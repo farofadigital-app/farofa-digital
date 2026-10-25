@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "Farofa Digital",
+    "slug": "farofa-digital",
+    "version": "3.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "assetBundlePatterns": ["**/*"],
+    "ios": { "supportsTablet": true },
+    "android": { "adaptiveIcon": { "backgroundColor": "#121826" } },
+    "web": { "favicon": "./assets/favicon.png" }
+  }
+}
