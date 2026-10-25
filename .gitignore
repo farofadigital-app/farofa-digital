@@ -1,0 +1,12 @@
+node_modules/
+.expo/
+dist/
+web-build/
+.env
+.env.local
+.DS_Store
+Thumbs.db
+npm-debug.log
+yarn-error.log
+*.tmp
+*.temp
