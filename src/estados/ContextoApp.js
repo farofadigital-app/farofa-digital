@@ -1,13 +1,23 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { CHAVES, salvar, carregar, limparTudo } from '../servicos/armazenamento';
 import { NIVEIS } from '../dados/niveis';
 import { formatarDataHoje } from '../uteis/formatacao';
+import { BRASAS_DIARIAS, BRASAS_BOAS_VINDAS } from '../uteis/constantes';
 
 const Contexto = createContext();
+const LIMITE_HISTORICO = 30;
+
+const novoId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+const registro = (quantidade, motivo) => ({
+  data: new Date().toISOString(),
+  quantidade,
+  motivo
+});
 
 export function ProvedorApp({ children }) {
   const [carregando, setCarregando] = useState(true);
   const [onboardingConcluido, setOnboardingConcluido] = useState(false);
+  const onboardingConcluidoRef = useRef(false);
   const [mentorEscolhido, setMentorEscolhido] = useState(null);
   const [brasas, setBrasas] = useState(0);
   const [exp, setExp] = useState(0);
@@ -16,19 +26,31 @@ export function ProvedorApp({ children }) {
   const [favoritos, setFavoritos] = useState([]);
   const [itensCompra, setItensCompra] = useState([]);
   const [ultimoAcesso, setUltimoAcesso] = useState(null);
+  const ultimoAcessoRef = useRef(null);
   const [streak, setStreak] = useState(0);
 
   useEffect(() => {
     const carregarDados = async () => {
-      setOnboardingConcluido(await carregar(CHAVES.ONBOARDING_CONCLUIDO) || false);
-      setMentorEscolhido(await carregar(CHAVES.MENTOR_ESCOLHIDO) || null);
-      setBrasas(await carregar(CHAVES.BRASAS) || 0);
-      setExp(await carregar(CHAVES.PROGRESSO)?.exp || 0);
-      setHistorico(await carregar(CHAVES.HISTORICO) || []);
-      setFavoritos(await carregar(CHAVES.FAVORITOS) || []);
-      setItensCompra(await carregar(CHAVES.COMPRAS) || []);
-      setUltimoAcesso(await carregar(CHAVES.ULTIMO_ACESSO) || null);
-      setCarregando(false);
+      try {
+        const onboardingSalvo = (await carregar(CHAVES.ONBOARDING_CONCLUIDO)) || false;
+        onboardingConcluidoRef.current = onboardingSalvo;
+        setOnboardingConcluido(onboardingSalvo);
+        setMentorEscolhido((await carregar(CHAVES.MENTOR_ESCOLHIDO)) || null);
+        setBrasas((await carregar(CHAVES.BRASAS)) || 0);
+        const progresso = await carregar(CHAVES.PROGRESSO);
+        setExp(progresso?.exp || 0);
+        setStreak(progresso?.streak || 0);
+        setHistorico((await carregar(CHAVES.HISTORICO)) || []);
+        setFavoritos((await carregar(CHAVES.FAVORITOS)) || []);
+        setItensCompra((await carregar(CHAVES.COMPRAS)) || []);
+        const acessoSalvo = (await carregar(CHAVES.ULTIMO_ACESSO)) || null;
+        ultimoAcessoRef.current = acessoSalvo;
+        setUltimoAcesso(acessoSalvo);
+      } catch (erro) {
+        console.warn('Erro ao carregar os dados salvos:', erro);
+      } finally {
+        setCarregando(false);
+      }
     };
     carregarDados();
   }, []);
@@ -36,14 +58,17 @@ export function ProvedorApp({ children }) {
   useEffect(() => {
     if (carregando) return;
     salvar(CHAVES.BRASAS, brasas);
-    salvar(CHAVES.PROGRESSO, { exp, nivel });
+    salvar(CHAVES.PROGRESSO, { exp, nivel, streak });
     salvar(CHAVES.HISTORICO, historico);
     salvar(CHAVES.FAVORITOS, favoritos);
     salvar(CHAVES.COMPRAS, itensCompra);
     salvar(CHAVES.ULTIMO_ACESSO, ultimoAcesso);
     salvar(CHAVES.MENTOR_ESCOLHIDO, mentorEscolhido);
     salvar(CHAVES.ONBOARDING_CONCLUIDO, onboardingConcluido);
-  }, [brasas, exp, historico, favoritos, itensCompra, ultimoAcesso, mentorEscolhido, onboardingConcluido, carregando]);
+  }, [
+    brasas, exp, nivel, streak, historico, favoritos, itensCompra,
+    ultimoAcesso, mentorEscolhido, onboardingConcluido, carregando
+  ]);
 
   useEffect(() => {
     let novoNivel = 1;
@@ -53,23 +78,44 @@ export function ProvedorApp({ children }) {
     setNivel(novoNivel);
   }, [exp]);
 
+  const adicionarRegistro = (quantidade, motivo) => {
+    setHistorico(h => [registro(quantidade, motivo), ...h].slice(0, LIMITE_HISTORICO));
+  };
+
   const registrarAcessoDiario = () => {
+    if (carregando) return false;
     const hoje = formatarDataHoje();
-    if (ultimoAcesso === hoje) return;
+    if (ultimoAcessoRef.current === hoje || ultimoAcesso === hoje) return false;
 
-    const ontem = new Date(); ontem.setDate(ontem.getDate() - 1);
-    const dataOntem = formatarDataHoje(ontem);
-    const novoStreak = ultimoAcesso === dataOntem ? streak + 1 : 1;
+    const ontem = new Date();
+    ontem.setDate(ontem.getDate() - 1);
+    const novoStreak = ultimoAcesso === formatarDataHoje(ontem) ? streak + 1 : 1;
+    const bonus = BRASAS_DIARIAS + Math.min(novoStreak * 2, 20);
 
+    ultimoAcessoRef.current = hoje;
     setStreak(novoStreak);
     setUltimoAcesso(hoje);
-    setBrasas(b => b + 10 + Math.min(novoStreak * 2, 20));
-    setHistorico(h => [{ data: new Date().toISOString(), quantidade: 10 + Math.min(novoStreak * 2, 20), motivo: "Acesso diário" }, ...h].slice(0, 30));
+    setBrasas(b => b + bonus);
+    adicionarRegistro(bonus, 'Acesso diário');
+    return true;
+  };
+
+  const escolherMentor = id => {
+    if (carregando || onboardingConcluidoRef.current || !['ana', 'jose'].includes(id)) {
+      return false;
+    }
+
+    onboardingConcluidoRef.current = true;
+    setMentorEscolhido(id);
+    setBrasas(b => b + BRASAS_BOAS_VINDAS);
+    adicionarRegistro(BRASAS_BOAS_VINDAS, 'Bônus de boas-vindas');
+    setOnboardingConcluido(true);
+    return true;
   };
 
   const adicionarBrasas = (quantidade, motivo) => {
     setBrasas(b => b + quantidade);
-    setHistorico(h => [{ data: new Date().toISOString(), quantidade, motivo }, ...h].slice(0, 30));
+    adicionarRegistro(quantidade, motivo);
   };
 
   const adicionarExp = (quantidade) => setExp(e => e + quantidade);
@@ -80,34 +126,62 @@ export function ProvedorApp({ children }) {
     );
   };
 
-  const adicionarItemCompra = (nome) => {
-    if (!itensCompra.find(i => i.nome === nome)) {
-      setItensCompra([...itensCompra, { id: Date.now(), nome, comprado: false }]);
-    }
+  // Aceita vários nomes de uma vez (ex.: todos os ingredientes de uma receita)
+  const adicionarItensCompra = (nomes) => {
+    setItensCompra(lista => {
+      const existentes = new Set(lista.map(i => i.nome.toLowerCase()));
+      const novos = [];
+      for (const bruto of nomes) {
+        const nome = String(bruto).trim();
+        if (!nome || existentes.has(nome.toLowerCase())) continue;
+        existentes.add(nome.toLowerCase());
+        novos.push({ id: novoId(), nome, comprado: false });
+      }
+      return novos.length ? [...lista, ...novos] : lista;
+    });
   };
+
+  const adicionarItemCompra = (nome) => adicionarItensCompra([nome]);
 
   const alternarItemCompra = (id) => {
     setItensCompra(lista =>
-      lista.map(i => i.id === id ? { ...i, comprado: !i.comprado } : i)
+      lista.map(i => (i.id === id ? { ...i, comprado: !i.comprado } : i))
     );
+  };
+
+  const removerItemCompra = (id) => {
+    setItensCompra(lista => lista.filter(i => i.id !== id));
+  };
+
+  const limparComprados = () => {
+    setItensCompra(lista => lista.filter(i => !i.comprado));
   };
 
   const resetarApp = async () => {
     await limparTudo();
+    onboardingConcluidoRef.current = false;
     setOnboardingConcluido(false);
     setMentorEscolhido(null);
-    setBrasas(0); setExp(0); setNivel(1);
-    setHistorico([]); setFavoritos([]); setItensCompra([]);
-    setUltimoAcesso(null); setStreak(0);
+    setBrasas(0);
+    setExp(0);
+    setNivel(1);
+    setHistorico([]);
+    setFavoritos([]);
+    setItensCompra([]);
+    ultimoAcessoRef.current = null;
+    setUltimoAcesso(null);
+    setStreak(0);
   };
 
   return (
     <Contexto.Provider value={{
       carregando, onboardingConcluido, setOnboardingConcluido,
-      mentorEscolhido, setMentorEscolhido,
-      brasas, exp, nivel, historico, favoritos, itensCompra, streak,
+      mentorEscolhido, setMentorEscolhido, escolherMentor,
+      brasas, exp, nivel, historico, favoritos, itensCompra, streak, ultimoAcesso,
       registrarAcessoDiario, adicionarBrasas, adicionarExp,
-      alternarFavorito, adicionarItemCompra, alternarItemCompra,
+      alternarFavorito,
+      adicionarItemCompra, adicionarItensCompra, alternarItemCompra,
+      removerItemCompra, limparComprados,
       resetarApp
     }}>
       {children}
