@@ -1,135 +1,429 @@
-import { useRef, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Animated, Easing, Platform, ScrollView, StyleSheet, View
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
 import { TextoResponsivo as Text } from '../../componentes/comuns/TextoResponsivo';
 import TelaSegura from '../../componentes/layout/TelaSegura';
 import BotaoInterativo from '../../componentes/comuns/BotaoInterativo';
 import BotaoPrincipal from '../../componentes/comuns/BotaoPrincipal';
 import { RECEITAS } from '../../dados/receitas';
 import {
-  acaoManual, configurarCalor, criarDesafioIngredientes, exigeAquecimento, extrairEtapas
+  acaoManual, calcularRecompensaMinicozinha, configurarCalor, criarBancada,
+  exigeAquecimento, extrairEtapas, zonaDoPonto
 } from '../../dados/minicozinha';
 import { useApp } from '../../estados/ContextoApp';
 import { CORES, RAIO } from '../../uteis/constantes';
 
+const NATIVO = Platform.OS !== 'web';
+
+const MENTORES = {
+  ana: {
+    emoji: '👩‍🍳',
+    falas: {
+      certo: ['Isso! Ingrediente certo na bancada.', 'Muito bem, a receita agradece!', 'Boa escolha!'],
+      intruso: ['Esse ingrediente não vai nessa receita. Leia de novo!', 'Hum, esse não é daqui. Tente outro.'],
+      ponto: ['Ponto certinho! Você tem mão de cozinheira.', 'Perfeito, é assim que se faz!'],
+      erroPonto: ['Calma, observe e tente de novo.', 'Quase no ponto! Mais uma tentativa.'],
+      acao: ['Que movimento bonito!', 'Assim mesmo, com capricho!'],
+      fim: 'Prato pronto! Dá vontade de provar.'
+    }
+  },
+  jose: {
+    emoji: '👨‍🍳',
+    falas: {
+      certo: ['Show! Esse vai na panela mesmo.', 'É isso aí, craque!', 'Boa, tá afiado!'],
+      intruso: ['Opa, esse não entra nessa receita!', 'Esse aí é de outro prato, hein?'],
+      ponto: ['No ponto! Agora sim!', 'Acertou em cheio o fogo!'],
+      erroPonto: ['Quase! Segura a mão e tenta de novo.', 'Faz parte, de novo!'],
+      acao: ['Mandou bem na pegada!', 'Isso! Ritmo bom.'],
+      fim: 'Prato na mesa! Mandou bem demais.'
+    }
+  }
+};
+
+const sorteio = lista => lista[Math.floor(Math.random() * lista.length)];
+
+function vibrar(acao) {
+  if (!NATIVO) return;
+  Promise.resolve()
+    .then(acao)
+    .catch(erro => console.warn('Não foi possível reproduzir a vibração do jogo:', erro));
+}
+
+function CartaoIngrediente({ item, estado, onPress }) {
+  const escala = useRef(new Animated.Value(1)).current;
+  const tremer = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (estado === 'certo') {
+      Animated.sequence([
+        Animated.timing(escala, { toValue: 1.12, duration: 120, useNativeDriver: NATIVO }),
+        Animated.spring(escala, { toValue: 1, friction: 5, useNativeDriver: NATIVO })
+      ]).start();
+    } else if (estado === 'errado') {
+      Animated.sequence(
+        [-8, 8, -6, 6, 0].map(valor =>
+          Animated.timing(tremer, { toValue: valor, duration: 55, useNativeDriver: NATIVO })
+        )
+      ).start();
+    }
+  }, [estado, escala, tremer]);
+
+  return (
+    <Animated.View
+      style={[estilos.celulaIngrediente, {
+        transform: [{ translateX: tremer }, { scale: escala }]
+      }]}
+    >
+      <BotaoInterativo
+        style={[
+          estilos.cartaoIngrediente,
+          estado === 'certo' && estilos.ingredienteCerto,
+          estado === 'errado' && estilos.ingredienteErrado
+        ]}
+        onPress={onPress}
+        disabled={Boolean(estado)}
+        feedbackHaptico={false}
+        accessibilityRole="button"
+        accessibilityLabel={`Ingrediente: ${item.nome}`}
+        accessibilityState={{ selected: estado === 'certo', disabled: Boolean(estado) }}
+      >
+        <Text style={estilos.emojiIngrediente}>
+          {estado === 'certo' ? '✅' : estado === 'errado' ? '❌' : '🥣'}
+        </Text>
+        <Text style={estilos.nomeIngrediente}>{item.nome}</Text>
+      </BotaoInterativo>
+    </Animated.View>
+  );
+}
+
+function Medidor({ zona, duracao, aoParar }) {
+  const posicao = useRef(new Animated.Value(0)).current;
+  const parado = useRef(false);
+
+  useEffect(() => {
+    const animacao = Animated.loop(
+      Animated.sequence([
+        Animated.timing(posicao, {
+          toValue: 1,
+          duration: duracao,
+          easing: Easing.inOut(Easing.quad),
+          useNativeDriver: false
+        }),
+        Animated.timing(posicao, {
+          toValue: 0,
+          duration: duracao,
+          easing: Easing.inOut(Easing.quad),
+          useNativeDriver: false
+        })
+      ])
+    );
+    animacao.start();
+    return () => animacao.stop();
+  }, [duracao, posicao]);
+
+  const parar = () => {
+    if (parado.current) return;
+    parado.current = true;
+    posicao.stopAnimation(valor => aoParar(valor >= zona.inicio && valor <= zona.fim));
+  };
+
+  return (
+    <View>
+      <View style={estilos.trilhoMedidor}>
+        <View
+          style={[
+            estilos.zonaMedidor,
+            {
+              left: `${zona.inicio * 100}%`,
+              width: `${(zona.fim - zona.inicio) * 100}%`
+            }
+          ]}
+        />
+        <Animated.View
+          style={[
+            estilos.marcadorMedidor,
+            { left: posicao.interpolate({ inputRange: [0, 1], outputRange: ['0%', '98%'] }) }
+          ]}
+        />
+      </View>
+      <View style={estilos.rotulosMedidor}>
+        {zona.rotulos.map(rotulo => (
+          <Text key={rotulo} style={estilos.rotuloMedidor}>{rotulo}</Text>
+        ))}
+      </View>
+      <BotaoInterativo
+        style={estilos.botaoParar}
+        onPress={parar}
+        accessibilityRole="button"
+        accessibilityLabel="Parar o marcador"
+      >
+        <Text style={estilos.textoBotaoParar}>PARAR AGORA</Text>
+      </BotaoInterativo>
+    </View>
+  );
+}
+
+function AcaoRapida({ acao, aoConcluir }) {
+  const [progresso, setProgresso] = useState(0);
+  const progressoRef = useRef(0);
+  const concluido = useRef(false);
+  const pulso = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    const intervalo = setInterval(() => {
+      if (concluido.current) return;
+      progressoRef.current = Math.max(0, progressoRef.current - 0.04);
+      setProgresso(progressoRef.current);
+    }, 150);
+    return () => clearInterval(intervalo);
+  }, []);
+
+  const tocar = () => {
+    if (concluido.current) return;
+    progressoRef.current = Math.min(1, progressoRef.current + 0.12);
+    setProgresso(progressoRef.current);
+    pulso.setValue(1);
+    Animated.sequence([
+      Animated.timing(pulso, { toValue: 1.18, duration: 70, useNativeDriver: NATIVO }),
+      Animated.timing(pulso, { toValue: 1, duration: 90, useNativeDriver: NATIVO })
+    ]).start();
+    vibrar(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light));
+
+    if (progressoRef.current >= 1) {
+      concluido.current = true;
+      aoConcluir();
+    }
+  };
+
+  return (
+    <View style={estilos.areaAcao}>
+      <Animated.Text style={[estilos.emojiAcao, { transform: [{ scale: pulso }] }]}>
+        {acao.emoji}
+      </Animated.Text>
+      <Text style={estilos.acaoTitulo}>{acao.nome}</Text>
+      <Text style={estilos.dica}>
+        Toque rápido para {acao.verbo.toLowerCase()}. A barra desce se você parar!
+      </Text>
+      <View style={estilos.trilhoAcao}>
+        <View style={[estilos.barraAcao, { width: `${Math.round(progresso * 100)}%` }]} />
+      </View>
+      <BotaoInterativo
+        style={estilos.botaoAcao}
+        onPress={tocar}
+        feedbackHaptico={false}
+        accessibilityRole="button"
+        accessibilityLabel={`${acao.verbo} (toque várias vezes)`}
+      >
+        <Text style={estilos.textoBotaoAcao}>{acao.verbo.toUpperCase()}!</Text>
+      </BotaoInterativo>
+    </View>
+  );
+}
+
+function Chama() {
+  const escala = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    const animacao = Animated.loop(
+      Animated.sequence([
+        Animated.timing(escala, { toValue: 1.18, duration: 380, useNativeDriver: NATIVO }),
+        Animated.timing(escala, { toValue: 0.92, duration: 380, useNativeDriver: NATIVO })
+      ])
+    );
+    animacao.start();
+    return () => animacao.stop();
+  }, [escala]);
+
+  return <Animated.Text style={[estilos.chama, { transform: [{ scale: escala }] }]}>🔥</Animated.Text>;
+}
+
+function BalaoMentor({ mentor, fala }) {
+  if (!fala) return null;
+
+  return (
+    <View style={estilos.balao}>
+      <Text style={estilos.emojiMentor}>{mentor.emoji}</Text>
+      <Text style={estilos.falaMentor}>{fala}</Text>
+    </View>
+  );
+}
+
 export default function MiniGame() {
-  const { adicionarBrasas, adicionarExp } = useApp();
+  const { mentorEscolhido, adicionarBrasas, adicionarExp } = useApp();
+  const mentor = MENTORES[mentorEscolhido] || MENTORES.ana;
   const premioRegistrado = useRef(false);
+  const avancandoEtapa = useRef(false);
+  const ingredientesResolvidos = useRef(new Set());
+  const estrelasAnim = useRef([0, 1, 2].map(() => new Animated.Value(0))).current;
+
   const [fase, setFase] = useState('inicio');
   const [receita, setReceita] = useState(null);
-  const [ingredientesDesafio, setIngredientesDesafio] = useState([]);
-  const [selecionados, setSelecionados] = useState([]);
+  const [bancada, setBancada] = useState([]);
+  const [certosEscolhidos, setCertosEscolhidos] = useState([]);
+  const [errados, setErrados] = useState([]);
   const [etapaAtual, setEtapaAtual] = useState(0);
-  const [nivelFogo, setNivelFogo] = useState('medio');
-  const [temperaturaForno, setTemperaturaForno] = useState(180);
-  const [acoesConcluidas, setAcoesConcluidas] = useState(0);
+  const [indiceDesafio, setIndiceDesafio] = useState(0);
+  const [tentativa, setTentativa] = useState(0);
+  const [etapaConcluida, setEtapaConcluida] = useState(false);
   const [precisao, setPrecisao] = useState(100);
   const [feedback, setFeedback] = useState('');
   const [feedbackErro, setFeedbackErro] = useState(false);
-  const etapas = receita ? extrairEtapas(receita) : [];
+  const [fala, setFala] = useState('');
+  const [premioFinal, setPremioFinal] = useState({ estrelas: 1, brasas: 0, exp: 0 });
 
-  const voltarParaReceitas = () => {
-    setAcoesConcluidas(0);
-    setFeedback('');
-    setFase('inicio');
-  };
+  const etapas = useMemo(
+    () => receita && typeof receita.modoPreparo === 'string' ? extrairEtapas(receita) : [],
+    [receita]
+  );
+  const desafios = useMemo(() => {
+    const instrucao = etapas[etapaAtual];
+    if (!instrucao) return [];
+
+    const lista = [];
+    if (exigeAquecimento(instrucao)) lista.push('ponto');
+    if (acaoManual(instrucao)) lista.push('acao');
+    if (lista.length === 0) lista.push('simples');
+    return lista;
+  }, [etapas, etapaAtual]);
+
+  useEffect(() => {
+    if (fase !== 'resultado') return;
+
+    estrelasAnim.forEach(estrela => estrela.setValue(0));
+    Animated.stagger(
+      220,
+      estrelasAnim.map(estrela =>
+        Animated.spring(estrela, { toValue: 1, friction: 4, useNativeDriver: NATIVO })
+      )
+    ).start();
+  }, [fase, estrelasAnim]);
+
+  const penalizar = valor => setPrecisao(atual => Math.max(0, atual - valor));
 
   const escolherReceita = item => {
     premioRegistrado.current = false;
+    avancandoEtapa.current = false;
+    ingredientesResolvidos.current.clear();
     setReceita(item);
-    setIngredientesDesafio(criarDesafioIngredientes(item));
-    setSelecionados([]);
+    setBancada(criarBancada(item, RECEITAS));
+    setCertosEscolhidos([]);
+    setErrados([]);
     setEtapaAtual(0);
-    setNivelFogo('medio');
-    setTemperaturaForno(180);
-    setAcoesConcluidas(0);
+    setIndiceDesafio(0);
+    setTentativa(0);
+    setEtapaConcluida(false);
     setPrecisao(100);
     setFeedback('');
     setFeedbackErro(false);
+    setFala('');
     setFase('ingredientes');
   };
 
-  const alternarIngrediente = id => {
-    setSelecionados(lista =>
-      lista.includes(id) ? lista.filter(item => item !== id) : [...lista, id]
-    );
+  const voltarParaReceitas = () => {
     setFeedback('');
+    setFala('');
+    setFase('inicio');
   };
 
-  const conferirIngredientes = () => {
-    const faltantes = ingredientesDesafio.filter(
-      ingrediente => !selecionados.includes(ingrediente.id)
-    );
+  const totalCertos = bancada.filter(item => item.certo).length;
+  const bancadaPronta = totalCertos > 0 && certosEscolhidos.length === totalCertos;
 
-    if (faltantes.length) {
-      setFeedback(`Separe os ingredientes que faltam: ${faltantes.map(item => item.nome).join(', ')}.`);
-      setFeedbackErro(true);
+  const tocarIngrediente = item => {
+    if (ingredientesResolvidos.current.has(item.id)) return;
+    ingredientesResolvidos.current.add(item.id);
+
+    if (item.certo) {
+      setCertosEscolhidos(lista => [...lista, item.id]);
+      setFala(sorteio(mentor.falas.certo));
+      setFeedbackErro(false);
+      vibrar(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light));
       return;
     }
 
-    setAcoesConcluidas(0);
-    setPrecisao(100);
-    setFeedback('Tudo separado! Agora leve a panela ao fogo.');
-    setFeedbackErro(false);
+    setErrados(lista => [...lista, item.id]);
+    penalizar(8);
+    setFala(sorteio(mentor.falas.intruso));
+    setFeedbackErro(true);
+    vibrar(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error));
+  };
+
+  const irParaFogao = () => {
+    avancandoEtapa.current = false;
+    setEtapaAtual(0);
+    setIndiceDesafio(0);
+    setTentativa(0);
+    setEtapaConcluida(false);
+    setFeedback('');
+    setFala('');
     setFase('cozinha');
   };
 
-  const ajustarTemperaturaForno = variacao => {
-    setTemperaturaForno(valor => Math.max(80, Math.min(250, valor + variacao)));
-    setFeedback('');
+  const finalizarPrato = () => {
+    const premio = calcularRecompensaMinicozinha(precisao);
+    if (!premioRegistrado.current) {
+      premioRegistrado.current = true;
+      adicionarBrasas(premio.brasas, `Minicozinha: ${receita.nome}`);
+      adicionarExp(premio.exp);
+    }
+    setPremioFinal(premio);
+    setFala(mentor.falas.fim);
+    vibrar(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success));
+    setFase('resultado');
   };
 
-  const registrarAcao = () => {
-    setAcoesConcluidas(atual => Math.min(3, atual + 1));
-    setFeedback('');
-  };
+  const avancar = () => {
+    if (fase !== 'cozinha' || avancandoEtapa.current) return;
+    avancandoEtapa.current = true;
 
-  const executarEtapa = () => {
-    const instrucao = etapas[etapaAtual];
-    const usaAquecimento = exigeAquecimento(instrucao);
-    const calor = usaAquecimento ? configurarCalor(instrucao) : null;
-    const calorCorreto = !usaAquecimento || (calor.equipamento === 'forno'
-      ? temperaturaForno >= calor.minimo && temperaturaForno <= calor.maximo
-      : nivelFogo === calor.alvo);
-    const acao = acaoManual(instrucao);
-
-    if (!calorCorreto) {
-      setPrecisao(valor => Math.max(0, valor - 10));
-      setFeedback(calor.equipamento === 'forno'
-        ? temperaturaForno < calor.minimo
-          ? 'O forno ainda está frio. Ajuste a temperatura antes de avançar.'
-          : 'O forno está quente demais para esta etapa. Reduza a temperatura.'
-        : `Ajuste o fogo para ${calor.alvo} antes de avançar.`);
-      setFeedbackErro(true);
-      return;
-    }
-
-    if (acao && acoesConcluidas < 3) {
-      setFeedback(`Complete a ação: ${acao.nome.toLocaleLowerCase()} (${acoesConcluidas}/3).`);
-      setFeedbackErro(false);
-      return;
-    }
-
-    setFeedbackErro(false);
-    if (etapaAtual === etapas.length - 1) {
-      if (!premioRegistrado.current) {
-        premioRegistrado.current = true;
-        adicionarBrasas(10, `Minicozinha: ${receita.nome}`);
-        adicionarExp(25);
-      }
-      setFeedback(`Prato pronto! Você ganhou 10 Brasas e 25 EXP.`);
-      setFase('resultado');
+    if (etapaAtual >= etapas.length - 1) {
+      finalizarPrato();
       return;
     }
 
     setEtapaAtual(indice => indice + 1);
-    setAcoesConcluidas(0);
-    setFeedback('Etapa concluída! Continue seguindo o preparo da receita.');
-  };
-
-  const mudarFogo = nivel => {
-    setNivelFogo(nivel);
+    setIndiceDesafio(0);
+    setTentativa(0);
+    setEtapaConcluida(false);
     setFeedback('');
     setFeedbackErro(false);
+  };
+
+  useEffect(() => {
+    if (fase === 'cozinha') avancandoEtapa.current = false;
+  }, [etapaAtual, fase]);
+
+  const concluirDesafio = fraseSucesso => {
+    if (indiceDesafio < desafios.length - 1) {
+      setIndiceDesafio(indice => indice + 1);
+      setTentativa(0);
+      setFeedback('Muito bem! Agora a próxima parte desta etapa.');
+      setFeedbackErro(false);
+      return;
+    }
+
+    setEtapaConcluida(true);
+    setFala(fraseSucesso);
+    setFeedback('Etapa concluída!');
+    setFeedbackErro(false);
+    vibrar(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success));
+  };
+
+  const resultadoPonto = acertou => {
+    if (acertou) {
+      vibrar(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success));
+      concluirDesafio(sorteio(mentor.falas.ponto));
+      return;
+    }
+
+    penalizar(10);
+    setTentativa(valor => valor + 1);
+    setFala(sorteio(mentor.falas.erroPonto));
+    setFeedback('Fora do ponto! A zona verde ficou um pouco maior. Tente de novo.');
+    setFeedbackErro(true);
+    vibrar(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error));
   };
 
   if (fase === 'inicio') {
@@ -140,11 +434,11 @@ export default function MiniGame() {
           <Text style={estilos.titulo}>Minicozinha</Text>
           <View style={estilos.cartao}>
             <Text style={estilos.texto}>
-              Prepare cada receita seguindo suas etapas: organize os ingredientes, escolha
-              o fogo ou forno, faça os movimentos e avance quando a ação estiver certa.
+              Escolha só os ingredientes certos (cuidado com os intrusos!), acerte o ponto do
+              fogo ou do forno e faça os movimentos na hora certa.
             </Text>
             <Text style={estilos.dica}>
-              Sem cronômetro: o jogo respeita seu ritmo e não substitui os cuidados da receita real.
+              Sem pressa: erros diminuem sua precisão, que define as estrelas e a recompensa.
             </Text>
           </View>
           <Text style={estilos.subtitulo}>Escolha o prato do desafio</Text>
@@ -157,7 +451,9 @@ export default function MiniGame() {
               accessibilityLabel={`Preparar ${item.nome}, ${item.regiao}, ${item.tempo}`}
             >
               <Text style={estilos.nomeReceita}>{item.nome}</Text>
-              <Text style={estilos.detalheReceita}>{item.regiao} · {item.tempo} · {item.dificuldade}</Text>
+              <Text style={estilos.detalheReceita}>
+                {item.regiao} · {item.tempo} · {item.dificuldade}
+              </Text>
             </BotaoInterativo>
           ))}
         </ScrollView>
@@ -169,13 +465,13 @@ export default function MiniGame() {
     return (
       <TelaSegura>
         <ScrollView contentContainerStyle={estilos.conteudo}>
-          <Text style={estilos.progresso}>Receita · {receita.regiao} · {receita.tempo}</Text>
+          <Text style={estilos.progresso}>{receita.regiao} · {receita.tempo}</Text>
           <Text style={estilos.titulo}>O que vai em {receita.nome}?</Text>
           <Text style={estilos.texto}>
-            Separe os ingredientes na bancada antes de começar. Cada item mostra a quantidade da receita.
+            Toque nos ingredientes da receita. Alguns não pertencem a ela, e cada erro custa precisão.
           </Text>
           <Text style={estilos.contador}>
-            Bancada: {selecionados.length} de {receita.ingredientes.length} itens separados
+            {certosEscolhidos.length} de {totalCertos} ingredientes certos · Precisão {precisao}%
           </Text>
           <BotaoInterativo
             style={estilos.botaoVoltar}
@@ -184,33 +480,28 @@ export default function MiniGame() {
           >
             <Text style={estilos.textoBotaoVoltar}>← Escolher outra receita</Text>
           </BotaoInterativo>
+          <BalaoMentor mentor={mentor} fala={fala} />
           <View style={estilos.grade}>
-            {ingredientesDesafio.map(ingrediente => {
-              const selecionado = selecionados.includes(ingrediente.id);
+            {bancada.map(item => {
+              const estado = certosEscolhidos.includes(item.id)
+                ? 'certo'
+                : errados.includes(item.id) ? 'errado' : null;
               return (
-                <BotaoInterativo
-                  key={ingrediente.id}
-                  style={[estilos.cartaoIngrediente, selecionado && estilos.ingredienteSelecionado]}
-                  onPress={() => alternarIngrediente(ingrediente.id)}
-                  accessibilityRole="button"
-                  accessibilityState={{ selected: selecionado }}
-                >
-                  <Text style={estilos.emojiIngrediente}>🥣</Text>
-                  <Text style={estilos.nomeIngrediente}>{ingrediente.nome}</Text>
-                  {selecionado && <Text style={estilos.marcadorSelecionado}>✓</Text>}
-                </BotaoInterativo>
+                <CartaoIngrediente
+                  key={item.id}
+                  item={item}
+                  estado={estado}
+                  onPress={() => tocarIngrediente(item)}
+                />
               );
             })}
           </View>
-          <BotaoPrincipal
-            titulo="Conferir ingredientes"
-            onPress={conferirIngredientes}
-            estilo={estilos.botaoLargo}
-          />
-          {feedback ? (
-            <Text style={[estilos.feedback, feedbackErro && estilos.feedbackErro]}>
-              {feedback}
-            </Text>
+          {bancadaPronta ? (
+            <BotaoPrincipal
+              titulo="Tudo separado! Ir para o fogão"
+              onPress={irParaFogao}
+              estilo={estilos.botaoLargo}
+            />
           ) : null}
         </ScrollView>
       </TelaSegura>
@@ -218,17 +509,36 @@ export default function MiniGame() {
   }
 
   if (fase === 'cozinha') {
+    if (!etapas.length) {
+      return (
+        <TelaSegura>
+          <ScrollView contentContainerStyle={estilos.conteudo}>
+            <Text style={estilos.titulo}>{receita.nome}</Text>
+            <Text style={estilos.texto}>
+              Esta receita ainda não tem o modo de preparo para o jogo.
+            </Text>
+            <BotaoPrincipal
+              titulo="Escolher outra receita"
+              onPress={voltarParaReceitas}
+              estilo={estilos.botaoLargo}
+            />
+          </ScrollView>
+        </TelaSegura>
+      );
+    }
+
     const instrucao = etapas[etapaAtual];
-    const usaAquecimento = exigeAquecimento(instrucao);
-    const calor = usaAquecimento ? configurarCalor(instrucao) : null;
+    const desafio = desafios[indiceDesafio];
+    const calor = exigeAquecimento(instrucao) ? configurarCalor(instrucao) : null;
     const acao = acaoManual(instrucao);
-    const progressoReceita = `${(etapaAtual / etapas.length) * 100}%`;
+    const progressoReceita = `${((etapaAtual + 1) / etapas.length) * 100}%`;
+    const ehForno = calor?.equipamento === 'forno';
 
     return (
       <TelaSegura>
         <ScrollView contentContainerStyle={estilos.conteudo}>
           <Text style={estilos.progresso}>
-            Etapa {etapaAtual + 1} de {etapas.length} · {receita.nome}
+            Etapa {etapaAtual + 1} de {etapas.length} · {receita.nome} · Precisão {precisao}%
           </Text>
           <BotaoInterativo
             style={estilos.botaoVoltar}
@@ -240,130 +550,69 @@ export default function MiniGame() {
           <View
             style={estilos.trilhoReceita}
             accessibilityRole="progressbar"
-            accessibilityValue={{ min: 0, max: etapas.length, now: etapaAtual }}
+            accessibilityLabel="Progresso da receita"
+            accessibilityValue={{ min: 1, max: etapas.length, now: etapaAtual + 1 }}
           >
             <View style={[estilos.barraReceita, { width: progressoReceita }]} />
           </View>
-          <Text style={estilos.titulo}>
-            {usaAquecimento
-              ? calor.equipamento === 'forno' ? 'Prepare o forno' : 'Cuide do fogo'
-              : acao ? acao.nome : 'Prepare a próxima etapa'}
-          </Text>
           <View style={estilos.instrucao}>
             <Text style={estilos.instrucaoLabel}>O que fazer agora</Text>
             <Text style={estilos.textoInstrucao}>{instrucao}</Text>
           </View>
 
-          <View style={estilos.travessa}>
-            <Text style={estilos.travessaTitulo}>🧺 Ingredientes na bancada</Text>
-            <Text style={estilos.conteudoPanela}>
-              {receita.ingredientes.join(' · ')}
-            </Text>
-          </View>
-
-          <View style={estilos.fogao}>
-            <Text style={estilos.panela}>{usaAquecimento && calor.equipamento === 'forno' ? '♨️' : '🍳'}</Text>
-            <Text style={estilos.conteudoPanela}>
-              {usaAquecimento
-                ? calor.equipamento === 'forno' ? 'Forno' : 'Panela no fogão'
-                : 'Bancada de preparo'}
-            </Text>
-            {usaAquecimento && calor.equipamento === 'fogao'
-              ? <Text style={estilos.chama}>{nivelFogo === 'alto' ? '🔥🔥🔥' : nivelFogo === 'medio' ? '🔥🔥' : '🔥'}</Text>
-              : null}
-          </View>
-
-          {usaAquecimento ? (
+          {!etapaConcluida && desafio === 'ponto' && calor ? (
             <View style={estilos.cartao}>
               <Text style={estilos.rotuloControle}>
-                {calor.equipamento === 'forno' ? 'Temperatura do forno' : 'Intensidade da chama'}
+                {ehForno
+                  ? `Acerte a temperatura do forno: ${calor.alvo} °C`
+                  : `Acerte a chama: fogo ${calor.alvo}`}
               </Text>
-              {calor.equipamento === 'forno' ? (
-                <>
-                  <Text style={estilos.valorTemperatura}>{temperaturaForno} °C</Text>
-                  <Text style={estilos.dicaTemperatura}>
-                    Receita pede {calor.alvo} °C (faixa de jogo: {calor.minimo}–{calor.maximo} °C)
-                  </Text>
-                  <View style={estilos.controlesTemperatura}>
-                    <BotaoInterativo
-                      style={estilos.botaoTemperatura}
-                      onPress={() => ajustarTemperaturaForno(-10)}
-                      accessibilityRole="button"
-                      accessibilityLabel="Diminuir temperatura do forno em 10 graus"
-                    >
-                      <Text style={estilos.textoBotaoTemperatura}>− 10°</Text>
-                    </BotaoInterativo>
-                    <BotaoInterativo
-                      style={estilos.botaoTemperatura}
-                      onPress={() => ajustarTemperaturaForno(10)}
-                      accessibilityRole="button"
-                      accessibilityLabel="Aumentar temperatura do forno em 10 graus"
-                    >
-                      <Text style={estilos.textoBotaoTemperatura}>+ 10°</Text>
-                    </BotaoInterativo>
-                  </View>
-                </>
-              ) : (
-                <>
-                  <Text style={estilos.dicaTemperatura}>A receita pede fogo {calor.alvo}.</Text>
-                  <View style={estilos.controlesFogo}>
-                    {['baixo', 'medio', 'alto'].map(nivel => (
-                      <BotaoInterativo
-                        key={nivel}
-                        style={[estilos.botaoFogo, nivelFogo === nivel && estilos.fogoSelecionado]}
-                        onPress={() => mudarFogo(nivel)}
-                        accessibilityRole="button"
-                        accessibilityState={{ selected: nivelFogo === nivel }}
-                      >
-                        <Text style={estilos.textoBotaoFogo}>
-                          {nivel === 'baixo' ? 'Baixo' : nivel === 'medio' ? 'Médio' : 'Alto'}
-                        </Text>
-                      </BotaoInterativo>
-                    ))}
-                  </View>
-                </>
-              )}
-            </View>
-          ) : (
-            <View style={estilos.cartao}>
-              <Text style={estilos.dica}>Etapa de bancada: siga a instrução e avance quando terminar.</Text>
-            </View>
-          )}
-
-          {acao ? (
-            <View style={estilos.cartaoAcao}>
-              <Text style={estilos.acaoTitulo}>{acao.emoji} {acao.nome}</Text>
-              <Text style={estilos.dica}>Faça o movimento na bancada para marcar a ação.</Text>
-              <View style={estilos.controlesAcao}>
-                {[0, 1, 2].map(indice => (
-                  <View
-                    key={indice}
-                    style={[estilos.marcadorAcao, indice < acoesConcluidas && estilos.marcadorAcaoFeito]}
-                  />
-                ))}
-              </View>
-              <Text style={estilos.progressoCozimento}>{acoesConcluidas} de 3 movimentos</Text>
-              <BotaoInterativo
-                style={estilos.botaoAcao}
-                onPress={registrarAcao}
-                disabled={acoesConcluidas >= 3}
-                accessibilityRole="button"
-                accessibilityLabel={`${acao.verbo}, movimento ${Math.min(acoesConcluidas + 1, 3)} de 3`}
-              >
-                <Text style={estilos.textoBotaoAcao}>{acao.verbo}</Text>
-              </BotaoInterativo>
+              {ehForno ? <Text style={estilos.chama}>♨️</Text> : <Chama />}
+              <Text style={estilos.dicaTemperatura}>Pare o marcador dentro da zona verde.</Text>
+              <Medidor
+                key={`ponto-${etapaAtual}-${tentativa}`}
+                zona={zonaDoPonto(calor, tentativa * 0.04)}
+                duracao={ehForno ? 1500 : 1100}
+                aoParar={resultadoPonto}
+              />
             </View>
           ) : null}
 
-          <BotaoPrincipal
-            titulo={etapaAtual === etapas.length - 1 ? 'Servir o prato' : 'Próxima etapa'}
-            onPress={executarEtapa}
-            estilo={estilos.botaoLargo}
-          />
+          {!etapaConcluida && desafio === 'acao' && acao ? (
+            <View style={estilos.cartao}>
+              <AcaoRapida
+                key={`acao-${etapaAtual}`}
+                acao={acao}
+                aoConcluir={() => concluirDesafio(sorteio(mentor.falas.acao))}
+              />
+            </View>
+          ) : null}
+
+          {!etapaConcluida && desafio === 'simples' ? (
+            <View style={estilos.cartao}>
+              <Text style={estilos.dica}>
+                Etapa de bancada: leia com atenção e siga em frente.
+              </Text>
+              <BotaoPrincipal
+                titulo={etapaAtual === etapas.length - 1 ? 'Servir o prato' : 'Feito! Próxima etapa'}
+                onPress={avancar}
+                estilo={estilos.botaoLargo}
+              />
+            </View>
+          ) : null}
+
+          <BalaoMentor mentor={mentor} fala={fala} />
           {feedback ? (
             <Text style={[estilos.feedback, feedbackErro && estilos.feedbackErro]}>
               {feedback}
             </Text>
+          ) : null}
+          {etapaConcluida ? (
+            <BotaoPrincipal
+              titulo={etapaAtual === etapas.length - 1 ? 'Servir o prato' : 'Próxima etapa'}
+              onPress={avancar}
+              estilo={estilos.botaoLargo}
+            />
           ) : null}
         </ScrollView>
       </TelaSegura>
@@ -375,24 +624,46 @@ export default function MiniGame() {
       <ScrollView contentContainerStyle={estilos.conteudo}>
         <Text style={estilos.emojiGrande}>🥘</Text>
         <Text style={estilos.titulo}>{receita.nome} pronto!</Text>
-        <Text style={estilos.texto}>
-          Você escolheu os ingredientes e percorreu as etapas da receita de {receita.regiao}.
-        </Text>
+        <View style={estilos.linhaEstrelas}>
+          {[0, 1, 2].map(indice => (
+            <Animated.View
+              key={indice}
+              style={{ transform: [{ scale: estrelasAnim[indice] }] }}
+            >
+              <Ionicons
+                name={indice < premioFinal.estrelas ? 'star' : 'star-outline'}
+                size={48}
+                color={CORES.destaque}
+                style={estilos.estrela}
+              />
+            </Animated.View>
+          ))}
+        </View>
+        <BalaoMentor mentor={mentor} fala={fala} />
         <View style={estilos.cartao}>
-          <Text style={estilos.recompensa}>🔥 +10 Brasas</Text>
-          <Text style={estilos.recompensa}>⭐ +25 EXP</Text>
+          <Text style={estilos.recompensa}>🔥 +{premioFinal.brasas} Brasas</Text>
+          <Text style={estilos.recompensa}>⭐ +{premioFinal.exp} EXP</Text>
           <Text style={estilos.precisaoFinal}>
-            Precisão no preparo: {precisao}% · {precisao >= 90 ? 'Muito bem!' : precisao >= 70 ? 'Bom trabalho!' : 'Continue praticando!'}
+            Precisão no preparo: {precisao}% · {precisao >= 90
+              ? 'Muito bem!'
+              : precisao >= 70 ? 'Bom trabalho!' : 'Continue praticando!'}
           </Text>
           <Text style={estilos.dica}>
             Confira o preparo completo na aba Receitas e siga as orientações de segurança alimentar.
           </Text>
         </View>
         <BotaoPrincipal
-          titulo="Escolher outra receita"
-          onPress={() => setFase('inicio')}
+          titulo="Cozinhar de novo"
+          onPress={() => escolherReceita(receita)}
           estilo={estilos.botaoLargo}
         />
+        <BotaoInterativo
+          style={estilos.botaoVoltar}
+          onPress={() => setFase('inicio')}
+          accessibilityRole="button"
+        >
+          <Text style={estilos.textoBotaoVoltar}>Escolher outra receita</Text>
+        </BotaoInterativo>
       </ScrollView>
     </TelaSegura>
   );
@@ -425,18 +696,8 @@ const estilos = StyleSheet.create({
     padding: 14,
     marginBottom: 10
   },
-  nomeReceita: {
-    color: CORES.texto,
-    fontSize: 16,
-    lineHeight: 22,
-    fontWeight: 'bold'
-  },
-  detalheReceita: {
-    color: CORES.textoSecundario,
-    fontSize: 12,
-    lineHeight: 18,
-    marginTop: 3
-  },
+  nomeReceita: { color: CORES.texto, fontSize: 16, lineHeight: 22, fontWeight: 'bold' },
+  detalheReceita: { color: CORES.textoSecundario, fontSize: 12, lineHeight: 18, marginTop: 3 },
   texto: {
     color: CORES.textoSecundario,
     fontSize: 15,
@@ -451,38 +712,12 @@ const estilos = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 10
   },
-  trilhoReceita: {
-    height: 8,
-    backgroundColor: CORES.superficie,
-    borderRadius: 4,
-    overflow: 'hidden',
-    marginBottom: 16
-  },
-  barraReceita: {
-    height: '100%',
-    backgroundColor: CORES.destaque,
-    borderRadius: 4
-  },
-  instrucao: {
-    backgroundColor: CORES.superficie,
-    borderLeftWidth: 4,
-    borderLeftColor: CORES.destaque,
-    borderRadius: RAIO,
-    padding: 14,
-    marginBottom: 14
-  },
-  instrucaoLabel: {
+  contador: {
     color: CORES.destaque,
-    fontSize: 12,
-    lineHeight: 18,
-    fontWeight: 'bold',
-    textTransform: 'uppercase',
-    marginBottom: 5
-  },
-  textoInstrucao: {
-    color: CORES.texto,
-    fontSize: 16,
-    lineHeight: 24
+    fontSize: 14,
+    lineHeight: 20,
+    textAlign: 'center',
+    marginBottom: 12
   },
   cartao: {
     backgroundColor: CORES.superficie,
@@ -502,28 +737,49 @@ const estilos = StyleSheet.create({
   },
   botaoLargo: { alignSelf: 'stretch' },
   botaoVoltar: { alignSelf: 'flex-start', paddingVertical: 8, marginBottom: 8 },
-  textoBotaoVoltar: { color: CORES.destaque, fontSize: 14, fontWeight: 'bold' },
+  textoBotaoVoltar: { color: CORES.destaque, fontSize: 14, lineHeight: 20, fontWeight: 'bold' },
+  balao: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: CORES.superficie,
+    borderRadius: RAIO,
+    padding: 12,
+    marginBottom: 12
+  },
+  emojiMentor: { fontSize: 30, lineHeight: 40, marginRight: 10 },
+  falaMentor: {
+    flex: 1,
+    color: CORES.texto,
+    fontSize: 14,
+    lineHeight: 21,
+    fontStyle: 'italic'
+  },
   grade: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    marginTop: 4
+    marginTop: 4,
+    marginBottom: 8
   },
+  celulaIngrediente: { width: '48%', marginBottom: 10 },
   cartaoIngrediente: {
-    width: '48%',
-    minHeight: 124,
+    minHeight: 112,
     backgroundColor: CORES.superficie,
     borderWidth: 1,
     borderColor: CORES.borda,
     borderRadius: RAIO,
     padding: 10,
-    marginBottom: 10,
     alignItems: 'center',
     justifyContent: 'center'
   },
-  ingredienteSelecionado: {
-    borderColor: CORES.destaque,
-    backgroundColor: 'rgba(245,166,35,0.12)'
+  ingredienteCerto: {
+    borderColor: CORES.sucesso,
+    backgroundColor: 'rgba(16,185,129,0.15)'
+  },
+  ingredienteErrado: {
+    borderColor: CORES.erro,
+    backgroundColor: 'rgba(239,68,68,0.15)',
+    opacity: 0.7
   },
   emojiIngrediente: { fontSize: 28, lineHeight: 36, marginBottom: 4 },
   nomeIngrediente: {
@@ -533,100 +789,87 @@ const estilos = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center'
   },
-  marcadorSelecionado: {
-    position: 'absolute',
-    top: 5,
-    right: 9,
-    color: CORES.sucesso,
-    fontWeight: 'bold',
-    fontSize: 16
+  trilhoReceita: {
+    height: 8,
+    backgroundColor: CORES.superficie,
+    borderRadius: 4,
+    overflow: 'hidden',
+    marginBottom: 16
   },
-  contador: {
+  barraReceita: { height: '100%', backgroundColor: CORES.destaque, borderRadius: 4 },
+  instrucao: {
+    backgroundColor: CORES.superficie,
+    borderLeftWidth: 4,
+    borderLeftColor: CORES.destaque,
+    borderRadius: RAIO,
+    padding: 14,
+    marginBottom: 14
+  },
+  instrucaoLabel: {
     color: CORES.destaque,
-    fontSize: 14,
-    lineHeight: 20,
-    textAlign: 'center',
-    marginBottom: 12
-  },
-  travessa: {
-    backgroundColor: CORES.superficie,
-    borderWidth: 1,
-    borderColor: CORES.borda,
-    borderRadius: RAIO,
-    padding: 12,
-    marginBottom: 4
-  },
-  travessaTitulo: {
-    color: CORES.texto,
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: 12,
+    lineHeight: 18,
     fontWeight: 'bold',
-    textAlign: 'center'
+    textTransform: 'uppercase',
+    marginBottom: 5
   },
-  feedback: {
-    color: CORES.sucesso,
-    fontSize: 14,
-    lineHeight: 21,
-    textAlign: 'center',
-    marginTop: 8
-  },
-  feedbackErro: { color: CORES.erro },
-  fogao: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: 150,
-    backgroundColor: CORES.superficie,
-    borderWidth: 1,
-    borderColor: CORES.borda,
-    borderRadius: RAIO,
-    padding: 16,
-    marginVertical: 12
-  },
-  panela: { fontSize: 62, lineHeight: 76 },
-  conteudoPanela: {
-    color: CORES.texto,
-    fontSize: 13,
-    lineHeight: 19,
-    textAlign: 'center',
-    marginTop: 4
-  },
-  chama: { fontSize: 20, lineHeight: 28, marginTop: 4 },
+  textoInstrucao: { color: CORES.texto, fontSize: 16, lineHeight: 24 },
   rotuloControle: {
     color: CORES.texto,
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: 15,
+    lineHeight: 22,
     fontWeight: 'bold',
     textAlign: 'center'
   },
-  valorTemperatura: { color: CORES.destaque, fontSize: 20, lineHeight: 28, fontWeight: 'bold' },
-  controlesFogo: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 14
+  chama: { fontSize: 40, lineHeight: 52, textAlign: 'center', marginVertical: 4 },
+  dicaTemperatura: {
+    color: CORES.textoSecundario,
+    fontSize: 12,
+    lineHeight: 18,
+    textAlign: 'center',
+    marginBottom: 14
   },
-  botaoFogo: {
-    flex: 1,
-    paddingVertical: 12,
-    borderRadius: RAIO,
+  trilhoMedidor: {
+    height: 34,
     backgroundColor: CORES.fundo,
-    alignItems: 'center',
-    marginHorizontal: 4
-  },
-  fogoSelecionado: {
-    borderWidth: 2,
-    borderColor: CORES.destaque,
-    backgroundColor: 'rgba(245,166,35,0.12)'
-  },
-  textoBotaoFogo: { color: CORES.texto, fontSize: 14, fontWeight: 'bold' },
-  cartaoAcao: {
-    backgroundColor: CORES.superficie,
+    borderRadius: 17,
     borderWidth: 1,
     borderColor: CORES.borda,
+    overflow: 'hidden'
+  },
+  zonaMedidor: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(16,185,129,0.4)',
+    borderLeftWidth: 2,
+    borderRightWidth: 2,
+    borderColor: CORES.sucesso
+  },
+  marcadorMedidor: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    width: 8,
+    borderRadius: 4,
+    backgroundColor: CORES.destaque
+  },
+  rotulosMedidor: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 6,
+    marginBottom: 14
+  },
+  rotuloMedidor: { color: CORES.textoSecundario, fontSize: 12, lineHeight: 18 },
+  botaoParar: {
+    backgroundColor: CORES.destaque,
     borderRadius: RAIO,
-    padding: 16,
-    marginBottom: 16,
+    paddingVertical: 14,
     alignItems: 'center'
   },
+  textoBotaoParar: { color: '#000', fontSize: 16, lineHeight: 22, fontWeight: 'bold' },
+  areaAcao: { alignItems: 'center' },
+  emojiAcao: { fontSize: 56, lineHeight: 70 },
   acaoTitulo: {
     color: CORES.texto,
     fontSize: 17,
@@ -634,63 +877,33 @@ const estilos = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center'
   },
-  controlesAcao: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginVertical: 4
-  },
-  marcadorAcao: {
-    width: 18,
-    height: 18,
-    borderRadius: 9,
+  trilhoAcao: {
+    alignSelf: 'stretch',
+    height: 16,
     backgroundColor: CORES.fundo,
-    borderWidth: 1,
-    borderColor: CORES.borda,
-    marginHorizontal: 6
+    borderRadius: 8,
+    overflow: 'hidden',
+    marginBottom: 14
   },
-  marcadorAcaoFeito: {
-    backgroundColor: CORES.sucesso,
-    borderColor: CORES.sucesso
-  },
+  barraAcao: { height: '100%', backgroundColor: CORES.sucesso, borderRadius: 8 },
   botaoAcao: {
-    minWidth: 140,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: RAIO,
+    alignSelf: 'stretch',
     backgroundColor: CORES.destaque,
-    alignItems: 'center',
-    marginTop: 8
-  },
-  textoBotaoAcao: { color: CORES.fundo, fontSize: 15, fontWeight: 'bold' },
-  progressoCozimento: {
-    color: CORES.texto,
-    fontSize: 13,
-    lineHeight: 20,
-    textAlign: 'center',
-    marginTop: 6
-  },
-  dicaTemperatura: {
-    color: CORES.textoSecundario,
-    fontSize: 12,
-    lineHeight: 18,
-    textAlign: 'center',
-    marginTop: 8
-  },
-  controlesTemperatura: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 12
-  },
-  botaoTemperatura: {
-    minWidth: 76,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
     borderRadius: RAIO,
-    backgroundColor: CORES.fundo,
+    paddingVertical: 18,
     alignItems: 'center'
   },
-  textoBotaoTemperatura: { color: CORES.texto, fontSize: 15, fontWeight: 'bold' },
+  textoBotaoAcao: { color: '#000', fontSize: 20, lineHeight: 28, fontWeight: 'bold' },
+  feedback: {
+    color: CORES.sucesso,
+    fontSize: 14,
+    lineHeight: 21,
+    textAlign: 'center',
+    marginBottom: 12
+  },
+  feedbackErro: { color: CORES.erro },
+  linhaEstrelas: { flexDirection: 'row', justifyContent: 'center', marginBottom: 12 },
+  estrela: { marginHorizontal: 4 },
   precisaoFinal: {
     color: CORES.texto,
     fontSize: 15,

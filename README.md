@@ -68,7 +68,7 @@ Brasas e EXP são recompensas virtuais de progressão; não representam dinheiro
 | Escolher o primeiro mentor | 80 Brasas de boas-vindas |
 | Bater ponto diário | 10 Brasas, mais bônus pela sequência de dias |
 | Responder corretamente no Quiz | Brasas e EXP variam conforme a dificuldade; acertos em sequência aumentam a recompensa |
-| Concluir uma receita na Minicozinha | 10 Brasas e 25 EXP |
+| Concluir uma receita na Minicozinha | 1 a 3 estrelas, 10 a 15 Brasas e 25 a 40 EXP, conforme a precisão |
 
 O Perfil reúne saldo, nível, sequência e histórico de ganhos. Essa economia recompensa a participação e o aprendizado; futuras recompensas devem continuar claras, equilibradas e conquistáveis jogando, sem tornar pagamentos necessários para progredir.
 

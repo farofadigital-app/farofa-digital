@@ -1,23 +1,42 @@
+# Dependencias
 node_modules/
+
+# Expo
 .expo/
 dist/
 dist-android/
-desktop/dist-*/
 web-build/
+
+# Projeto nativo gerado (recriado com: npx expo prebuild)
+android/
+ios/
+
+# Versao de PC (gerada automaticamente)
 desktop/web/
-.env
-.env.local
+desktop/dist*/
+
+# Sistema
 .DS_Store
 Thumbs.db
+
+# Logs
 *.log
 npm-debug.log*
 yarn-error.log
-*.tmp
-*.temp
+
+# Variaveis de ambiente
+.env
+.env.local
+.env.*
+!.env.example
+
+# Chaves e certificados
 *.keystore
 *.jks
 *.p12
 *.pfx
 *.pem
-.env.*
-!.env.example
+
+# Temporarios
+*.tmp
+*.temp
