@@ -1,122 +1,73 @@
-# 🔥 Farofa Digital
+# 🎮 Farofa Digital
 
-Aplicativo educativo e interativo sobre a culinária e a cultura gastronômica do Brasil.
-Receitas e conteúdos do catálogo funcionam offline e ficam no próprio aparelho.
+Jogo educativo e interativo desenvolvido para aprender de forma divertida!
 
-**Versão 3.11.3** · Expo SDK 58 · React Native 0.88
+---
 
-## O que já funciona
+## 📋 Sobre o Jogo
 
-- **Mentores**: escolha entre Chef Ana e Chef José ao começar (o primeiro mentor é grátis, com bônus de boas-vindas em Brasas)
-- **Brasas e níveis**: 10 níveis, de Aprendiz de Cozinha a Mestre Cuca, com barra de EXP
-- **Acesso diário**: botão de check-in na tela inicial do Mentor, com bônus de Brasas por dia e por sequência
-- **Sala do Saber (Quiz)**: perguntas variadas sobre pratos, técnicas, higiene e segurança, ciência dos alimentos, panificação, confeitaria, nutrição e cozinhas do mundo, com explicações e progresso sem repetição até concluir o banco
-- **Interações**: animação de toque em botões e vibração de seleção nos apps móveis
-- **Acessibilidade**: textos e campos ajustam a tipografia conforme a largura da tela e respeitam o tamanho de fonte configurado no aparelho
-- **Minicozinha**: prepare receitas passo a passo, separe os ingredientes, ajuste o fogo ou forno, pratique movimentos de cozinha e avance no seu ritmo, sem cronômetro
-- **Início / Mentor**: chefs com estilos próprios, check-in diário, dica rotativa, receita sugerida do dia, orientações ampliadas de corte, organização, higiene, conservação e aproveitamento, além de atalhos e conversa offline; no Android/iOS, também oferece modelo local
-- **Cozinha do mundo**: receitas brasileiras e internacionais pesquisáveis por prato, país ou ingrediente, filtros por origem, favoritos, lista de compras e guia de cortes bovinos, suínos, aves, frutas e vegetais
-- **Perfil**: carreira integrada ao perfil com todos os níveis, resumo de Brasas e sequência, histórico de ganhos e botão de resetar os dados
+**Farofa Digital** é um aplicativo de aprendizado com quizzes, minijogos e desafios que ajudam você a crescer enquanto se diverte. Cada resposta certa e cada tarefa concluída rendem **Brasas** e **Experiência** para subir de nível e desbloquear novas conquistas.
 
-## Em desenvolvimento
+### 🧩 Principais Funcionalidades
 
-- Mais receitas e ingredientes regionais
+- 📝 **Quizzes** — Teste seus conhecimentos com perguntas sorteadas e embaralhadas
+- 👩‍🍳👨‍🍳 **Minicozinha** — Siga as receitas, escolha os ingredientes certos e acerte o fogo no momento exato
+- 📈 **Sistema de Progresso** — Ganhe Brasas e EXP, evolua sua carreira e desbloqueie recompensas
+- 🧭 **Mentores** — Aprenda com a Chef Ana, o Chef José e outros personagens que te guiam em cada etapa
+- ⭐ **Avaliação por Estrelas** — Quanto mais preciso, mais recompensas recebe:
+  - ⭐⭐⭐ 3 estrelas → 15 Brasas + 40 EXP
+  - ⭐⭐ 2 estrelas → 12 Brasas + 30 EXP
+  - ⭐ 1 estrela → 10 Brasas + 25 EXP
 
-### Sala do Mentor (offline)
+---
 
-O guia offline funciona também na web e responde com dados locais de receitas, cortes, técnicas básicas e segurança alimentar. As sugestões acompanham o assunto da conversa, e Chef Ana e Chef José têm estilos de comunicação próprios. Ele não depende de conexão, mas tem respostas limitadas ao catálogo e às orientações incluídas no app.
+## 🎯 Como Jogar
 
-No Android/iOS, é possível baixar o modelo Qwen 1.5B Q4_K_M (aproximadamente **1,12 GB**) para conversas mais abertas. O download inicial requer internet; depois, a inferência e as mensagens ficam no aparelho, sem envio a um serviço remoto. Como usa código nativo, requer um **development build** e não funciona no Expo Go. A aceleração por GPU é usada quando disponível; o desempenho depende do aparelho.
+1. **Escolha seu mentor** na tela inicial
+2. **Selecione uma atividade** — Quiz ou Minicozinha
+3. **Responda e interaja** com atenção:
+   - Na **Minicozinha**: toque nos ingredientes corretos e separe os intrusos; acerte o fogo e o forno parando no momento certo; execute ações rápidas sovando, batendo e cortando
+   - Nos **Quizzes**: escolha a alternativa correta entre as opções
+4. **Conclua a tarefa** e veja sua pontuação e recompensas!
+5. **Jogue de novo** quantas vezes quiser para melhorar sua marcação ⭐
 
-### Testes automatizados
+---
 
-Execute `npm test` na pasta do projeto. As suítes validam os dados e as regras do Quiz e da Minicozinha, incluindo etapas, ingredientes, calor, movimentos e recompensas.
+## 🔄 Atualizações e Melhorias
 
-### Aplicativo desktop para Windows
+### Versão 3.12.0 — 🆕
+- ✨ **Minicozinha renovada**: ingredientes com itens intrusos, detecção visual e tátil de acerto/erro
+- ✨ **Controles de fogo e forno**: marcador dinâmico — pare na zona verde para acertar
+- ✨ **Ações manuais**: barra de progresso que enche a cada toque e diminui se parar
+- ✨ **Mentor interativo**: comenta acertos, erros e escolhas em tempo real
+- ✨ **Sistema de estrelas**: recompensas proporcionais à precisão
+- ✅ **Correção de compatibilidade**: aplicativo funciona corretamente tanto no Expo Go quanto na versão instalada no celular
+- ✅ **Melhorias gerais**: desempenho e estabilidade
 
-O ZIP do código-fonte não inclui instaladores. Para usar o código-fonte no Windows, instale o Node.js LTS e execute `Iniciar-Farofa.bat` na raiz do projeto. Na primeira execução, o script instala as dependências e prepara o jogo; é necessária conexão com a internet para essa preparação.
+### Versão 3.1.0
+- 📦 Nova estrutura de navegação e organização de telas
+- 🎨 Tema escuro e identidade visual atualizada
+- 🔄 Atualização de dependências e preparação para build nativa
 
-Para instalar sem Node.js, baixe `Farofa-Digital-Windows-*.exe` na seção **Releases** do GitHub e execute o instalador. Para gerar o instalador manualmente, execute `npm --prefix desktop run build`; o arquivo será criado em `desktop/dist`.
+---
 
-### Aplicativo para Android
+## 📲 Instalação no Celular
 
-O ZIP do código-fonte também não inclui o instalador do celular. Baixe `Farofa-Digital-Android-*.apk` na seção **Releases** e abra o APK no Android para instalar. O Android pode pedir autorização para instalar apps dessa fonte. Não há APK para iPhone: a distribuição iOS requer um processo separado pela Apple.
+Baixe o arquivo **.apk** e instale diretamente no seu dispositivo Android:
+1. Transfira o arquivo para o celular
+2. Toque no arquivo → permita instalação de fontes desconhecidas
+3. Pronto! O ícone aparecerá na tela inicial 🎉
 
-As Releases com os dois instaladores são geradas quando uma versão `v*` é publicada por tag. O APK atual é destinado à instalação direta para testes; publicar na Play Store exige assinatura de lançamento própria.
+> Não é necessário criar conta — basta instalar e jogar!
 
-## Estrutura do projeto
+---
 
-```text
-farofa-digital/
-├── app.json, package.json, babel.config.js, metro.config.js, index.js, jest.config.js
-├── Iniciar-Farofa.bat
-├── assets/          tema.json e imagens (ícones, abertura)
-├── .github/         workflow para gerar instaladores em Releases versionadas
-├── android/         projeto nativo gerado pelo Expo durante o build Android
-├── desktop/         versão de PC (Electron: main.js e prepare-web.js)
-└── src/
-    ├── App.js
-    ├── componentes/ comuns, layout, progresso
-    ├── dados/       conteúdo, regras do Quiz e da Minicozinha, testes
-    ├── estados/     ContextoApp (Brasas, EXP, favoritos, compras)
-    ├── navegacao/   Rotas
-    ├── servicos/    armazenamento no aparelho
-    ├── telas/       onboarding, aprendizado, mentor, perfil e receitas (inclui lista de compras)
-    └── uteis/       constantes e formatação
-```
+## 💬 Suporte
 
-## Economia do projeto e evolução da experiência
+Encontrou algum problema? Tem sugestão de nova funcionalidade? Sua opinião ajuda a fazer o jogo cada vez melhor!
 
-A prioridade é preservar a experiência atual do Farofa Digital: um jogo educativo, acolhedor e acessível, com conteúdo culinário, mentores, progressão e recursos que funcionam offline. A evolução deve aprofundar a imersão sem trocar essa base por uma solução que dependa de servidor ou conexão constante.
+---
 
-### Economia dentro do jogo
-
-Brasas e EXP são recompensas virtuais de progressão; não representam dinheiro e não exigem compra para usar os recursos atuais.
-
-| Ação atual | Recompensa |
-| --- | --- |
-| Escolher o primeiro mentor | 80 Brasas de boas-vindas |
-| Bater ponto diário | 10 Brasas, mais bônus pela sequência de dias |
-| Responder corretamente no Quiz | Brasas e EXP variam conforme a dificuldade; acertos em sequência aumentam a recompensa |
-| Concluir uma receita na Minicozinha | 1 a 3 estrelas, 10 a 15 Brasas e 25 a 40 EXP, conforme a precisão |
-
-O Perfil reúne saldo, nível, sequência e histórico de ganhos. Essa economia recompensa a participação e o aprendizado; futuras recompensas devem continuar claras, equilibradas e conquistáveis jogando, sem tornar pagamentos necessários para progredir.
-
-### Custos e funcionamento atual
-
-| Item | Como funciona no projeto |
-| --- | --- |
-| Aplicativo | Expo e React Native, com a mesma base para Android, iOS e web |
-| Dados e progresso | Salvos localmente no aparelho; não há backend ou banco remoto exigido pelos recursos atuais |
-| Mentor offline | Usa receitas e orientações incluídas no app; não exige tráfego de rede para responder |
-| IA local opcional | No Android/iOS, o modelo pode ser baixado uma vez; requer internet no download e cerca de **1,12 GB** de armazenamento |
-| Versão para PC | Empacotada com Electron |
-| Equipamentos e HD externo | Computador/celular já disponíveis e HD de aproximadamente **R$ 150**, conforme informado pelo criador; não são custos auditados |
-| Desenvolvimento e manutenção | Valores de mercado não foram medidos para este projeto; dependem do escopo, da distribuição e de eventual contratação |
-
-O uso de ferramentas e bibliotecas não significa custo total zero: podem existir custos de equipamentos, distribuição, serviços opcionais e manutenção. O benefício confirmado pela arquitetura atual é evitar a necessidade de manter um servidor para as funções locais já implementadas. Não há percentuais medidos de economia de tempo ou código.
-
-### Como melhorar a imersão mantendo a base atual
-
-- **Manter o formato atual como padrão:** jogo educativo sem cobrança obrigatória, com conteúdo acessível e recursos principais funcionando offline.
-- **Dar mais contexto às recompensas:** mostrar claramente o que cada atividade rende e como a sequência diária ajuda na progressão.
-- **Aprofundar a jornada dos mentores:** ampliar falas, dicas e reconhecimento do progresso sem perder a personalidade da Chef Ana e do Chef José.
-- **Conectar as atividades:** aproximar receitas, Quiz e Minicozinha com desafios e sugestões coerentes com o que a pessoa acabou de aprender.
-- **Valorizar conquistas sem pressão:** celebrar níveis e marcos com feedback visual e mensagens, sem punição por pausas ou perda de progresso.
-- **Crescer com o conteúdo local:** adicionar receitas regionais, desafios e explicações em `src/dados/`, mantendo a navegação existente e o uso offline sempre que possível.
-
-Esses pontos são diretrizes para melhorias futuras; não indicam que funcionalidades ainda não implementadas já estejam disponíveis. A expansão deve ser gradual, testada com usuários e preservar acessibilidade, desempenho e segurança alimentar.
-
-## Versões
-
-O número segue o formato **maior.menor.correção**:
-
-- correção de erro ou ajuste visual: sobe o último número (3.11.2 → 3.11.3)
-- tela ou recurso novo: sobe o do meio (3.11.3 → 3.12.0)
-- mudança grande: sobe o primeiro (3.12.0 → 4.0.0)
-
-A versão precisa ser a mesma no `package.json`, no `app.json`, em `desktop/package.json` e neste arquivo.
-
-## Tecnologias
-
-React Native · Expo · React Navigation 7 · AsyncStorage · Expo Haptics · Electron (versão de PC)
+<div align="center">
+  <strong>Farofa Digital</strong> — Aprender é divertido! 🎮✨
+</div>
