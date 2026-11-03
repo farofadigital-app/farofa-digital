@@ -53,6 +53,12 @@
           "enableOpenCLAndHexagon": true
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "35914e17-6f80-43e4-92b5-b0128b6665c8"
+      }
+    },
+    "owner": "iar-noels-team"
   }
 }

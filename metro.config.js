@@ -4,7 +4,10 @@ const config = getDefaultConfig(__dirname);
 
 config.transformer.minifierConfig = {
   compress: true,
-  mangle: true
+  mangle: true,
+  output: {
+    comments: false,
+  },
 };
 
 module.exports = config;

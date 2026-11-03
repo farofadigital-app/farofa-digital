@@ -1,7 +1,9 @@
-import { initLlama } from 'llama.rn';
+import Constants, { ExecutionEnvironment } from 'expo-constants';
 import * as FileSystem from 'expo-file-system/legacy';
 
-export const SUPORTA_IA_LOCAL = true;
+// O modelo local precisa de um app compilado; não roda no Expo Go
+export const SUPORTA_IA_LOCAL =
+  Constants.executionEnvironment !== ExecutionEnvironment.StoreClient;
 
 const TAMANHO_MODELO = 1117320736;
 const DIRETORIO_MODELOS = `${FileSystem.documentDirectory}modelos/`;
@@ -19,6 +21,10 @@ export async function verificarModeloBaixado() {
 }
 
 async function prepararContexto(onProgress) {
+  if (!SUPORTA_IA_LOCAL) {
+    throw new Error('O modelo local não funciona no Expo Go. Use o guia offline.');
+  }
+  const { initLlama } = require('llama.rn');
   if (!FileSystem.documentDirectory) {
     throw new Error('O armazenamento local do aplicativo não está disponível.');
   }
