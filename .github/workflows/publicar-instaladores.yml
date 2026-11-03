@@ -1,0 +1,111 @@
+name: Publicar instaladores
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    name: Instalador Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        run: |
+          npm install --global npm@11
+          npm ci
+          npm --prefix desktop ci
+
+      - name: Gerar instalador
+        run: npm --prefix desktop run build
+
+      - name: Preparar arquivo para a Release
+        shell: pwsh
+        run: |
+          $version = node -p "require('./package.json').version"
+          $installer = "desktop/dist/Farofa Digital Setup $version.exe"
+          if (-not (Test-Path $installer)) {
+            throw "Instalador não encontrado: $installer"
+          }
+          New-Item -ItemType Directory -Force -Path release-assets | Out-Null
+          Copy-Item $installer "release-assets/Farofa-Digital-Windows-$version.exe"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: instalador-windows
+          path: release-assets/*
+          if-no-files-found: error
+
+  android:
+    name: APK Android
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Instalar Android SDK
+        run: sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0" "ndk;27.1.12297006" "cmake;3.22.1"
+
+      - name: Instalar dependencias
+        run: |
+          npm install --global npm@11
+          npm ci
+
+      - name: Gerar projeto Android
+        run: npx expo prebuild --platform android --no-install
+
+      - name: Compilar APK
+        run: |
+          cd android
+          ./gradlew --no-daemon assembleRelease
+
+      - name: Preparar arquivo para a Release
+        run: |
+          mkdir -p release-assets
+          cp android/app/build/outputs/apk/release/app-release.apk "release-assets/Farofa-Digital-Android-${GITHUB_REF_NAME}.apk"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: instalador-android
+          path: release-assets/*
+          if-no-files-found: error
+
+  release:
+    name: Anexar instaladores à Release
+    needs:
+      - windows
+      - android
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: instalador-*
+          path: release-assets
+          merge-multiple: true
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: Farofa Digital ${{ github.ref_name }}
+          files: release-assets/*
+          generate_release_notes: true

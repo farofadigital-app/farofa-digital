@@ -34,15 +34,25 @@ Execute `npm test` na pasta do projeto. As suítes validam os dados e as regras 
 
 ### Aplicativo desktop para Windows
 
-Na raiz do projeto, execute `npm --prefix desktop run build`. O processo exporta a versão web atual, substitui os arquivos gerados anteriormente e cria o instalador em `desktop/dist`.
+O ZIP do código-fonte não inclui instaladores. Para usar o código-fonte no Windows, instale o Node.js LTS e execute `Iniciar-Farofa.bat` na raiz do projeto. Na primeira execução, o script instala as dependências e prepara o jogo; é necessária conexão com a internet para essa preparação.
+
+Para instalar sem Node.js, baixe `Farofa-Digital-Windows-*.exe` na seção **Releases** do GitHub e execute o instalador. Para gerar o instalador manualmente, execute `npm --prefix desktop run build`; o arquivo será criado em `desktop/dist`.
+
+### Aplicativo para Android
+
+O ZIP do código-fonte também não inclui o instalador do celular. Baixe `Farofa-Digital-Android-*.apk` na seção **Releases** e abra o APK no Android para instalar. O Android pode pedir autorização para instalar apps dessa fonte. Não há APK para iPhone: a distribuição iOS requer um processo separado pela Apple.
+
+As Releases com os dois instaladores são geradas quando uma versão `v*` é publicada por tag. O APK atual é destinado à instalação direta para testes; publicar na Play Store exige assinatura de lançamento própria.
 
 ## Estrutura do projeto
 
 ```text
 farofa-digital/
-├── app.json, package.json, babel.config.js, index.js, jest.config.js
+├── app.json, package.json, babel.config.js, metro.config.js, index.js, jest.config.js
+├── Iniciar-Farofa.bat
 ├── assets/          tema.json e imagens (ícones, abertura)
-├── android/         projeto nativo Android gerado/configurado pelo Expo
+├── .github/         workflow para gerar instaladores em Releases versionadas
+├── android/         projeto nativo gerado pelo Expo durante o build Android
 ├── desktop/         versão de PC (Electron: main.js e prepare-web.js)
 └── src/
     ├── App.js
