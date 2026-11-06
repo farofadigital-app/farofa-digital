@@ -285,9 +285,9 @@ export const PERGUNTAS_JOSE = [
     exp: 20,
     brasas: 2,
     pergunta: 'Qual ingrediente dá a base cremosa tradicional do hummus?',
-    alternativas: ['Gr-de-bico', 'Arroz integral', 'Batata', 'Milho'],
-    correta: 'Gr-de-bico',
-    explicacao: 'Hummus é uma pasta do Oriente Médio feita principalmente de gr-de-bico, tahine, lim e outros temperos.'
+    alternativas: ['Grão-de-bico', 'Arroz integral', 'Batata', 'Milho'],
+    correta: 'Grão-de-bico',
+    explicacao: 'Hummus é uma pasta do Oriente Médio feita principalmente de Grão-de-bico, tahine, lim e outros temperos.'
   },
   {
     id: 'jose-027',
@@ -336,5 +336,6 @@ export const PERGUNTAS_JOSE = [
 ];
 
 validarPerguntas('PERGUNTAS_JOSE', PERGUNTAS_JOSE);
+
 
 

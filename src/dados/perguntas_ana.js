@@ -10,9 +10,9 @@ export const PERGUNTAS_ANA = [
     exp: 10,
     brasas: 1,
     pergunta: 'Qual ingrediente é a base da Feijão
-    alternativas: ['Feij branco', 'Feij preto', 'Feij carioca', 'Gr-de-bico'],
-    correta: 'Feij preto',
-    explicacao: 'A Feijão tradicional brasileira é feita com feij preto.'
+    alternativas: ['Feijão branco', 'Feijão preto', 'Feijão carioca', 'Grão-de-bico'],
+    correta: 'Feijão preto',
+    explicacao: 'A Feijão tradicional brasileira é feita com feijão preto.'
   },
   {
     id: 'ana-002',
@@ -336,5 +336,6 @@ export const PERGUNTAS_ANA = [
 ];
 
 validarPerguntas('PERGUNTAS_ANA', PERGUNTAS_ANA);
+
 
 

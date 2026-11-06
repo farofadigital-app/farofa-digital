@@ -246,7 +246,7 @@ export const RECEITAS = [
       '1 cenoura em tiras',
       '2 xícaras de broto de Feijão
       '3 colheres (sopa) de molho de soja',
-      '2 colheres (sopa) de suco de limão',,
+      '2 colheres (sopa) de suco de limão',
       '1 colher (sopa) de açúcar mascavo',
       '2 colheres (sopa) de óleo',
       'Amendoim torrado e cebolinha a gosto'
@@ -323,6 +323,8 @@ export const RECEITAS = [
     favorito: false
   }
 ];
+
+
 
 
 
