@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+﻿import { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { TextoResponsivo as Text } from '../../componentes/comuns/TextoResponsivo';
 import { CORTES } from '../../dados/cortes';
@@ -42,8 +42,8 @@ export default function Cortes() {
         <Text style={estilos.avisoTitulo}>Segurança com alimentos</Text>
         <Text style={estilos.avisoTexto}>
           Use tábuas e utensílios separados para carnes cruas e alimentos prontos.
-          Não lave carnes cruas: os respingos podem espalhar microrganismos.
-          Lave as mãos e higienize frutas e vegetais antes de cortar.
+          N lave carnes cruas: os respingos podem espalhar microrganismos.
+          Lave as ms e higienize frutas e vegetais antes de cortar.
         </Text>
       </View>
 

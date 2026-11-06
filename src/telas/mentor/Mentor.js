@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+﻿import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView,
   StyleSheet, View
@@ -39,7 +39,7 @@ const MENTORES = {
     nome: 'Chef José',
     emoji: '👨‍🍳',
     estilo: 'sabores brasileiros e dicas práticas',
-    saudacao: 'A cozinha está pronta. Vamos pôr a mão na massa?',
+    saudacao: 'A cozinha está pronta. Vamos pôr a m na massa?',
     retorno: 'Bom ver você de novo! Qual sabor vamos explorar hoje?',
     sugestoes: [
       'Qual receita brasileira você recomenda?',
@@ -53,19 +53,19 @@ const DICAS = [
   {
     emoji: '🔪',
     titulo: 'Corte seguro',
-    texto: 'Estabilize a tábua com um pano úmido por baixo. Use uma faca afiada e mantenha as pontas dos dedos recolhidas, afastadas da lâmina.',
+    texto: 'Estabilize a tábua com um pano úmido por baixo. Use uma faca afiada e mantenha as pontas dos dedos recolhidas, afastadas da lmina.',
     pergunta: 'Como corto legumes com segurança?'
   },
   {
     emoji: '🥘',
-    titulo: 'Organização do preparo',
-    texto: 'Leia a receita inteira, separe e meça os ingredientes e só então aqueça a panela. Isso ajuda a evitar que algo queime enquanto você procura outro item.',
+    titulo: 'Organizaç do preparo',
+    texto: 'Leia a receita inteira, separe e meça os ingredientes e só ent aqueça a panela. Isso ajuda a evitar que algo queime enquanto você procura outro item.',
     pergunta: 'Como organizo o preparo de uma receita?'
   },
   {
     emoji: '🧼',
     titulo: 'Higiene',
-    texto: 'Lave as mãos e higienize a tábua e os utensílios. Não lave carnes cruas: os respingos podem espalhar microrganismos. Separe-as dos alimentos prontos e lave frutas e vegetais em água corrente.',
+    texto: 'Lave as ms e higienize a tábua e os utensílios. N lave carnes cruas: os respingos podem espalhar microrganismos. Separe-as dos alimentos prontos e lave frutas e vegetais em água corrente.',
     pergunta: 'Quais cuidados de higiene devo ter na cozinha?'
   },
   {
@@ -77,7 +77,7 @@ const DICAS = [
   {
     emoji: '🧂',
     titulo: 'Tempero equilibrado',
-    texto: 'Ajuste o sal aos poucos e prove durante o preparo, quando for seguro. Ervas, alho, cebola, limão e especiarias também realçam o sabor.',
+    texto: 'Ajuste o sal aos poucos e prove durante o preparo, quando for seguro. Ervas, alho, cebola, lim e especiarias também realçam o sabor.',
     pergunta: 'Como ajusto o tempero sem exagerar no sal?'
   },
   {
@@ -88,8 +88,8 @@ const DICAS = [
   },
   {
     emoji: '🧊',
-    titulo: 'Conservação',
-    texto: 'Guarde os alimentos perecíveis refrigerados, em recipientes limpos e fechados. Separe alimentos crus dos que já estão prontos para consumo.',
+    titulo: 'Conservaç',
+    texto: 'Guarde os alimentos perecíveis refrigerados, em recipientes limpos e fechados. Separe alimentos crus dos que já est prontos para consumo.',
     pergunta: 'Como guardo os alimentos com segurança?'
   }
 ];
@@ -109,7 +109,7 @@ function formatarTamanho(bytes) {
 function mensagemErro(erro) {
   return erro instanceof Error
     ? erro.message
-    : 'Não foi possível concluir a operação. Tente novamente.';
+    : 'N foi possível concluir a operaç. Tente novamente.';
 }
 
 export default function Mentor() {
@@ -237,7 +237,7 @@ export default function Mentor() {
           );
         } catch (falha) {
           setStatusModelo('offline');
-          setErro(`O modelo local não respondeu (${mensagemErro(falha)}). Usei o guia offline.`);
+          setErro(`O modelo local n respondeu (${mensagemErro(falha)}). Usei o guia offline.`);
           respostaFinal = await responderMentorOffline(mentorEscolhido, conteudo, anteriores);
         }
       } else {
@@ -245,7 +245,7 @@ export default function Mentor() {
       }
       const concluida = {
         ...resposta,
-        content: respostaFinal || textoParcial || 'Não consegui formular uma resposta. Tente perguntar de outro jeito.',
+        content: respostaFinal || textoParcial || 'N consegui formular uma resposta. Tente perguntar de outro jeito.',
         pendente: false
       };
       const atualizadas = [...anteriores, concluida].slice(-40);
@@ -362,7 +362,7 @@ export default function Mentor() {
           </View>
 
           <View style={estilos.receitaDoDia}>
-            <Text style={estilos.rotuloDica}>SUGESTÃO DO DIA</Text>
+            <Text style={estilos.rotuloDica}>SUGEST DO DIA</Text>
             <Text style={estilos.tituloReceita}>{receitaDoDia.nome}</Text>
             <Text style={estilos.metaReceita}>
               {receitaDoDia.regiao} · {receitaDoDia.tempo} · {receitaDoDia.porcoes} porções
@@ -460,7 +460,7 @@ export default function Mentor() {
             <View style={estilos.avisoModelo}>
               <Text style={estilos.textoAviso}>
                 Download inicial: {formatarTamanho(TAMANHO_MODELO_BYTES)}.
-                Verifique o espaço livre e prefira uma conexão Wi-Fi.
+                Verifique o espaço livre e prefira uma conex Wi-Fi.
               </Text>
             </View>
             <TouchableOpacity

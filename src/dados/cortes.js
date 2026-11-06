@@ -1,4 +1,4 @@
-// Maciez indicativa: escala de 1 (mais firme) a 5 (mais macia).
+﻿// Maciez indicativa: escala de 1 (mais firme) a 5 (mais macia).
 export const CORTES = [
   {
     id: 'picanha',
@@ -12,7 +12,7 @@ export const CORTES = [
       'Corte do traseiro do boi, com uma capa de gordura por cima que mantém a carne suculenta. É o símbolo do churrasco brasileiro.',
     usoIdeal: 'Churrasco na brasa ou na grelha, inteira ou em bifes grossos.',
     dica:
-      'Não retire a capa de gordura antes de assar. Tempere com sal grosso e vire poucas vezes.'
+      'N retire a capa de gordura antes de assar. Tempere com sal grosso e vire poucas vezes.'
   },
   {
     id: 'alcatra',
@@ -26,7 +26,7 @@ export const CORTES = [
       'Corte magro e macio do traseiro. A maminha, muito usada no churrasco, faz parte dela.',
     usoIdeal: 'Bifes na chapa, churrasco e assados no forno.',
     dica:
-      'Por ser magra, não deixe passar do ponto. Cortar a carne contra o sentido das fibras deixa a mordida mais macia.'
+      'Por ser magra, n deixe passar do ponto. Cortar a carne contra o sentido das fibras deixa a mordida mais macia.'
   },
   {
     id: 'file-mignon',
@@ -52,13 +52,13 @@ export const CORTES = [
     gordura: 'Alta',
     descricao:
       'Corte com osso, muita gordura e tecido que derrete no cozimento. Pede tempo, mas rende muito sabor.',
-    usoIdeal: 'Assado lento (fogo de chão ou forno baixo) e cozidos.',
+    usoIdeal: 'Assado lento (fogo de ch ou forno baixo) e cozidos.',
     dica:
       'A paciência faz a diferença: fogo baixo por várias horas deixa a carne macia e soltando do osso.'
   },
   {
     id: 'coxao-mole',
-    nome: 'Coxão Mole',
+    nome: 'Cox Mole',
     categoria: 'Bovinos',
     parte: 'Traseiro',
     dificuldade: 'Médio',
@@ -68,7 +68,7 @@ export const CORTES = [
       'Corte magro da parte interna da coxa. É muito versátil e comum no dia a dia.',
     usoIdeal: 'Bifes, carne de panela, rocambole e bife à milanesa.',
     dica:
-      'Bata levemente os bifes antes de temperar e evite cozinhar demais em fogo alto, para não ressecar.'
+      'Bata levemente os bifes antes de temperar e evite cozinhar demais em fogo alto, para n ressecar.'
   },
   {
     id: 'patinho',
@@ -96,7 +96,7 @@ export const CORTES = [
       'Corte do pescoço e da parte da frente do boi, com fibras mais firmes. Fica macio e saboroso com cozimento longo.',
     usoIdeal: 'Cozidos, ensopados, picadinho e carne moída para molhos.',
     dica:
-      'Cozinhe em fogo baixo e com líquido, de preferência na panela de pressão, até a carne ficar macia.'
+      'Cozinhe em fogo baixo e com líquido, de preferência na panela de press, até a carne ficar macia.'
   },
   {
     id: 'peito-frango',
@@ -142,7 +142,7 @@ export const CORTES = [
     dificuldade: 'Médio',
     maciez: 3,
     gordura: 'Baixa',
-    descricao: 'Corte comprido e relativamente magro, retirado da região do lombo do porco.',
+    descricao: 'Corte comprido e relativamente magro, retirado da regi do lombo do porco.',
     usoIdeal: 'Assados, medalhões e bifes.',
     dica: 'Como é mais magro, evite cozinhar por tempo excessivo; use um termômetro culinário para conferir o ponto seguro.'
   },
@@ -197,7 +197,7 @@ export const CORTES = [
     tipo: 'Tiras finas',
     parte: 'Frutas e vegetais',
     descricao: 'Tiras finas e compridas, também chamadas de tirinhas.',
-    usoIdeal: 'Cenoura, pimentão e abobrinha em salteados ou saladas.',
+    usoIdeal: 'Cenoura, piment e abobrinha em salteados ou saladas.',
     dica: 'Corte o alimento em placas e depois transforme as placas em tiras de espessura semelhante.'
   },
   {
@@ -217,7 +217,7 @@ export const CORTES = [
     tipo: 'Cubinhos pequenos',
     parte: 'Frutas e vegetais',
     descricao: 'Cubinhos pequenos e regulares, geralmente feitos a partir de tiras finas.',
-    usoIdeal: 'Cebola, cenoura e salsão para bases de molhos e recheios.',
+    usoIdeal: 'Cebola, cenoura e sals para bases de molhos e recheios.',
     dica: 'Faça primeiro tiras finas e corte-as transversalmente em cubinhos.'
   },
   {
@@ -227,7 +227,9 @@ export const CORTES = [
     tipo: 'Tiras de folhas',
     parte: 'Folhas',
     descricao: 'Tiras finas feitas ao empilhar e enrolar folhas antes de fatiá-las.',
-    usoIdeal: 'Couve, manjericão, espinafre e outras folhas.',
+    usoIdeal: 'Couve, manjeric, espinafre e outras folhas.',
     dica: 'Lave e seque bem as folhas, empilhe algumas, enrole sem apertar e fatie com cuidado.'
   }
 ];
+
+

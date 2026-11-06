@@ -1,5 +1,6 @@
-import { createContext, useContext, useState, useEffect, useRef } from 'react';
+﻿import { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { CHAVES, salvar, carregar, limparTudo } from '../servicos/armazenamento';
+import { salvarPerfil, carregarPerfil } from '../servicos/perfilService';
 import { NIVEIS } from '../dados/niveis';
 import { formatarDataHoje } from '../uteis/formatacao';
 import { BRASAS_DIARIAS, BRASAS_BOAS_VINDAS } from '../uteis/constantes';
@@ -17,6 +18,7 @@ const registro = (quantidade, motivo) => ({
 export function ProvedorApp({ children }) {
   const [carregando, setCarregando] = useState(true);
   const [onboardingConcluido, setOnboardingConcluido] = useState(false);
+  const [perfilCompleto, setPerfilCompleto] = useState(false);
   const onboardingConcluidoRef = useRef(false);
   const [mentorEscolhido, setMentorEscolhido] = useState(null);
   const [brasas, setBrasas] = useState(0);
@@ -28,6 +30,7 @@ export function ProvedorApp({ children }) {
   const [ultimoAcesso, setUltimoAcesso] = useState(null);
   const ultimoAcessoRef = useRef(null);
   const [streak, setStreak] = useState(0);
+  const [dadosPerfil, setDadosPerfil] = useState({ nome: '', avatarUri: null });
 
   useEffect(() => {
     const carregarDados = async () => {
@@ -46,6 +49,10 @@ export function ProvedorApp({ children }) {
         const acessoSalvo = (await carregar(CHAVES.ULTIMO_ACESSO)) || null;
         ultimoAcessoRef.current = acessoSalvo;
         setUltimoAcesso(acessoSalvo);
+        
+        const perfil = await carregarPerfil();
+        setPerfilCompleto(perfil.perfilCompleto);
+        setDadosPerfil({ nome: perfil.nome, avatarUri: perfil.avatarUri });
       } catch (erro) {
         console.warn('Erro ao carregar os dados salvos:', erro);
       } finally {
@@ -96,7 +103,7 @@ export function ProvedorApp({ children }) {
     setStreak(novoStreak);
     setUltimoAcesso(hoje);
     setBrasas(b => b + bonus);
-    adicionarRegistro(bonus, 'Acesso diário');
+    adicionarRegistro(bonus, 'Acesso diario');
     return true;
   };
 
@@ -104,13 +111,21 @@ export function ProvedorApp({ children }) {
     if (carregando || onboardingConcluidoRef.current || !['ana', 'jose'].includes(id)) {
       return false;
     }
-
     onboardingConcluidoRef.current = true;
     setMentorEscolhido(id);
     setBrasas(b => b + BRASAS_BOAS_VINDAS);
-    adicionarRegistro(BRASAS_BOAS_VINDAS, 'Bônus de boas-vindas');
+    adicionarRegistro(BRASAS_BOAS_VINDAS, 'Bonus de boas-vindas');
     setOnboardingConcluido(true);
     return true;
+  };
+
+  const salvarPerfilCompleto = async (nome, avatarUri) => {
+    const res = await salvarPerfil(nome, avatarUri);
+    if (res.sucesso) {
+      setPerfilCompleto(true);
+      setDadosPerfil({ nome, avatarUri });
+    }
+    return res;
   };
 
   const adicionarBrasas = (quantidade, motivo) => {
@@ -126,7 +141,6 @@ export function ProvedorApp({ children }) {
     );
   };
 
-  // Aceita vários nomes de uma vez (ex.: todos os ingredientes de uma receita)
   const adicionarItensCompra = (nomes) => {
     setItensCompra(lista => {
       const existentes = new Set(lista.map(i => i.nome.toLowerCase()));
@@ -161,6 +175,8 @@ export function ProvedorApp({ children }) {
     await limparTudo();
     onboardingConcluidoRef.current = false;
     setOnboardingConcluido(false);
+    setPerfilCompleto(false);
+    setDadosPerfil({ nome: '', avatarUri: null });
     setMentorEscolhido(null);
     setBrasas(0);
     setExp(0);
@@ -175,8 +191,11 @@ export function ProvedorApp({ children }) {
 
   return (
     <Contexto.Provider value={{
-      carregando, onboardingConcluido, setOnboardingConcluido,
+      carregando, onboardingConcluido, perfilCompleto,
+      dadosPerfil,
+      setOnboardingConcluido,
       mentorEscolhido, setMentorEscolhido, escolherMentor,
+      salvarPerfilCompleto,
       brasas, exp, nivel, historico, favoritos, itensCompra, streak, ultimoAcesso,
       registrarAcessoDiario, adicionarBrasas, adicionarExp,
       alternarFavorito,

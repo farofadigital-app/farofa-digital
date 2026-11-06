@@ -1,9 +1,9 @@
-// Mantém o mesmo formato de antes (id numérico, ingredientes em texto, modoPreparo em texto),
-// então as telas atuais continuam funcionando. Campos novos: categoria, regiao e tempoMinutos.
+﻿// Mantém o mesmo formato de antes (id numérico, ingredientes em texto, modoPreparo em texto),
+// ent as telas atuais continuam funcionando. Campos novos: categoria, regiao e tempoMinutos.
 export const RECEITAS = [
   {
     id: 1,
-    nome: 'Feijoada Completa',
+    nome: 'Feijão Completa',
     categoria: 'Prato principal',
     regiao: 'Sudeste',
     tempo: '3h',
@@ -11,7 +11,7 @@ export const RECEITAS = [
     porcoes: 8,
     dificuldade: 'Média',
     ingredientes: [
-      '500 g de feijão preto',
+      '500 g de feij preto',
       '300 g de carne seca dessalgada',
       '500 g de costelinha de porco',
       '300 g de linguiça calabresa',
@@ -24,7 +24,7 @@ export const RECEITAS = [
       '2 laranjas'
     ],
     modoPreparo:
-      'Deixe o feijão de molho de um dia para o outro e a carne seca dessalgando na água, trocando-a algumas vezes. Cozinhe o feijão com o louro, a carne seca e a costelinha por cerca de 2 horas, até ficar macio. Refogue a cebola e o alho, junte a linguiça em rodelas e acrescente ao feijão. Cozinhe por mais 30 minutos e acerte o sal. Sirva com arroz, couve refogada e laranja em fatias.',
+      'Deixe o feij de molho de um dia para o outro e a carne seca dessalgando na água, trocando-a algumas vezes. Cozinhe o feij com o louro, a carne seca e a costelinha por cerca de 2 horas, até ficar macio. Refogue a cebola e o alho, junte a linguiça em rodelas e acrescente ao Feijão Cozinhe por mais 30 minutos e acerte o sal. Sirva com arroz, couve refogada e laranja em fatias.',
     favorito: false
   },
   {
@@ -38,7 +38,7 @@ export const RECEITAS = [
     dificuldade: 'Fácil',
     ingredientes: [
       '800 g de peixe em postas',
-      'Suco de 1 limão',
+      'Suco de 1 lim',
       '400 ml de leite de coco',
       '3 colheres (sopa) de azeite de dendê',
       '2 pimentões',
@@ -48,12 +48,12 @@ export const RECEITAS = [
       'Sal a gosto'
     ],
     modoPreparo:
-      'Tempere o peixe com limão e sal e deixe descansar por 15 minutos. Em uma panela, monte camadas de cebola, tomate, pimentão e peixe. Regue com o leite de coco e o dendê. Cozinhe tampado, em fogo médio, por cerca de 20 minutos. Finalize com coentro picado.',
+      'Tempere o peixe com lim e sal e deixe descansar por 15 minutos. Em uma panela, monte camadas de cebola, tomate, piment e peixe. Regue com o leite de coco e o dendê. Cozinhe tampado, em fogo médio, por cerca de 20 minutos. Finalize com coentro picado.',
     favorito: false
   },
   {
     id: 3,
-    nome: 'Pão de Queijo',
+    nome: 'P de Queijo',
     categoria: 'Salgados',
     regiao: 'Sudeste',
     tempo: '45min',
@@ -149,12 +149,12 @@ export const RECEITAS = [
       '6 tomates maduros picados',
       '2 dentes de alho picados',
       '2 colheres (sopa) de azeite',
-      'Folhas de manjericão',
+      'Folhas de manjeric',
       'Sal e pimenta a gosto',
-      'Queijo parmesão ralado'
+      'Queijo parmes ralado'
     ],
     modoPreparo:
-      'Cozinhe o espaguete em água fervente com sal até ficar al dente e reserve um pouco da água do cozimento. Aqueça o azeite e doure o alho. Junte os tomates e cozinhe em fogo baixo por 20 minutos, mexendo até formar um molho. Tempere com sal e pimenta, misture a massa ao molho e ajuste a textura com um pouco da água reservada. Sirva com manjericão e parmesão.',
+      'Cozinhe o espaguete em água fervente com sal até ficar al dente e reserve um pouco da água do cozimento. Aqueça o azeite e doure o alho. Junte os tomates e cozinhe em fogo baixo por 20 minutos, mexendo até formar um molho. Tempere com sal e pimenta, misture a massa ao molho e ajuste a textura com um pouco da água reservada. Sirva com manjeric e parmes.',
     favorito: false
   },
   {
@@ -174,24 +174,24 @@ export const RECEITAS = [
       '1 cebola fatiada',
       '2 tomates picados',
       '1 abacate maduro',
-      'Suco de 1 limão',
+      'Suco de 1 lim',
       'Coentro e sal a gosto'
     ],
     modoPreparo:
-      'Tempere o frango com páprica, cominho e sal. Aqueça uma frigideira com um fio de óleo e cozinhe o frango até dourar e ficar completamente cozido. Amasse o abacate com o limão e uma pitada de sal. Aqueça as tortillas, recheie com frango, tomate, cebola e o creme de abacate. Finalize com coentro.',
+      'Tempere o frango com páprica, cominho e sal. Aqueça uma frigideira com um fio de óleo e cozinhe o frango até dourar e ficar completamente cozido. Amasse o abacate com o lim e uma pitada de sal. Aqueça as tortillas, recheie com frango, tomate, cebola e o creme de abacate. Finalize com coentro.',
     favorito: false
   },
   {
     id: 9,
     nome: 'Yakisoba de Legumes',
     categoria: 'Massa',
-    regiao: 'Japão',
+    regiao: 'Jap',
     tempo: '35min',
     tempoMinutos: 35,
     porcoes: 4,
     dificuldade: 'Fácil',
     ingredientes: [
-      '300 g de macarrão para yakisoba',
+      '300 g de macarr para yakisoba',
       '1 cenoura em tiras',
       '1 xícara de brócolis em floretes',
       '1 xícara de repolho fatiado',
@@ -202,7 +202,7 @@ export const RECEITAS = [
       'Cebolinha a gosto'
     ],
     modoPreparo:
-      'Cozinhe o macarrão conforme as instruções da embalagem e escorra. Aqueça o óleo de gergelim em uma frigideira grande e refogue o gengibre, a cenoura e o brócolis por alguns minutos. Junte o repolho e os cogumelos e cozinhe até os legumes ficarem macios, mas ainda firmes. Acrescente o macarrão e o molho de soja, misture bem e finalize com cebolinha.',
+      'Cozinhe o macarr conforme as instruções da embalagem e escorra. Aqueça o óleo de gergelim em uma frigideira grande e refogue o gengibre, a cenoura e o brócolis por alguns minutos. Junte o repolho e os cogumelos e cozinhe até os legumes ficarem macios, mas ainda firmes. Acrescente o macarr e o molho de soja, misture bem e finalize com cebolinha.',
     favorito: false
   },
   {
@@ -215,7 +215,7 @@ export const RECEITAS = [
     porcoes: 4,
     dificuldade: 'Média',
     ingredientes: [
-      '2 xícaras de grão-de-bico cozido',
+      '2 xícaras de gr-de-bico cozido',
       '1 cebola picada',
       '2 tomates picados',
       '2 dentes de alho picados',
@@ -227,32 +227,32 @@ export const RECEITAS = [
       'Coentro e sal a gosto'
     ],
     modoPreparo:
-      'Aqueça o óleo e refogue a cebola até ficar macia. Junte o alho, o gengibre, a cúrcuma e o garam masala e mexa por um minuto. Acrescente os tomates e cozinhe até formar um molho. Adicione o grão-de-bico, a água e o sal. Cozinhe em fogo baixo por 15 minutos, amassando alguns grãos para engrossar o molho. Sirva com coentro.',
+      'Aqueça o óleo e refogue a cebola até ficar macia. Junte o alho, o gengibre, a cúrcuma e o garam masala e mexa por um minuto. Acrescente os tomates e cozinhe até formar um molho. Adicione o gr-de-bico, a água e o sal. Cozinhe em fogo baixo por 15 minutos, amassando alguns grs para engrossar o molho. Sirva com coentro.',
     favorito: false
   },
   {
     id: 11,
     nome: 'Pad Thai de Tofu',
     categoria: 'Massa',
-    regiao: 'Tailândia',
+    regiao: 'Tailndia',
     tempo: '40min',
     tempoMinutos: 40,
     porcoes: 4,
     dificuldade: 'Média',
     ingredientes: [
-      '250 g de macarrão de arroz',
+      '250 g de macarr de arroz',
       '200 g de tofu firme em cubos',
       '2 ovos',
       '1 cenoura em tiras',
-      '2 xícaras de broto de feijão',
+      '2 xícaras de broto de Feijão
       '3 colheres (sopa) de molho de soja',
-      '2 colheres (sopa) de suco de limão',
+      '2 colheres (sopa) de suco de lim',
       '1 colher (sopa) de açúcar mascavo',
       '2 colheres (sopa) de óleo',
       'Amendoim torrado e cebolinha a gosto'
     ],
     modoPreparo:
-      'Deixe o macarrão de arroz de molho em água morna pelo tempo indicado na embalagem e escorra. Misture o molho de soja, o limão e o açúcar. Doure o tofu em uma frigideira grande com metade do óleo e reserve. Adicione o restante do óleo, cozinhe os ovos mexendo e junte a cenoura e o macarrão. Acrescente o molho e misture até aquecer. Volte o tofu à frigideira, junte o broto de feijão e finalize com amendoim e cebolinha.',
+      'Deixe o macarr de arroz de molho em água morna pelo tempo indicado na embalagem e escorra. Misture o molho de soja, o lim e o açúcar. Doure o tofu em uma frigideira grande com metade do óleo e reserve. Adicione o restante do óleo, cozinhe os ovos mexendo e junte a cenoura e o macarr. Acrescente o molho e misture até aquecer. Volte o tofu à frigideira, junte o broto de feij e finalize com amendoim e cebolinha.',
     favorito: false
   },
   {
@@ -287,7 +287,7 @@ export const RECEITAS = [
     ingredientes: [
       '1 berinjela',
       '1 abobrinha',
-      '1 pimentão',
+      '1 piment',
       '4 tomates',
       '1 cebola',
       '2 dentes de alho',
@@ -295,7 +295,7 @@ export const RECEITAS = [
       'Tomilho, sal e pimenta a gosto'
     ],
     modoPreparo:
-      'Aqueça o forno a 190 °C. Refogue a cebola e o alho com uma colher de azeite e espalhe no fundo de uma assadeira. Corte a berinjela, a abobrinha, o pimentão e os tomates em rodelas. Disponha os legumes alternados sobre o refogado, tempere com sal, pimenta e tomilho e regue com o azeite restante. Cubra com papel-alumínio e asse por 30 minutos; retire o papel e asse por mais 15 minutos, até os legumes ficarem macios.',
+      'Aqueça o forno a 190 °C. Refogue a cebola e o alho com uma colher de azeite e espalhe no fundo de uma assadeira. Corte a berinjela, a abobrinha, o piment e os tomates em rodelas. Disponha os legumes alternados sobre o refogado, tempere com sal, pimenta e tomilho e regue com o azeite restante. Cubra com papel-alumínio e asse por 30 minutos; retire o papel e asse por mais 15 minutos, até os legumes ficarem macios.',
     favorito: false
   },
   {
@@ -312,14 +312,15 @@ export const RECEITAS = [
       '1 xícara de caldo de legumes quente',
       '1 cenoura em cubos pequenos',
       '1 abobrinha em cubos pequenos',
-      '1/2 xícara de grão-de-bico cozido',
+      '1/2 xícara de gr-de-bico cozido',
       '2 colheres (sopa) de azeite',
       '1/2 colher (chá) de cominho',
       'Uvas-passas e salsinha a gosto',
       'Sal e pimenta a gosto'
     ],
     modoPreparo:
-      'Coloque o cuscuz em uma tigela, despeje o caldo quente, tampe e deixe hidratar por cinco minutos. Solte os grãos com um garfo. Aqueça o azeite e refogue a cenoura e a abobrinha até ficarem macias. Junte o grão-de-bico, o cominho e as uvas-passas e aqueça por alguns minutos. Misture ao cuscuz, tempere com sal e pimenta e finalize com salsinha.',
+      'Coloque o cuscuz em uma tigela, despeje o caldo quente, tampe e deixe hidratar por cinco minutos. Solte os grs com um garfo. Aqueça o azeite e refogue a cenoura e a abobrinha até ficarem macias. Junte o gr-de-bico, o cominho e as uvas-passas e aqueça por alguns minutos. Misture ao cuscuz, tempere com sal e pimenta e finalize com salsinha.',
     favorito: false
   }
 ];
+

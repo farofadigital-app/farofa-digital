@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+﻿import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Animated, Easing, Platform, ScrollView, StyleSheet, View
 } from 'react-native';
@@ -23,8 +23,8 @@ const MENTORES = {
     emoji: '👩‍🍳',
     falas: {
       certo: ['Isso! Ingrediente certo na bancada.', 'Muito bem, a receita agradece!', 'Boa escolha!'],
-      intruso: ['Esse ingrediente não vai nessa receita. Leia de novo!', 'Hum, esse não é daqui. Tente outro.'],
-      ponto: ['Ponto certinho! Você tem mão de cozinheira.', 'Perfeito, é assim que se faz!'],
+      intruso: ['Esse ingrediente n vai nessa receita. Leia de novo!', 'Hum, esse n é daqui. Tente outro.'],
+      ponto: ['Ponto certinho! Você tem m de cozinheira.', 'Perfeito, é assim que se faz!'],
       erroPonto: ['Calma, observe e tente de novo.', 'Quase no ponto! Mais uma tentativa.'],
       acao: ['Que movimento bonito!', 'Assim mesmo, com capricho!'],
       fim: 'Prato pronto! Dá vontade de provar.'
@@ -34,9 +34,9 @@ const MENTORES = {
     emoji: '👨‍🍳',
     falas: {
       certo: ['Show! Esse vai na panela mesmo.', 'É isso aí, craque!', 'Boa, tá afiado!'],
-      intruso: ['Opa, esse não entra nessa receita!', 'Esse aí é de outro prato, hein?'],
+      intruso: ['Opa, esse n entra nessa receita!', 'Esse aí é de outro prato, hein?'],
       ponto: ['No ponto! Agora sim!', 'Acertou em cheio o fogo!'],
-      erroPonto: ['Quase! Segura a mão e tenta de novo.', 'Faz parte, de novo!'],
+      erroPonto: ['Quase! Segura a m e tenta de novo.', 'Faz parte, de novo!'],
       acao: ['Mandou bem na pegada!', 'Isso! Ritmo bom.'],
       fim: 'Prato na mesa! Mandou bem demais.'
     }
@@ -49,7 +49,7 @@ function vibrar(acao) {
   if (!NATIVO) return;
   Promise.resolve()
     .then(acao)
-    .catch(erro => console.warn('Não foi possível reproduzir a vibração do jogo:', erro));
+    .catch(erro => console.warn('N foi possível reproduzir a vibraç do jogo:', erro));
 }
 
 function CartaoIngrediente({ item, estado, onPress }) {
@@ -438,7 +438,7 @@ export default function MiniGame() {
               fogo ou do forno e faça os movimentos na hora certa.
             </Text>
             <Text style={estilos.dica}>
-              Sem pressa: erros diminuem sua precisão, que define as estrelas e a recompensa.
+              Sem pressa: erros diminuem sua precis, que define as estrelas e a recompensa.
             </Text>
           </View>
           <Text style={estilos.subtitulo}>Escolha o prato do desafio</Text>
@@ -468,10 +468,10 @@ export default function MiniGame() {
           <Text style={estilos.progresso}>{receita.regiao} · {receita.tempo}</Text>
           <Text style={estilos.titulo}>O que vai em {receita.nome}?</Text>
           <Text style={estilos.texto}>
-            Toque nos ingredientes da receita. Alguns não pertencem a ela, e cada erro custa precisão.
+            Toque nos ingredientes da receita. Alguns n pertencem a ela, e cada erro custa precis.
           </Text>
           <Text style={estilos.contador}>
-            {certosEscolhidos.length} de {totalCertos} ingredientes certos · Precisão {precisao}%
+            {certosEscolhidos.length} de {totalCertos} ingredientes certos · Precis {precisao}%
           </Text>
           <BotaoInterativo
             style={estilos.botaoVoltar}
@@ -498,7 +498,7 @@ export default function MiniGame() {
           </View>
           {bancadaPronta ? (
             <BotaoPrincipal
-              titulo="Tudo separado! Ir para o fogão"
+              titulo="Tudo separado! Ir para o fog"
               onPress={irParaFogao}
               estilo={estilos.botaoLargo}
             />
@@ -515,7 +515,7 @@ export default function MiniGame() {
           <ScrollView contentContainerStyle={estilos.conteudo}>
             <Text style={estilos.titulo}>{receita.nome}</Text>
             <Text style={estilos.texto}>
-              Esta receita ainda não tem o modo de preparo para o jogo.
+              Esta receita ainda n tem o modo de preparo para o jogo.
             </Text>
             <BotaoPrincipal
               titulo="Escolher outra receita"
@@ -538,7 +538,7 @@ export default function MiniGame() {
       <TelaSegura>
         <ScrollView contentContainerStyle={estilos.conteudo}>
           <Text style={estilos.progresso}>
-            Etapa {etapaAtual + 1} de {etapas.length} · {receita.nome} · Precisão {precisao}%
+            Etapa {etapaAtual + 1} de {etapas.length} · {receita.nome} · Precis {precisao}%
           </Text>
           <BotaoInterativo
             style={estilos.botaoVoltar}
@@ -591,7 +591,7 @@ export default function MiniGame() {
           {!etapaConcluida && desafio === 'simples' ? (
             <View style={estilos.cartao}>
               <Text style={estilos.dica}>
-                Etapa de bancada: leia com atenção e siga em frente.
+                Etapa de bancada: leia com atenç e siga em frente.
               </Text>
               <BotaoPrincipal
                 titulo={etapaAtual === etapas.length - 1 ? 'Servir o prato' : 'Feito! Próxima etapa'}
@@ -644,7 +644,7 @@ export default function MiniGame() {
           <Text style={estilos.recompensa}>🔥 +{premioFinal.brasas} Brasas</Text>
           <Text style={estilos.recompensa}>⭐ +{premioFinal.exp} EXP</Text>
           <Text style={estilos.precisaoFinal}>
-            Precisão no preparo: {precisao}% · {precisao >= 90
+            Precis no preparo: {precisao}% · {precisao >= 90
               ? 'Muito bem!'
               : precisao >= 70 ? 'Bom trabalho!' : 'Continue praticando!'}
           </Text>

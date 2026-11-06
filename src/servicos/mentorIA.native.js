@@ -1,7 +1,7 @@
-import Constants, { ExecutionEnvironment } from 'expo-constants';
+﻿import Constants, { ExecutionEnvironment } from 'expo-constants';
 import * as FileSystem from 'expo-file-system/legacy';
 
-// O modelo local precisa de um app compilado; não roda no Expo Go
+// O modelo local precisa de um app compilado; n roda no Expo Go
 export const SUPORTA_IA_LOCAL =
   Constants.executionEnvironment !== ExecutionEnvironment.StoreClient;
 
@@ -22,11 +22,11 @@ export async function verificarModeloBaixado() {
 
 async function prepararContexto(onProgress) {
   if (!SUPORTA_IA_LOCAL) {
-    throw new Error('O modelo local não funciona no Expo Go. Use o guia offline.');
+    throw new Error('O modelo local n funciona no Expo Go. Use o guia offline.');
   }
   const { initLlama } = require('llama.rn');
   if (!FileSystem.documentDirectory) {
-    throw new Error('O armazenamento local do aplicativo não está disponível.');
+    throw new Error('O armazenamento local do aplicativo n está disponível.');
   }
 
   await FileSystem.makeDirectoryAsync(DIRETORIO_MODELOS, { intermediates: true });
@@ -68,7 +68,7 @@ async function prepararContexto(onProgress) {
     info = await FileSystem.getInfoAsync(ARQUIVO_MODELO);
     if (!info.exists || info.size !== TAMANHO_MODELO) {
       await FileSystem.deleteAsync(ARQUIVO_MODELO, { idempotent: true });
-      throw new Error('O arquivo baixado está incompleto. Verifique a conexão e tente novamente.');
+      throw new Error('O arquivo baixado está incompleto. Verifique a conex e tente novamente.');
     }
   }
 
@@ -125,7 +125,7 @@ export async function responderMentor(mentor, mensagens, onToken = () => {}) {
       messages: [
         {
           role: 'system',
-          content: `Você é ${nome}, mentor culinário do aplicativo Farofa Digital. ${estilo} Converse em português brasileiro correto, com simpatia e clareza. Ajude com receitas, ingredientes, técnicas de cozinha e cultura gastronômica. Dê respostas organizadas, com passos curtos e detalhes úteis, sem repetir a pergunta nem revelar raciocínio interno privado. Ao falar de segurança alimentar, seja prudente e recomende práticas seguras; nunca recomende lavar carnes cruas. Se não souber algo, diga isso claramente.`
+          content: `Você é ${nome}, mentor culinário do aplicativo Farofa Digital. ${estilo} Converse em português brasileiro correto, com simpatia e clareza. Ajude com receitas, ingredientes, técnicas de cozinha e cultura gastronômica. Dê respostas organizadas, com passos curtos e detalhes úteis, sem repetir a pergunta nem revelar raciocínio interno privado. Ao falar de segurança alimentar, seja prudente e recomende práticas seguras; nunca recomende lavar carnes cruas. Se n souber algo, diga isso claramente.`
         },
         ...historico
       ],

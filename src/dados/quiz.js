@@ -1,4 +1,4 @@
-// Funções genéricas do quiz: funcionam com qualquer lista de perguntas (Ana, José, etc.)
+﻿// Funções genéricas do quiz: funcionam com qualquer lista de perguntas (Ana, José, etc.)
 
 // Embaralha sem alterar o array original (Fisher-Yates)
 export function embaralhar(lista) {
@@ -40,7 +40,7 @@ export function acertou(pergunta, alternativaEscolhida) {
   return alternativaEscolhida === pergunta.correta;
 }
 
-// Validação só em desenvolvimento: avisa no console se alguma pergunta estiver errada
+// Validaç só em desenvolvimento: avisa no console se alguma pergunta estiver errada
 export function validarPerguntas(nome, lista) {
   if (typeof __DEV__ === 'undefined' || !__DEV__) return;
   const ids = new Set();
@@ -50,6 +50,6 @@ export function validarPerguntas(nome, lista) {
     if (p.alternativas.length !== 4)
       console.warn(`[${nome}] ${p.id} deveria ter 4 alternativas`);
     if (!p.alternativas.includes(p.correta))
-      console.warn(`[${nome}] ${p.id}: "correta" não está nas alternativas`);
+      console.warn(`[${nome}] ${p.id}: "correta" n está nas alternativas`);
   });
 }

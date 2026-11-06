@@ -1,268 +1,237 @@
-import { useState } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
-import { TextoResponsivo as Text } from '../../componentes/comuns/TextoResponsivo';
-import TelaSegura from '../../componentes/layout/TelaSegura';
-import TouchableOpacity from '../../componentes/comuns/BotaoInterativo';
-import BarraNivel from '../../componentes/progresso/BarraNivel';
-import { useApp } from '../../estados/ContextoApp';
-import { CORES, RAIO } from '../../uteis/constantes';
-import { NIVEIS } from '../../dados/niveis';
+﻿import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+  Image
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as ImagePicker from 'expo-image-picker';
 
-const MENTORES = {
-  ana: { emoji: '👩‍🍳', nome: 'Chef Ana' },
-  jose: { emoji: '👨‍🍳', nome: 'Chef José' }
+const CHAVES = {
+  NOME: '@FarofaDigital:nomeUsuario',
+  AVATAR: '@FarofaDigital:avatarUri',
+  PERFIL_COMPLETO: '@FarofaDigital:perfilCompleto'
 };
 
-function formatarData(iso) {
-  const d = new Date(iso);
-  if (isNaN(d.getTime())) return '';
-  const dois = n => String(n).padStart(2, '0');
-  return `${dois(d.getDate())}/${dois(d.getMonth() + 1)}/${d.getFullYear()}`;
-}
+const Perfil = () => {
+  const [nome, setNome] = useState('');
+  const [fotoUri, setFotoUri] = useState(null);
+  const [salvando, setSalvando] = useState(false);
+  const navegacao = useNavigation();
 
-export default function Perfil() {
-  const { mentorEscolhido, brasas, exp, nivel, streak, historico, resetarApp } = useApp();
-  const [confirmando, setConfirmando] = useState(false);
-  const [erroReset, setErroReset] = useState('');
+  // Carregar dados salvos ao abrir
+  useEffect(() => {
+    const carregar = async () => {
+      const nomeSalvo = await AsyncStorage.getItem(CHAVES.NOME);
+      const fotoSalva = await AsyncStorage.getItem(CHAVES.AVATAR);
+      if (nomeSalvo) setNome(nomeSalvo);
+      if (fotoSalva) setFotoUri(fotoSalva);
+    };
+    carregar();
+  }, []);
 
-  const info = NIVEIS.find(n => n.nivel === nivel);
-  const mentor = MENTORES[mentorEscolhido];
+  const escolherFoto = () => {
+    Alert.alert(
+      'Escolher Foto',
+      'De onde quer pegar sua foto?',
+      [
+        {
+          text: '📷 Tirar Foto',
+          onPress: async () => {
+            const permissao = await ImagePicker.requestCameraPermissionsAsync();
+            if (!permissao.granted) {
+              Alert.alert('Atenção', 'Permita acesso à câmera nas configurações');
+              return;
+            }
+            const resultado = await ImagePicker.launchCameraAsync({
+              allowsEditing: true,
+              aspect: [1, 1],
+              quality: 0.7
+            });
+            if (!resultado.canceled) {
+              setFotoUri(resultado.assets[0].uri);
+            }
+          }
+        },
+        {
+          text: '🖼️ Escolher da Galeria',
+          onPress: async () => {
+            const permissao = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (!permissao.granted) {
+              Alert.alert('Atenção', 'Permita acesso à galeria nas configurações');
+              return;
+            }
+            const resultado = await ImagePicker.launchImageLibraryAsync({
+              mediaTypes: ImagePicker.MediaTypeOptions.Images,
+              allowsEditing: true,
+              aspect: [1, 1],
+              quality: 0.7
+            });
+            if (!resultado.canceled) {
+              setFotoUri(resultado.assets[0].uri);
+            }
+          }
+        },
+        { text: 'Cancelar', style: 'cancel' }
+      ]
+    );
+  };
 
-  const confirmarReset = async () => {
-    setErroReset('');
-    try {
-      await resetarApp();
-    } catch (erro) {
-      setErroReset(
-        erro instanceof Error
-          ? `Não foi possível apagar os dados: ${erro.message}`
-          : 'Não foi possível apagar os dados. Tente novamente.'
-      );
+  const salvar = async () => {
+    if (!nome.trim()) {
+      Alert.alert('Digite seu nome', 'Precisamos saber seu nome para continuar!');
+      return;
     }
+    setSalvando(true);
+    await AsyncStorage.setItem(CHAVES.NOME, nome.trim());
+    if (fotoUri) {
+      await AsyncStorage.setItem(CHAVES.AVATAR, fotoUri);
+    }
+    await AsyncStorage.setItem(CHAVES.PERFIL_COMPLETO, 'true');
+    setSalvando(false);
+    Alert.alert('✅ Salvo!', 'Perfil atualizado com sucesso!', [
+      { text: 'Continuar', onPress: () => navegacao.goBack() }
+    ]);
   };
 
   return (
-    <TelaSegura>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={estilos.conteudo}
-      >
-        <View style={estilos.cartao}>
-          {mentor && (
-            <Text style={estilos.mentor}>
-              {mentor.emoji} {mentor.nome}
-            </Text>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={estilos.tela}
+    >
+      <View style={estilos.conteudo}>
+        <Text style={estilos.titulo}>👤 Seu Perfil</Text>
+        <Text style={estilos.subtitulo}>Atualize seus dados</Text>
+
+        <TouchableOpacity style={estilos.avatarContainer} onPress={escolherFoto}>
+          {fotoUri ? (
+            <Image source={{ uri: fotoUri }} style={estilos.avatarImagem} />
+          ) : (
+            <View style={estilos.avatarPlaceholder}>
+              <Text style={estilos.avatarIcone}>📷</Text>
+              <Text style={estilos.avatarTexto}>Adicionar foto</Text>
+            </View>
           )}
-          <Text style={estilos.nivelNome}>
-            {info?.icone} {info?.nome}
+        </TouchableOpacity>
+        <Text style={estilos.dicaFoto}>Toque na foto para alterar</Text>
+
+        <View style={estilos.campo}>
+          <Text style={estilos.rotulo}>Seu Nome</Text>
+          <TextInput
+            style={estilos.input}
+            value={nome}
+            onChangeText={setNome}
+            placeholder="Digite seu nome..."
+            placeholderTextColor="#A0826D"
+            autoCapitalize="words"
+          />
+        </View>
+
+        <TouchableOpacity style={estilos.botao} onPress={salvar} disabled={salvando}>
+          <Text style={estilos.textoBotao}>
+            {salvando ? 'Salvando...' : '✅ Salvar e Continuar'}
           </Text>
-
-          <View style={estilos.estatisticas}>
-            <View style={estilos.estat}>
-              <Text style={estilos.estatValor}>{brasas}</Text>
-              <Text style={estilos.estatRotulo}>Brasas</Text>
-            </View>
-            <View style={estilos.estat}>
-              <Text style={estilos.estatValor}>{nivel}</Text>
-              <Text style={estilos.estatRotulo}>Nível</Text>
-            </View>
-            <View style={estilos.estat}>
-              <Text style={estilos.estatValor}>{streak}</Text>
-              <Text style={estilos.estatRotulo}>Dias seguidos</Text>
-            </View>
-          </View>
-
-          <BarraNivel expAtual={exp} nivelAtual={nivel} />
-        </View>
-
-        <Text style={estilos.subtitulo}>Carreira · todos os níveis</Text>
-        <View style={estilos.listaNiveis}>
-          {NIVEIS.map(item => (
-            <View
-              key={item.nivel}
-              style={[estilos.nivelLinha, item.nivel === nivel && estilos.nivelLinhaAtual]}
-              accessibilityState={{ selected: item.nivel === nivel }}
-            >
-              <Text style={[estilos.nivelTexto, item.nivel === nivel && estilos.nivelTextoAtual]}>
-                {item.icone} {item.nivel}. {item.nome}
-                {item.nivel === nivel ? ' · Atual' : ''}
-              </Text>
-              <Text style={estilos.nivelExp}>{item.expNecessaria} EXP</Text>
-            </View>
-          ))}
-        </View>
-
-        <Text style={estilos.subtitulo}>Histórico de Brasas</Text>
-        {historico.length === 0 ? (
-          <Text style={estilos.vazio}>Nenhum ganho de Brasas ainda.</Text>
-        ) : (
-          historico.map((item, i) => (
-            <View key={`${item.data}-${i}`} style={estilos.linha}>
-              <View style={estilos.linhaInfo}>
-                <Text style={estilos.motivo}>{item.motivo}</Text>
-                <Text style={estilos.data}>{formatarData(item.data)}</Text>
-              </View>
-              <Text style={estilos.quantidade}>+{item.quantidade}</Text>
-            </View>
-          ))
-        )}
-
-        <View style={estilos.zonaPerigo}>
-          {erroReset ? <Text style={estilos.erro}>{erroReset}</Text> : null}
-          {confirmando && (
-            <Text style={estilos.aviso}>
-              Isso apaga Brasas, nível, favoritos e lista de compras, e volta para a
-              escolha do mentor. Toque de novo para confirmar.
-            </Text>
-          )}
-          <TouchableOpacity
-            style={[estilos.botaoReset, confirmando && estilos.botaoResetAtivo]}
-            activeOpacity={0.8}
-            onPress={() => {
-              if (confirmando) {
-                confirmarReset();
-              } else {
-                setErroReset('');
-                setConfirmando(true);
-              }
-            }}
-          >
-            <Text style={[estilos.botaoResetTexto, confirmando && estilos.botaoResetTextoAtivo]}>
-              {confirmando ? 'Sim, apagar tudo' : 'Resetar todos os dados'}
-            </Text>
-          </TouchableOpacity>
-          {confirmando && (
-            <TouchableOpacity
-              onPress={() => {
-                setConfirmando(false);
-                setErroReset('');
-              }}
-              style={estilos.cancelar}
-            >
-              <Text style={estilos.cancelarTexto}>Cancelar</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-      </ScrollView>
-    </TelaSegura>
+        </TouchableOpacity>
+      </View>
+    </KeyboardAvoidingView>
   );
-}
+};
 
 const estilos = StyleSheet.create({
-  conteudo: { paddingTop: 16, paddingBottom: 32 },
-  cartao: {
-    backgroundColor: CORES.superficie,
-    padding: 20,
-    borderRadius: 16,
-    marginBottom: 24
+  tela: {
+    flex: 1,
+    backgroundColor: '#FFF8F0'
   },
-  mentor: {
-    fontSize: 15,
-    lineHeight: 22,
-    color: CORES.textoSecundario,
+  conteudo: {
+    flex: 1,
+    padding: 24,
+    paddingTop: 40
+  },
+  titulo: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#5C3D2E',
+    textAlign: 'center',
     marginBottom: 4
   },
-  nivelNome: {
-    fontSize: 20,
-    lineHeight: 28,
-    fontWeight: 'bold',
-    color: CORES.texto,
-    marginBottom: 16
-  },
-  estatisticas: { flexDirection: 'row', marginBottom: 8 },
-  estat: { flex: 1, alignItems: 'center' },
-  estatValor: {
-    fontSize: 24,
-    lineHeight: 32,
-    fontWeight: 'bold',
-    color: CORES.destaque
-  },
-  estatRotulo: {
-    fontSize: 12,
-    lineHeight: 18,
-    color: CORES.textoSecundario,
-    textAlign: 'center'
-  },
   subtitulo: {
-    fontSize: 18,
-    lineHeight: 26,
-    color: CORES.texto,
-    marginBottom: 12
+    fontSize: 16,
+    color: '#8B5A2B',
+    textAlign: 'center',
+    marginBottom: 32
   },
-  listaNiveis: {
-    backgroundColor: CORES.superficie,
-    borderRadius: RAIO,
-    paddingHorizontal: 12,
+  avatarContainer: {
+    width: 140,
+    height: 140,
+    borderRadius: 70,
+    borderWidth: 4,
+    borderColor: '#D4A574',
+    backgroundColor: '#F5E6D3',
+    overflow: 'hidden',
+    alignSelf: 'center'
+  },
+  avatarImagem: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover'
+  },
+  avatarPlaceholder: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  avatarIcone: {
+    fontSize: 32
+  },
+  avatarTexto: {
+    fontSize: 12,
+    color: '#8B5A2B',
+    marginTop: 4
+  },
+  dicaFoto: {
+    textAlign: 'center',
+    marginTop: 12,
+    fontSize: 14,
+    color: '#8B5A2B',
+    marginBottom: 32
+  },
+  campo: {
     marginBottom: 24
   },
-  nivelLinha: {
-    minHeight: 44,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderBottomColor: CORES.borda,
-    paddingVertical: 8,
-    paddingHorizontal: 6
-  },
-  nivelLinhaAtual: {
-    backgroundColor: 'rgba(245,166,35,0.1)',
-    borderRadius: 8
-  },
-  nivelTexto: { flex: 1, color: CORES.texto, fontSize: 14, lineHeight: 20 },
-  nivelTextoAtual: { color: CORES.destaque, fontWeight: 'bold' },
-  nivelExp: { marginLeft: 8, color: CORES.textoSecundario, fontSize: 12, lineHeight: 18 },
-  vazio: {
-    fontSize: 14,
-    lineHeight: 22,
-    color: CORES.textoSecundario,
-    marginBottom: 12
-  },
-  linha: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: CORES.borda
-  },
-  linhaInfo: { flex: 1, marginRight: 12 },
-  motivo: { fontSize: 15, lineHeight: 22, color: CORES.texto },
-  data: { fontSize: 12, lineHeight: 18, color: CORES.textoSecundario },
-  quantidade: {
-    flexShrink: 0,
+  rotulo: {
     fontSize: 16,
-    lineHeight: 22,
-    fontWeight: 'bold',
-    color: CORES.sucesso
+    fontWeight: '600',
+    color: '#5C3D2E',
+    marginBottom: 8
   },
-  zonaPerigo: { marginTop: 32 },
-  aviso: {
-    fontSize: 13,
-    lineHeight: 20,
-    color: CORES.textoSecundario,
-    marginBottom: 12
+  input: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 2,
+    borderColor: '#E0C4A8',
+    borderRadius: 12,
+    padding: 16,
+    fontSize: 16,
+    color: '#5C3D2E'
   },
-  erro: {
-    fontSize: 14,
-    lineHeight: 21,
-    color: CORES.erro,
-    marginBottom: 12
+  botao: {
+    backgroundColor: '#8B5A2B',
+    borderRadius: 12,
+    padding: 18,
+    alignItems: 'center',
+    marginTop: 8
   },
-  botaoReset: {
-    borderWidth: 1,
-    borderColor: CORES.erro,
-    borderRadius: RAIO,
-    paddingVertical: 14,
-    alignItems: 'center'
-  },
-  botaoResetAtivo: { backgroundColor: CORES.erro },
-  botaoResetTexto: {
-    fontSize: 15,
-    lineHeight: 22,
-    fontWeight: 'bold',
-    color: CORES.erro
-  },
-  botaoResetTextoAtivo: { color: '#fff' },
-  cancelar: { alignItems: 'center', paddingVertical: 12 },
-  cancelarTexto: { fontSize: 14, lineHeight: 20, color: CORES.textoSecundario }
+  textoBotao: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: 'bold'
+  }
 });
+
+export default Perfil;

@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import TestRenderer, { act } from 'react-test-renderer';
 import MiniGame from './MiniGame';
 import { RECEITAS } from '../../dados/receitas';
@@ -69,7 +69,7 @@ describe('interações da Minicozinha', () => {
     });
   });
 
-  test('mostra o catálogo e abre a seleção de ingredientes ao escolher uma receita', () => {
+  test('mostra o catálogo e abre a seleç de ingredientes ao escolher uma receita', () => {
     const renderer = renderizarJogo();
 
     expect(encontrarTexto(renderer, 'Minicozinha')).toHaveLength(1);
@@ -84,7 +84,7 @@ describe('interações da Minicozinha', () => {
     )).toHaveLength(12);
   });
 
-  test('contabiliza acerto e penaliza intruso sem permitir selecionar o mesmo cartão duas vezes', () => {
+  test('contabiliza acerto e penaliza intruso sem permitir selecionar o mesmo cart duas vezes', () => {
     const renderer = renderizarJogo();
     const receita = RECEITAS.find(item => item.nome === 'Moqueca Baiana');
     const intrusos = renderer => renderer.root.findAll(node =>
@@ -115,16 +115,16 @@ describe('interações da Minicozinha', () => {
       cartaoIntruso.props.onPress();
       cartaoIntruso.props.onPress();
     });
-    expect(encontrarTexto(renderer, 'Precisão 92%')).toHaveLength(1);
+    expect(encontrarTexto(renderer, 'Precis 92%')).toHaveLength(1);
   });
 
-  test('não pula etapas quando o botão de avançar é acionado duas vezes rapidamente', () => {
+  test('n pula etapas quando o bot de avançar é acionado duas vezes rapidamente', () => {
     const renderer = renderizarJogo();
     const receita = RECEITAS.find(item => item.nome === 'Moqueca Baiana');
 
     pressionar(renderer, 'Preparar Moqueca Baiana, Nordeste, 45min');
     receita.ingredientes.forEach(nome => pressionar(renderer, `Ingrediente: ${nome}`));
-    pressionarTexto(renderer, 'Tudo separado! Ir para o fogão');
+    pressionarTexto(renderer, 'Tudo separado! Ir para o fog');
 
     const avancar = renderer.root.find(node =>
       node.type.name === 'TouchableOpacity'

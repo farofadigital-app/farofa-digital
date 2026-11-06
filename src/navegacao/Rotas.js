@@ -1,4 +1,4 @@
-import { ActivityIndicator, StyleSheet, View, useWindowDimensions } from 'react-native';
+﻿import { ActivityIndicator, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { TextoResponsivo as Text, escalaFonte } from '../componentes/comuns/TextoResponsivo';
@@ -8,6 +8,7 @@ import { CORES } from '../uteis/constantes';
 
 import BoasVindas from '../telas/onboarding/BoasVindas';
 import EscolherMentor from '../telas/onboarding/EscolherMentor';
+import CriarPerfil from '../telas/CriarPerfil';
 import Cozinha from '../telas/receitas/Cozinha';
 import Perfil from '../telas/perfil/Perfil';
 import Quiz from '../telas/aprendizado/Quiz';
@@ -17,7 +18,6 @@ import Mentor from '../telas/mentor/Mentor';
 const Tab = createBottomTabNavigator();
 const AuthStack = createNativeStackNavigator();
 
-// Emoji não muda de cor, então a aba ativa fica em destaque pela opacidade.
 const Icone = ({ emoji, focused }) => (
   <Text style={[estilos.iconeAba, !focused && estilos.iconeInativo]}>{emoji}</Text>
 );
@@ -69,7 +69,7 @@ function NavegacaoAutenticada() {
         name="Cozinha"
         component={Cozinha}
         options={{
-          title: 'Cozinha do mundo',
+          title: 'Cozinha do Mundo',
           tabBarLabel: 'Receitas',
           tabBarIcon: ({ focused }) => <Icone emoji="🍲" focused={focused} />,
         }}
@@ -97,7 +97,7 @@ const estilos = StyleSheet.create({
 });
 
 export default function Rotas() {
-  const { onboardingConcluido, carregando } = useApp();
+  const { carregando, onboardingConcluido, perfilCompleto } = useApp();
 
   if (carregando) {
     return (
@@ -116,5 +116,15 @@ export default function Rotas() {
     );
   }
 
+  if (!perfilCompleto) {
+    return (
+      <AuthStack.Navigator screenOptions={{ headerShown: false }}>
+        <AuthStack.Screen name="CriarPerfil" component={CriarPerfil} />
+      </AuthStack.Navigator>
+    );
+  }
+
   return <NavegacaoAutenticada />;
 }
+
+

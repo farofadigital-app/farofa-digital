@@ -1,4 +1,4 @@
-import {
+﻿import {
   acertou, calcularRecompensaAcerto, multiplicadorCombo, sortearPerguntas
 } from './quiz';
 import { PERGUNTAS_ANA } from './perguntas_ana';
@@ -70,7 +70,7 @@ describe('recompensas e combos do Quiz', () => {
     expect(multiplicadorCombo(combo)).toBe(esperado);
   });
 
-  test('recompensa o primeiro acerto sem multiplicação', () => {
+  test('recompensa o primeiro acerto sem multiplicaç', () => {
     expect(calcularRecompensaAcerto(pergunta, 1)).toEqual({
       multiplicador: 1,
       exp: 10,

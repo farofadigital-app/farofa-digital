@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+﻿import { useEffect, useMemo, useRef, useState } from 'react';
 import { useIsFocused } from '@react-navigation/native';
 import {
   Animated, Easing, Platform, ScrollView, StyleSheet, TouchableOpacity, View
@@ -39,12 +39,12 @@ const MENTORES = {
       ],
       combo: [
         'Você está pegando fogo! Que sequência!',
-        'Isso é ponto de mestre cuca! Não pare agora.'
+        'Isso é ponto de mestre cuca! N pare agora.'
       ],
       erro: [
         'Sem problema, errar faz parte de aprender.',
-        'Quase! Leia a explicação e guarde essa.',
-        'Tudo bem, a gente aprende no fogão.'
+        'Quase! Leia a explicaç e guarde essa.',
+        'Tudo bem, a gente aprende no fog.'
       ],
       tempo: [
         'O tempo voou! Respire e vá com calma na próxima.',
@@ -85,7 +85,7 @@ function vibrar(acao) {
   try {
     Promise.resolve(acao()).catch(() => {});
   } catch (e) {
-    // sem vibração (navegador/PC): segue normalmente
+    // sem vibraç (navegador/PC): segue normalmente
   }
 }
 
@@ -127,7 +127,7 @@ export default function Quiz() {
   const premiado = useRef(false);
   const esgotar = useRef(() => {});
 
-  // Cada pergunta entra com animação e liga o cronômetro
+  // Cada pergunta entra com animaç e liga o cronômetro
   useEffect(() => {
     if (fase !== 'jogando' || !telaAtiva) return undefined;
 
@@ -298,7 +298,7 @@ export default function Quiz() {
           <Text style={estilos.emojiGrande}>🧠</Text>
           <Text style={estilos.titulo}>Sala do Saber</Text>
           {banco.length === 0 ? (
-            <Text style={estilos.texto}>Ainda não há perguntas para {mentor.nome}.</Text>
+            <Text style={estilos.texto}>Ainda n há perguntas para {mentor.nome}.</Text>
           ) : (
             <>
               <Text style={estilos.texto}>
@@ -329,7 +329,7 @@ export default function Quiz() {
                 <View style={estilos.regra}>
                   <Ionicons name="trending-up" size={20} color={CORES.sucesso} />
                   <Text style={estilos.textoRegra}>
-                    As perguntas vão ficando mais difíceis.
+                    As perguntas v ficando mais difíceis.
                   </Text>
                 </View>
               </View>
@@ -408,7 +408,7 @@ export default function Quiz() {
     );
   }
 
-  // ---------- Revisão dos erros ----------
+  // ---------- Revis dos erros ----------
   if (fase === 'revisao') {
     return (
       <TelaSegura>
@@ -568,7 +568,7 @@ export default function Quiz() {
 
             <View style={[estilos.feedback, certo ? estilos.feedbackCerto : estilos.feedbackErrado]}>
               <Text style={estilos.feedbackTitulo}>
-                {certo ? 'Correto!' : tempoEsgotado ? 'O tempo acabou' : 'Não foi dessa vez'}
+                {certo ? 'Correto!' : tempoEsgotado ? 'O tempo acabou' : 'N foi dessa vez'}
               </Text>
               {!certo && (
                 <Text style={estilos.feedbackTexto}>Resposta certa: {p.correta}</Text>

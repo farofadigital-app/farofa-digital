@@ -1,4 +1,4 @@
-# 🎮 Farofa Digital
+﻿# 🎮 Farofa Digital
 
 Jogo educativo e interativo desenvolvido para aprender de forma divertida!
 
@@ -14,7 +14,7 @@ Jogo educativo e interativo desenvolvido para aprender de forma divertida!
 - 👩‍🍳👨‍🍳 **Minicozinha** — Siga as receitas, escolha os ingredientes certos e acerte o fogo no momento exato
 - 📈 **Sistema de Progresso** — Ganhe Brasas e EXP, evolua sua carreira e desbloqueie recompensas
 - 🧭 **Mentores** — Aprenda com a Chef Ana, o Chef José e outros personagens que te guiam em cada etapa
-- ⭐ **Avaliação por Estrelas** — Quanto mais preciso, mais recompensas recebe:
+- ⭐ **Avaliaç por Estrelas** — Quanto mais preciso, mais recompensas recebe:
   - ⭐⭐⭐ 3 estrelas → 15 Brasas + 40 EXP
   - ⭐⭐ 2 estrelas → 12 Brasas + 30 EXP
   - ⭐ 1 estrela → 10 Brasas + 25 EXP
@@ -25,46 +25,46 @@ Jogo educativo e interativo desenvolvido para aprender de forma divertida!
 
 1. **Escolha seu mentor** na tela inicial
 2. **Selecione uma atividade** — Quiz ou Minicozinha
-3. **Responda e interaja** com atenção:
+3. **Responda e interaja** com atenç:
    - Na **Minicozinha**: toque nos ingredientes corretos e separe os intrusos; acerte o fogo e o forno parando no momento certo; execute ações rápidas sovando, batendo e cortando
    - Nos **Quizzes**: escolha a alternativa correta entre as opções
-4. **Conclua a tarefa** e veja sua pontuação e recompensas!
-5. **Jogue de novo** quantas vezes quiser para melhorar sua marcação ⭐
+4. **Conclua a tarefa** e veja sua pontuaç e recompensas!
+5. **Jogue de novo** quantas vezes quiser para melhorar sua marcaç ⭐
 
 ---
 
 ## 🔄 Atualizações e Melhorias
 
-### Versão 3.12.0 — 🆕
-- ✨ **Minicozinha renovada**: ingredientes com itens intrusos, detecção visual e tátil de acerto/erro
-- ✨ **Controles de fogo e forno**: marcador dinâmico — pare na zona verde para acertar
+### Vers 3.12.0 — 🆕
+- ✨ **Minicozinha renovada**: ingredientes com itens intrusos, detecç visual e tátil de acerto/erro
+- ✨ **Controles de fogo e forno**: marcador dinmico — pare na zona verde para acertar
 - ✨ **Ações manuais**: barra de progresso que enche a cada toque e diminui se parar
 - ✨ **Mentor interativo**: comenta acertos, erros e escolhas em tempo real
-- ✨ **Sistema de estrelas**: recompensas proporcionais à precisão
-- ✅ **Correção de compatibilidade**: aplicativo funciona corretamente tanto no Expo Go quanto na versão instalada no celular
+- ✨ **Sistema de estrelas**: recompensas proporcionais à precis
+- ✅ **Correç de compatibilidade**: aplicativo funciona corretamente tanto no Expo Go quanto na vers instalada no celular
 - ✅ **Melhorias gerais**: desempenho e estabilidade
 
-### Versão 3.1.0
-- 📦 Nova estrutura de navegação e organização de telas
+### Vers 3.1.0
+- 📦 Nova estrutura de navegaç e organizaç de telas
 - 🎨 Tema escuro e identidade visual atualizada
-- 🔄 Atualização de dependências e preparação para build nativa
+- 🔄 Atualizaç de dependências e preparaç para build nativa
 
 ---
 
-## 📲 Instalação no Celular
+## 📲 Instalaç no Celular
 
 Baixe o arquivo **.apk** e instale diretamente no seu dispositivo Android:
 1. Transfira o arquivo para o celular
-2. Toque no arquivo → permita instalação de fontes desconhecidas
+2. Toque no arquivo → permita instalaç de fontes desconhecidas
 3. Pronto! O ícone aparecerá na tela inicial 🎉
 
-> Não é necessário criar conta — basta instalar e jogar!
+> N é necessário criar conta — basta instalar e jogar!
 
 ---
 
 ## 💬 Suporte
 
-Encontrou algum problema? Tem sugestão de nova funcionalidade? Sua opinião ajuda a fazer o jogo cada vez melhor!
+Encontrou algum problema? Tem sugest de nova funcionalidade? Sua opini ajuda a fazer o jogo cada vez melhor!
 
 ---
 
