@@ -49,7 +49,7 @@ export function ProvedorApp({ children }) {
         const acessoSalvo = (await carregar(CHAVES.ULTIMO_ACESSO)) || null;
         ultimoAcessoRef.current = acessoSalvo;
         setUltimoAcesso(acessoSalvo);
-        
+
         const perfil = await carregarPerfil();
         setPerfilCompleto(perfil.perfilCompleto);
         setDadosPerfil({ nome: perfil.nome, avatarUri: perfil.avatarUri });

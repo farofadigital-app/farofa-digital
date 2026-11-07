@@ -127,7 +127,3 @@ export default function Rotas() {
   return <NavegacaoAutenticada />;
 }
 
-
-
-
-

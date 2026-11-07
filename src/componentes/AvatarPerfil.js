@@ -1,45 +1,24 @@
 ﻿import React from 'react';
-import { View, Image, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Image, Text, StyleSheet } from 'react-native';
 
-const AvatarPerfil = ({ uri, aoPressionar, tamanho = 120 }) => {
+export function AvatarPerfil({ uri, tamanho = 80 }) {
   return (
-    <TouchableOpacity onPress={aoPressionar} style={estilos.container}>
+    <View style={[estilos.quadro, { width: tamanho, height: tamanho, borderRadius: tamanho / 2 }]}>
       {uri ? (
-        <Image source={{ uri }} style={[estilos.imagem, { width: tamanho, height: tamanho, borderRadius: tamanho / 2 }]} />
+        <Image source={{ uri }} style={estilos.imagem} resizeMode="cover" />
       ) : (
-        <View style={[estilos.placeholder, { width: tamanho, height: tamanho, borderRadius: tamanho / 2 }]}>
-          <Text style={estilos.icone}>👤</Text>
-          <Text style={estilos.texto}>Adicionar foto</Text>
+        <View style={estilos.semFoto}>
+          <Text style={{ fontSize: tamanho * 0.4 }}>👤</Text>
         </View>
       )}
-    </TouchableOpacity>
+    </View>
   );
-};
-
-const estilos = StyleSheet.create({
-  container: {
-    alignSelf: 'center'
-  },
-  imagem: {
-    borderWidth: 4,
-    borderColor: '#D4A574',
-    backgroundColor: '#F5E6D3'
-  },
-  placeholder: {
-    borderWidth: 4,
-    borderColor: '#D4A574',
-    backgroundColor: '#F5E6D3',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  icone: {
-    fontSize: 32
-  },
-  texto: {
-    fontSize: 12,
-    color: '#8B5A2B',
-    marginTop: 4
-  }
-});
+}
 
 export default AvatarPerfil;
+
+const estilos = StyleSheet.create({
+  quadro: { backgroundColor: '#f0d080', overflow: 'hidden', borderWidth: 3, borderColor: '#8b5a2b' },
+  imagem: { width: '100%', height: '100%' },
+  semFoto: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#e8c870' }
+});

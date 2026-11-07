@@ -1,4 +1,4 @@
-import { Text, TextInput, StyleSheet, useWindowDimensions } from 'react-native';
+﻿import { Text, TextInput, StyleSheet, useWindowDimensions } from 'react-native';
 
 const LARGURA_REFERENCIA = 390;
 const ESCALA_MINIMA = 0.9;

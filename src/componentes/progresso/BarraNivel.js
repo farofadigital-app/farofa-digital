@@ -1,4 +1,4 @@
-import { View, StyleSheet } from 'react-native';
+﻿import { View, StyleSheet } from 'react-native';
 import { TextoResponsivo as Text } from '../comuns/TextoResponsivo';
 import { CORES } from '../../uteis/constantes';
 import { NIVEIS } from '../../dados/niveis';

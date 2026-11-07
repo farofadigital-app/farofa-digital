@@ -337,5 +337,3 @@ export const PERGUNTAS_JOSE = [
 
 validarPerguntas('PERGUNTAS_JOSE', PERGUNTAS_JOSE);
 
-
-

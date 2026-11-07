@@ -232,5 +232,3 @@ export const CORTES = [
   }
 ];
 
-
-

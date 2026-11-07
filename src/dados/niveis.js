@@ -1,4 +1,4 @@
-export const NIVEIS = [
+﻿export const NIVEIS = [
   { nivel: 1, nome: "Aprendiz de Cozinha", expNecessaria: 0, icone: "🌱" },
   { nivel: 2, nome: "Auxiliar de Cozinha", expNecessaria: 100, icone: "🥄" },
   { nivel: 3, nome: "Cozinheiro Júnior", expNecessaria: 250, icone: "🍳" },

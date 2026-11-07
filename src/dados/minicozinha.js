@@ -1,4 +1,4 @@
-const QTD_INTRUSOS = 3;
+﻿const QTD_INTRUSOS = 3;
 const FORNO_MIN = 100;
 const FORNO_MAX = 260;
 const RECOMPENSAS = {

@@ -9,7 +9,7 @@ export const PERGUNTAS_ANA = [
     dificuldade: 1,
     exp: 10,
     brasas: 1,
-    pergunta: 'Qual ingrediente é a base da Feijão
+    pergunta: 'Qual ingrediente é a base da feijoada?',
     alternativas: ['Feijão branco', 'Feijão preto', 'Feijão carioca', 'Grão-de-bico'],
     correta: 'Feijão preto',
     explicacao: 'A Feijão tradicional brasileira é feita com feijão preto.'
@@ -336,6 +336,4 @@ export const PERGUNTAS_ANA = [
 ];
 
 validarPerguntas('PERGUNTAS_ANA', PERGUNTAS_ANA);
-
-
 

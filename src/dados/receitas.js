@@ -244,7 +244,7 @@ export const RECEITAS = [
       '200 g de tofu firme em cubos',
       '2 ovos',
       '1 cenoura em tiras',
-      '2 xícaras de broto de Feijão
+      '2 xícaras de broto de feijão',
       '3 colheres (sopa) de molho de soja',
       '2 colheres (sopa) de suco de limão',
       '1 colher (sopa) de açúcar mascavo',
@@ -323,11 +323,4 @@ export const RECEITAS = [
     favorito: false
   }
 ];
-
-
-
-
-
-
-
 
