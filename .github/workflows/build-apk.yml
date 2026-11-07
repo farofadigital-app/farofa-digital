@@ -2,8 +2,8 @@
 
 on:
   push:
-    branches: [ main, master ]
-  workflow_dispatch: # Permite disparar o build manualmente pelo site
+    branches: [ "main", "master", "minha-atualizacao" ]
+  workflow_dispatch:
 
 jobs:
   build-apk:
@@ -13,7 +13,7 @@ jobs:
       - name: Baixar codigo do projeto
         uses: actions/checkout@v4
 
-      - name: Configurar Node.js
+      - name: Configurar Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -28,22 +28,23 @@ jobs:
       - name: Configurar Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Instalar dependencias do projeto
+      - name: Instalar dependencias
         run: npm install --legacy-peer-deps
 
-      - name: Gerar estrutura nativa do Android
-        run: npx expo prebuild --platform android
+      - name: Gerar arquivos nativos do Android
+        run: npx expo prebuild --platform android --clean
 
-      - name: Dar permissao de execucao ao Gradle
+      - name: Dar permissao ao Gradle
         run: chmod +x android/gradlew
 
-      - name: Compilar o APK
+      - name: Compilar APK de Release
         run: |
           cd android
           ./gradlew assembleRelease --no-daemon
 
-      - name: Disponibilizar APK para Download
+      - name: Salvar APK para Download
         uses: actions/upload-artifact@v4
         with:
-          name: farofa-digital-apk
+          name: FarofaDigital-APK
           path: android/app/build/outputs/apk/release/*.apk
+          retention-days: 7
