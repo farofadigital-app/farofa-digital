@@ -9,10 +9,10 @@ export const PERGUNTAS_JOSE = [
     dificuldade: 1,
     exp: 10,
     brasas: 1,
-    pergunta: 'Qual região é famosa pela Feijão completa?',
+    pergunta: 'Qual região é famosa pela feijoada completa?',
     alternativas: ['Nordeste', 'Sul', 'Sudeste', 'Centro-Oeste'],
     correta: 'Sudeste',
-    explicacao: 'A Feijão completa é prato icônico do Sudeste, especialmente do Rio de Janeiro.'
+    explicacao: 'A feijoada completa é prato icônico do Sudeste, especialmente do Rio de Janeiro.'
   },
   {
     id: 'jose-002',

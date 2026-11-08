@@ -219,7 +219,7 @@ export const PERGUNTAS_ANA = [
     exp: 10,
     brasas: 1,
     pergunta: 'Qual é a função principal do fermento biológico em uma massa de pão?',
-    alternativas: ['Produzir gás que ajuda a massa a crescer', 'Tostar a superfície', 'Substituir toda a farinha', 'Impedir a formaç de glúten'],
+    alternativas: ['Produzir gás que ajuda a massa a crescer', 'Tostar a superfície', 'Substituir toda a farinha', 'Impedir a formação de glúten'],
     correta: 'Produzir gás que ajuda a massa a crescer',
     explicacao: 'A levedura fermenta açúcares e libera dióxido de carbono, que fica retido na massa e contribui para seu crescimento.'
   },

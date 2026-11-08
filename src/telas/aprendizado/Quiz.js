@@ -189,9 +189,24 @@ export default function Quiz() {
     };
   }, [fase, indice, telaAtiva]);
 
-  // Estrelas pulam na tela de resultado
+  // Animacao na tela de resultado (derrota treme o emoji, vitoria salta o trofeu e estrelas)
   useEffect(() => {
     if (fase !== 'fim') return;
+    const total = perguntas.length;
+    const ehDerrotaFim = motivoFim === 'vidas' || (total > 0 && acertos / total < 0.6);
+
+    if (ehDerrotaFim) {
+      shake.setValue(0);
+      Animated.sequence(
+        [-10, 10, -8, 8, 0].map(v =>
+          Animated.timing(shake, { toValue: v, duration: 60, useNativeDriver: NATIVO })
+        )
+      ).start();
+    } else {
+      scaleVitoria.setValue(0.6);
+      Animated.spring(scaleVitoria, { toValue: 1, friction: 5, useNativeDriver: NATIVO }).start();
+    }
+
     estrelas.forEach(e => e.setValue(0));
     Animated.stagger(
       220,
@@ -199,7 +214,7 @@ export default function Quiz() {
         Animated.spring(e, { toValue: 1, friction: 4, useNativeDriver: NATIVO })
       )
     ).start();
-  }, [fase]);
+  }, [fase, motivoFim, acertos, perguntas.length]);
 
   const iniciar = () => {
     const sorteadas = sortearPerguntas(banco, QTD_PERGUNTAS)
@@ -623,7 +638,7 @@ export default function Quiz() {
 
             <View style={[estilos.feedback, certo ? estilos.feedbackCerto : estilos.feedbackErrado]}>
               <Text style={estilos.feedbackTitulo}>
-                {certo ? 'Correto!' : tempoEsgotado ? 'O tempo acabou' : 'N foi dessa vez'}
+                {certo ? 'Correto!' : tempoEsgotado ? 'O tempo acabou' : 'Não foi dessa vez'}
               </Text>
               {!certo && (
                 <Text style={estilos.feedbackTexto}>Resposta certa: {p.correta}</Text>
