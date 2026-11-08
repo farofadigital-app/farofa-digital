@@ -1,5 +1,5 @@
 ﻿import { useEffect, useMemo, useRef, useState } from 'react';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import {
   Animated, Easing, Platform, ScrollView, StyleSheet, TouchableOpacity, View
 } from 'react-native';
@@ -25,6 +25,36 @@ const TEMPO_POR_PERGUNTA = 20;  // segundos; use 0 para desligar o cronômetro
 const NATIVO = Platform.OS !== 'web';
 const LETRAS = ['A', 'B', 'C', 'D', 'E', 'F'];
 const DIFICULDADES = { 1: 'Fácil', 2: 'Médio', 3: 'Difícil' };
+
+const FALAS_DERROTA = {
+  ana: [
+    'Quase lá! A cozinha brasileira é generosa com quem tenta de novo.',
+    'Não desanima. O sabor verdadeiro vem com a prática e o carinho.',
+    'Errar faz parte. Na próxima você acerta com mais gosto.',
+  ],
+  jose: [
+    'Ainda não. Revise o fundamento e tente com mais precisão.',
+    'Erro registrado. Foque no método e avance.',
+    'Não é o fim. Organização e atenção resolvem na próxima.',
+  ],
+};
+
+const FALAS_VITORIA = {
+  ana: [
+    'Perfeito! Você mandou muito bem na cozinha!',
+    'Que orgulho! Cada receita fica melhor quando colocamos dedicação.',
+    'Maravilhoso! Seu talento para os temperos está brilhando.',
+  ],
+  jose: [
+    'Show de bola! Está afiado igual faca de açougueiro!',
+    'Sensacional! Pegou o jeito da cozinha brasileira rapidinho!',
+    'É disso que eu estou falando! Mestre cuca de primeira!',
+  ],
+};
+
+function sortearFala(lista) {
+  return lista[Math.floor(Math.random() * lista.length)];
+}
 
 const MENTORES = {
   ana: {
@@ -95,8 +125,11 @@ function escolherFala(falas, certo, tempoEsgotado, combo) {
 }
 
 export default function Quiz() {
+  const navigation = useNavigation();
   const telaAtiva = useIsFocused();
-  const { mentorEscolhido, adicionarBrasas, adicionarExp } = useApp();
+  const { mentorEscolhido, adicionarBrasas, adicionarExp, dadosPerfil } = useApp();
+  const nomeJogador = dadosPerfil?.nome?.trim();
+  const shake = useRef(new Animated.Value(0)).current;
   const mentor = MENTORES[mentorEscolhido] || MENTORES.ana;
   const banco = useMemo(() => mentor.perguntas || [], [mentor]);
 
@@ -348,35 +381,50 @@ export default function Quiz() {
     const nEstrelas = !total
       ? 0
       : acertos === total ? 3 : acertos / total >= 0.6 ? 2 : acertos > 0 ? 1 : 0;
-    const titulo = motivoFim === 'vidas' ? 'Acabaram as vidas!' : 'Rodada completa!';
-    const mensagem =
-      nEstrelas === 3 ? 'Perfeito! Você mandou muito bem.'
-      : nEstrelas === 2 ? 'Muito bem! Continue assim.'
-      : 'Boa tentativa! Jogue de novo para melhorar.';
+    const ehDerrota = motivoFim === 'vidas' || (total > 0 && acertos / total < 0.6);
+    const titulo = motivoFim === 'vidas' ? 'Acabaram as vidas!' : (ehDerrota ? 'Quase lá!' : 'Rodada completa!');
+
+    const chaveMentor = mentorEscolhido === 'jose' ? 'jose' : 'ana';
+    const listaFalas = ehDerrota ? FALAS_DERROTA[chaveMentor] : FALAS_VITORIA[chaveMentor];
+    const falaBase = sortearFala(listaFalas);
+    const falaPersonalizada = nomeJogador
+      ? `${nomeJogador}, ${falaBase.charAt(0).toLowerCase()}${falaBase.slice(1)}`
+      : falaBase;
 
     return (
       <TelaSegura>
         <ScrollView contentContainerStyle={estilos.centroRolagem}>
-          <Text style={estilos.titulo}>{titulo}</Text>
+          <Animated.View style={ehDerrota ? { transform: [{ translateX: shake }] } : null}>
+            <Text style={estilos.emojiDerrota}>
+              {ehDerrota ? '😅🔥' : '🎉👨‍🍳'}
+            </Text>
+          </Animated.View>
 
-          <View style={estilos.linhaEstrelas}>
-            {[0, 1, 2].map(i => (
-              <Animated.View key={i} style={{ transform: [{ scale: estrelas[i] }] }}>
-                <Ionicons
-                  name={i < nEstrelas ? 'star' : 'star-outline'}
-                  size={52}
-                  color={CORES.destaque}
-                  style={estilos.estrela}
-                />
-              </Animated.View>
-            ))}
-          </View>
+          <Text style={[estilos.titulo, ehDerrota && estilos.tituloDerrota]}>{titulo}</Text>
 
-          <Text style={estilos.texto}>
-            {mentor.emoji} {mensagem}
+          {!ehDerrota && (
+            <View style={estilos.linhaEstrelas}>
+              {[0, 1, 2].map(i => (
+                <Animated.View key={i} style={{ transform: [{ scale: estrelas[i] }] }}>
+                  <Ionicons
+                    name={i < nEstrelas ? 'star' : 'star-outline'}
+                    size={52}
+                    color={CORES.destaque}
+                    style={estilos.estrela}
+                  />
+                </Animated.View>
+              ))}
+            </View>
+          )}
+
+          <Text style={estilos.falaMentorResultado}>
+            "{falaPersonalizada}"
+          </Text>
+          <Text style={estilos.mentorAssinatura}>
+            {mentor.emoji} {mentor.nome}
           </Text>
 
-          <View style={estilos.cartaoResultado}>
+          <View style={[estilos.cartaoResultado, ehDerrota && estilos.cartaoResultadoDerrota]}>
             <View style={estilos.linhaResultado}>
               <Text style={estilos.rotulo}>Acertos</Text>
               <Text style={estilos.valor}>{acertos} de {total}</Text>
@@ -403,6 +451,12 @@ export default function Quiz() {
               </Text>
             </TouchableOpacity>
           )}
+          <TouchableOpacity
+            style={estilos.botaoVoltarInicio}
+            onPress={() => navigation.navigate('Mentor')}
+          >
+            <Text style={estilos.textoBotaoVoltarInicio}>🏠 Voltar ao Início</Text>
+          </TouchableOpacity>
         </ScrollView>
       </TelaSegura>
     );
@@ -827,5 +881,43 @@ const estilos = StyleSheet.create({
   },
   respostaErrada: { fontSize: 14, lineHeight: 22, color: CORES.erro },
   respostaCerta: { fontSize: 14, lineHeight: 22, fontWeight: 'bold', color: CORES.sucesso },
-  explicacao: { fontSize: 14, lineHeight: 22, color: CORES.textoSecundario, marginTop: 6 }
+  explicacao: { fontSize: 14, lineHeight: 22, color: CORES.textoSecundario, marginTop: 6 },
+  emojiDerrota: {
+    fontSize: 48,
+    textAlign: 'center',
+    marginBottom: 6,
+  },
+  tituloDerrota: {
+    color: '#EF4444',
+  },
+  falaMentorResultado: {
+    color: '#F8FAFC',
+    fontSize: 15,
+    fontStyle: 'italic',
+    textAlign: 'center',
+    marginHorizontal: 16,
+    marginTop: 6,
+    lineHeight: 22,
+  },
+  mentorAssinatura: {
+    color: '#94A3B8',
+    fontSize: 13,
+    fontWeight: '600',
+    marginTop: 4,
+    marginBottom: 14,
+  },
+  cartaoResultadoDerrota: {
+    borderWidth: 1,
+    borderColor: '#7F1D1D',
+  },
+  botaoVoltarInicio: {
+    marginTop: 12,
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  textoBotaoVoltarInicio: {
+    color: '#94A3B8',
+    fontSize: 14,
+    fontWeight: '600',
+  },
 });
