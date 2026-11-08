@@ -1,18 +1,20 @@
-﻿// Maciez indicativa: escala de 1 (mais firme) a 5 (mais macia).
+﻿// Guia Completo de Cortes, Carnes, Aves, Suínos e Técnicas de Facas
 export const CORTES = [
+  // ==================== BOVINOS ====================
   {
     id: 'picanha',
     nome: 'Picanha',
     categoria: 'Bovinos',
     parte: 'Traseiro',
     dificuldade: 'Fácil',
-    maciez: 4,
-    gordura: 'Média',
-    descricao:
-      'Corte do traseiro do boi, com uma capa de gordura por cima que mantém a carne suculenta. É o símbolo do churrasco brasileiro.',
-    usoIdeal: 'Churrasco na brasa ou na grelha, inteira ou em bifes grossos.',
-    dica:
-      'N retire a capa de gordura antes de assar. Tempere com sal grosso e vire poucas vezes.'
+    maciez: 5,
+    gordura: 'Alta',
+    faca: 'Faca do Chef 8" ou Faca de Churrasco',
+    tabua: 'Madeira maciça ou bambu (com canaleta para sucos)',
+    metodo: 'Grelha, brasa ou assada inteira',
+    descricao: 'Corte nobre retirado do traseiro do boi com espessa capa de gordura que confere maciez e sabor.',
+    usoIdeal: 'Churrasco na brasa, fatiada em bifes grossos (contra a fibra) ou assada inteira no forno.',
+    dica: 'Nunca retire a capa de gordura antes do preparo. Asse com a gordura virada para cima para hidratar a peça.'
   },
   {
     id: 'alcatra',
@@ -20,215 +22,215 @@ export const CORTES = [
     categoria: 'Bovinos',
     parte: 'Traseiro',
     dificuldade: 'Fácil',
-    maciez: 3,
+    maciez: 4,
     gordura: 'Baixa',
-    descricao:
-      'Corte magro e macio do traseiro. A maminha, muito usada no churrasco, faz parte dela.',
-    usoIdeal: 'Bifes na chapa, churrasco e assados no forno.',
-    dica:
-      'Por ser magra, n deixe passar do ponto. Cortar a carne contra o sentido das fibras deixa a mordida mais macia.'
+    faca: 'Faca do Chef 8"',
+    tabua: 'Plástico/polietileno ou madeira',
+    metodo: 'Grelhada, chapa, refogada ou assada',
+    descricao: 'Carne magra de fibras curtas, muito macia e versátil para o dia a dia e churrasco.',
+    usoIdeal: 'Bifes rápidos, strogonoff, picadinhos e assados no forno.',
+    dica: 'Corte sempre no sentido transversal às fibras para garantir que os bifes fiquem macios na mastigação.'
   },
   {
     id: 'file-mignon',
     nome: 'Filé Mignon',
     categoria: 'Bovinos',
-    parte: 'Traseiro',
-    dificuldade: 'Médio',
+    parte: 'Lombo / Traseiro',
+    dificuldade: 'Fácil',
     maciez: 5,
-    gordura: 'Baixa',
-    descricao:
-      'Fica no lombo e é um músculo pouco usado pelo animal, por isso é o corte mais macio. Tem pouquíssima gordura.',
-    usoIdeal: 'Medalhões, grelhados rápidos, strogonoff e pratos com molho.',
-    dica:
-      'Cozinha rápido e seca com facilidade. Sele em fogo alto e retire antes de passar do ponto.'
+    gordura: 'Muito Baixa',
+    faca: 'Faca do Chef bem afiada ou Faca de Filetar',
+    tabua: 'Plástico ou madeira higienizada',
+    metodo: 'Frigideira de fundo grosso, grelha ou medalhão',
+    descricao: 'O corte bovino mais tenro e magro, praticamente sem gordura entremeada.',
+    usoIdeal: 'Medalhões ao molho madeira, tornedor, carpaccio, tartare e bifes rápidos.',
+    dica: 'Por ser extremamente magro, resseca facilmente. Sele em fogo bem alto para manter o centro suculento e rosado.'
   },
   {
-    id: 'costela',
-    nome: 'Costela',
+    id: 'costela-bovina',
+    nome: 'Costela Ponta de Agulha',
     categoria: 'Bovinos',
-    parte: 'Dianteiro',
-    dificuldade: 'Difícil',
+    parte: 'Costilhar / Dianteiro e Traseiro',
+    dificuldade: 'Média',
     maciez: 3,
     gordura: 'Alta',
-    descricao:
-      'Corte com osso, muita gordura e tecido que derrete no cozimento. Pede tempo, mas rende muito sabor.',
-    usoIdeal: 'Assado lento (fogo de ch ou forno baixo) e cozidos.',
-    dica:
-      'A paciência faz a diferença: fogo baixo por várias horas deixa a carne macia e soltando do osso.'
+    faca: 'Cutelo pesado e Faca de Desossa',
+    tabua: 'Madeira pesada e estável',
+    metodo: 'Cozimento longo no bafo, brasa baixa ou panela de pressão',
+    descricao: 'Corte rico em colágeno, ossos e gordura entremeada, exigindo cocção prolongada para desmanchar.',
+    usoIdeal: 'Costela fogo de chão, costela assada na brasa ou na panela com cebola.',
+    dica: 'O colágeno precisa de tempo e fogo baixo (acima de 3 a 4 horas) para quebrar e virar gelatina suculenta.'
   },
   {
-    id: 'coxao-mole',
-    nome: 'Cox Mole',
-    categoria: 'Bovinos',
-    parte: 'Traseiro',
-    dificuldade: 'Médio',
-    maciez: 3,
-    gordura: 'Baixa',
-    descricao:
-      'Corte magro da parte interna da coxa. É muito versátil e comum no dia a dia.',
-    usoIdeal: 'Bifes, carne de panela, rocambole e bife à milanesa.',
-    dica:
-      'Bata levemente os bifes antes de temperar e evite cozinhar demais em fogo alto, para n ressecar.'
-  },
-  {
-    id: 'patinho',
-    nome: 'Patinho',
-    categoria: 'Bovinos',
-    parte: 'Traseiro',
-    dificuldade: 'Fácil',
-    maciez: 3,
-    gordura: 'Baixa',
-    descricao:
-      'Corte magro da coxa, com fibras finas e poucas gorduras. Muito usado para moer.',
-    usoIdeal: 'Carne moída, almôndegas, bifes e carne de panela.',
-    dica:
-      'Na carne moída, refogue bem para soltar o sabor e acrescente um pouco de gordura se quiser mais suculência.'
-  },
-  {
-    id: 'acem',
-    nome: 'Acém',
+    id: 'acem-musculo',
+    nome: 'Acém e Músculo',
     categoria: 'Bovinos',
     parte: 'Dianteiro',
-    dificuldade: 'Médio',
+    dificuldade: 'Fácil',
     maciez: 2,
-    gordura: 'Média',
-    descricao:
-      'Corte do pescoço e da parte da frente do boi, com fibras mais firmes. Fica macio e saboroso com cozimento longo.',
-    usoIdeal: 'Cozidos, ensopados, picadinho e carne moída para molhos.',
-    dica:
-      'Cozinhe em fogo baixo e com líquido, de preferência na panela de press, até a carne ficar macia.'
+    gordura: 'Baixa a Média',
+    faca: 'Faca de Desossa ou Faca do Chef',
+    tabua: 'Polietileno/plástico higienizável',
+    metodo: 'Panela de pressão, caldos e ensopados',
+    descricao: 'Carnes de segunda ricas em fibras e colágeno, campeãs de sabor quando cozidas lentamente com líquidos.',
+    usoIdeal: 'Carne de panela com batatas, guisados, caldos base e recheios desfiados.',
+    dica: 'Dourar bem os cubos de carne em fogo alto antes de colocar a água cria o fundo de panela que dá cor e sabor ao molho.'
   },
+
+  // ==================== AVES ====================
   {
     id: 'peito-frango',
-    nome: 'Peito de frango',
+    nome: 'Peito de Frango (Filé Borboleta)',
     categoria: 'Aves',
     parte: 'Peito',
     dificuldade: 'Fácil',
-    maciez: 3,
-    gordura: 'Baixa',
-    descricao: 'Carne magra e versátil, vendida com ou sem osso e pele.',
-    usoIdeal: 'Grelhados, assados, empanados, recheados e desfiados.',
-    dica: 'Corte em porções de espessura parecida para cozinhar por igual e confira se está completamente cozido antes de servir.'
-  },
-  {
-    id: 'coxa-sobrecoxa',
-    nome: 'Coxa e sobrecoxa',
-    categoria: 'Aves',
-    parte: 'Perna',
-    dificuldade: 'Fácil',
     maciez: 4,
-    gordura: 'Média',
-    descricao: 'Partes da perna do frango, geralmente mais suculentas que o peito.',
-    usoIdeal: 'Assados, ensopados, grelhados e preparos com molho.',
-    dica: 'Com osso, o cozimento costuma levar mais tempo. Garanta que a parte mais espessa esteja completamente cozida.'
+    gordura: 'Muito Baixa',
+    faca: 'Faca de Filetar ou Faca do Chef com ponta fina',
+    tabua: 'Tábua plástica amarela ou branca exclusiva para aves',
+    metodo: 'Grelhado, empanado, desfiado ou assado',
+    descricao: 'Corte magro e proteico. Abrir em borboleta nivela a espessura para cozimento uniforme.',
+    usoIdeal: 'Filés grelhados, frango à parmegiana, desfiado para tortas e coxinhas.',
+    dica: 'Não aperte o filé na frigideira para não expulsar os sucos naturais. Uma marinada com limão ou iogurte evita o ressecamento.'
   },
   {
-    id: 'asa-frango',
-    nome: 'Asa de frango',
+    id: 'sobrecoxa-desossada',
+    nome: 'Sobrecoxa Desossada',
+    categoria: 'Aves',
+    parte: 'Coxa e Sobrecoxa',
+    dificuldade: 'Média',
+    maciez: 5,
+    gordura: 'Média',
+    faca: 'Faca de Desossa flexível e afiada',
+    tabua: 'Plástico higienizável com sabão antibacteriano',
+    metodo: 'Forno, frigideira, ensopado ou churrasco',
+    descricao: 'A parte mais saborosa e suculenta do frango, graças à gordura natural e irrigação muscular.',
+    usoIdeal: 'Assados dourados, frango xadrez, iscas crocantes e churrasco.',
+    dica: 'Para desossar, raspe a carne rente ao osso com a ponta da faca de desossa sem romper a pele externa.'
+  },
+  {
+    id: 'tulipa-coxinha-asa',
+    nome: 'Asa e Tulipa (Meio da Asa)',
     categoria: 'Aves',
     parte: 'Asa',
     dificuldade: 'Fácil',
-    maciez: 3,
-    gordura: 'Média',
-    descricao: 'Corte com pele e osso, dividido em ponta, meio da asa e drumette.',
-    usoIdeal: 'Assada, grelhada ou cozida em molhos.',
-    dica: 'Se assar, disponha as peças sem amontoar para dourarem por igual e cozinhe completamente.'
+    maciez: 4,
+    gordura: 'Alta',
+    faca: 'Faca do Chef média ou cutelo de ave',
+    tabua: 'Tábua de corte sintética',
+    metodo: 'Fritura, airfryer ou brasa com molho agridoce',
+    descricao: 'Pedaços com alta proporção de pele e osso que garantem crocância por fora e umidade por dentro.',
+    usoIdeal: 'Buffalo wings, petisco frito ou aperitivo de churrasco.',
+    dica: 'Seque muito bem a pele com papel toalha antes de assar ou fritar para obter a máxima crocância.'
   },
+
+  // ==================== SUÍNOS ====================
   {
-    id: 'lombo-suino',
-    nome: 'Lombo suíno',
-    categoria: 'Suínos',
-    parte: 'Lombo',
-    dificuldade: 'Médio',
-    maciez: 3,
-    gordura: 'Baixa',
-    descricao: 'Corte comprido e relativamente magro, retirado da regi do lombo do porco.',
-    usoIdeal: 'Assados, medalhões e bifes.',
-    dica: 'Como é mais magro, evite cozinhar por tempo excessivo; use um termômetro culinário para conferir o ponto seguro.'
-  },
-  {
-    id: 'pernil-suino',
-    nome: 'Pernil suíno',
-    categoria: 'Suínos',
-    parte: 'Perna traseira',
-    dificuldade: 'Médio',
-    maciez: 3,
-    gordura: 'Média',
-    descricao: 'Corte grande da perna traseira, vendido com osso ou desossado.',
-    usoIdeal: 'Assados, bifes e carne desfiada.',
-    dica: 'Para assados grandes, cozinhe até o centro atingir uma temperatura segura e deixe descansar antes de fatiar.'
-  },
-  {
-    id: 'costelinha-suino',
-    nome: 'Costelinha suína',
+    id: 'costelinha-suina',
+    nome: 'Costelinha Suína',
     categoria: 'Suínos',
     parte: 'Costela',
-    dificuldade: 'Médio',
+    dificuldade: 'Fácil',
+    maciez: 4,
+    gordura: 'Média a Alta',
+    faca: 'Faca de Desossa e Faca do Chef',
+    tabua: 'Madeira densa ou plástico de alta densidade',
+    metodo: 'Forno baixo com papel-alumínio, brasa ou defumação',
+    descricao: 'Carne entremeada nas costelas, macia e extremamente saborosa quando cozida lentamente.',
+    usoIdeal: 'Costelinha ao molho barbecue, assada com limão e ervas, ou no feijão.',
+    dica: 'Remova a fina membrana branca (pleura) na parte de trás dos ossos para que os temperos penetrem e a carne solte facilmente.'
+  },
+  {
+    id: 'lombo-copa-lombo',
+    nome: 'Lombo e Copa Lombo',
+    categoria: 'Suínos',
+    parte: 'Lombo / Sobrepaleta',
+    dificuldade: 'Média',
+    maciez: 4,
+    gordura: 'Baixa (Lombo) / Média (Copa)',
+    faca: 'Faca do Chef 8" bem afiada',
+    tabua: 'Plástico higienizável',
+    metodo: 'Bifes na frigideira, recheado no forno ou assado',
+    descricao: 'O lombo é magro e delicado; a copa lombo (sobrepaleta) possui marmoreio de gordura que derrete no preparo.',
+    usoIdeal: 'Bifes acebolados, assado de domingo com abacaxi e espetinhos suínos.',
+    dica: 'Não cozinhe o lombo em excesso: carne de porco moderna atinge segurança aos 68°C-70°C e deve manter um leve brilho úmido.'
+  },
+  {
+    id: 'pancetta-barriga',
+    nome: 'Pancetta (Barriga de Porco)',
+    categoria: 'Suínos',
+    parte: 'Barriga',
+    dificuldade: 'Média',
+    maciez: 5,
+    gordura: 'Alta',
+    faca: 'Faca do Chef afiada para fatiar couro e carne',
+    tabua: 'Madeira pesada',
+    metodo: 'Pururuca no forno, torresmo ou marinada oriental',
+    descricao: 'Camadas alternadas de carne e toucinho com o couro externo.',
+    usoIdeal: 'Torresmo de rolo, pancetta pururucada, feijoadas e recheios.',
+    dica: 'Para pururucar o couro perfeitamente, fure a superfície com palito ou garfo, aplique sal e vinagre e deixe secar na geladeira antes de assar.'
+  },
+
+  // ==================== TÉCNICAS DE VEGETAIS & FACAS ====================
+  {
+    id: 'corte-julienne',
+    nome: 'Corte Julienne (Tiras Finas)',
+    categoria: 'Frutas e vegetais',
+    parte: 'Legumes (Cenoura, Abobrinha, Pimentão)',
+    dificuldade: 'Média',
     maciez: 3,
-    gordura: 'Média',
-    descricao: 'Costelas menores com carne entre os ossos e uma camada de gordura.',
-    usoIdeal: 'Assada lentamente, grelhada ou cozida com molho.',
-    dica: 'O cozimento lento ajuda a amaciar; evite que a superfície queime antes de o interior cozinhar.'
+    gordura: 'Nenhuma',
+    faca: 'Faca do Chef 8" ou Faca Santoku',
+    tabua: 'Tábua verde sintética ou madeira lisa',
+    metodo: 'Wok, salteados rápidos, saladas e guarnições',
+    descricao: 'Técnica francesa clássica que corta os vegetais em bastões finos de aproximadamente 3 mm x 3 mm x 5 cm.',
+    usoIdeal: 'Yakisoba, legumes salteados na manteiga, saladas cruas e recheios de rolinho primavera.',
+    dica: 'Apoie os nós dos dedos em garra sobre o legume com a ponta dos dedos recolhida para guiar a lâmina com total segurança.'
   },
   {
-    id: 'cubos',
-    nome: 'Cubos',
+    id: 'corte-brunoise',
+    nome: 'Corte Brunoise (Cubinhos Finos)',
     categoria: 'Frutas e vegetais',
-    tipo: 'Corte em cubos',
-    parte: 'Frutas e vegetais',
-    descricao: 'Pedaços em forma de cubo. Tente manter o tamanho parecido para um resultado uniforme.',
-    usoIdeal: 'Batata para ensopados, abóbora para assar, manga para saladas de frutas.',
-    dica: 'Primeiro corte o alimento em fatias ou tiras e depois divida em cubos do tamanho desejado.'
+    parte: 'Cebola, Cenoura, Aipo, Tomate',
+    dificuldade: 'Média',
+    maciez: 3,
+    gordura: 'Nenhuma',
+    faca: 'Faca do Chef bem afiada',
+    tabua: 'Tábua sintética higienizada',
+    metodo: 'Refogados base (sofrito), molhos, recheios e vinagretes',
+    descricao: 'Cubinhos milimétricos de 2 mm a 3 mm obtidos a partir das tiras de Julienne.',
+    usoIdeal: 'Vinagrete, bases de risoto, molho à bolonhesa e recheios de pastéis.',
+    dica: 'Mantenha a ponta da faca em contato com a tábua e faça um movimento de gangorra contínuo para obter cubinhos uniformes.'
   },
   {
-    id: 'rodelas',
-    nome: 'Rodelas',
+    id: 'corte-chiffonade',
+    nome: 'Corte Chiffonade (Fitas Finas de Folhas)',
     categoria: 'Frutas e vegetais',
-    tipo: 'Corte transversal',
-    parte: 'Frutas e vegetais',
-    descricao: 'Fatias redondas feitas ao cortar o alimento transversalmente.',
-    usoIdeal: 'Cenoura, abobrinha, pepino, banana e tomate.',
-    dica: 'Apoie o alimento na tábua e procure manter a espessura das fatias regular.'
+    parte: 'Couve, Manjericão, Espinafre, Hortelã',
+    dificuldade: 'Fácil',
+    maciez: 5,
+    gordura: 'Nenhuma',
+    faca: 'Faca do Chef de lâmina longa e muito bem afiada',
+    tabua: 'Tábua lisa e seca',
+    metodo: 'Refogado rápido de 1 minuto ou guarnição fresca',
+    descricao: 'Empilham-se as folhas higienizadas, enrola-se em formato de charuto e corta-se em fitas bem finas.',
+    usoIdeal: 'Couve refogada da feijoada, manjericão para pizzas e massas, caldos verdes.',
+    dica: 'A faca deve estar afiada como navalha para cortar as folhas sem esmagá-las, o que evita que murchem ou escureçam.'
   },
   {
-    id: 'julienne',
-    nome: 'Julienne',
+    id: 'corte-mirepoix',
+    nome: 'Mirepoix & Cubos Médios',
     categoria: 'Frutas e vegetais',
-    tipo: 'Tiras finas',
-    parte: 'Frutas e vegetais',
-    descricao: 'Tiras finas e compridas, também chamadas de tirinhas.',
-    usoIdeal: 'Cenoura, piment e abobrinha em salteados ou saladas.',
-    dica: 'Corte o alimento em placas e depois transforme as placas em tiras de espessura semelhante.'
-  },
-  {
-    id: 'bastoes',
-    nome: 'Bastões',
-    categoria: 'Frutas e vegetais',
-    tipo: 'Tiras grossas',
-    parte: 'Frutas e vegetais',
-    descricao: 'Tiras mais grossas, parecidas com palitos.',
-    usoIdeal: 'Batata para assar, pepino e cenoura para servir como petisco.',
-    dica: 'Apare as laterais para estabilizar o alimento antes de cortar os bastões.'
-  },
-  {
-    id: 'brunoise',
-    nome: 'Brunoise',
-    categoria: 'Frutas e vegetais',
-    tipo: 'Cubinhos pequenos',
-    parte: 'Frutas e vegetais',
-    descricao: 'Cubinhos pequenos e regulares, geralmente feitos a partir de tiras finas.',
-    usoIdeal: 'Cebola, cenoura e sals para bases de molhos e recheios.',
-    dica: 'Faça primeiro tiras finas e corte-as transversalmente em cubinhos.'
-  },
-  {
-    id: 'chiffonade',
-    nome: 'Chiffonade',
-    categoria: 'Frutas e vegetais',
-    tipo: 'Tiras de folhas',
-    parte: 'Folhas',
-    descricao: 'Tiras finas feitas ao empilhar e enrolar folhas antes de fatiá-las.',
-    usoIdeal: 'Couve, manjeric, espinafre e outras folhas.',
-    dica: 'Lave e seque bem as folhas, empilhe algumas, enrole sem apertar e fatie com cuidado.'
+    parte: 'Cebola, Cenoura e Salsão / Batatas e Abóboras',
+    dificuldade: 'Fácil',
+    maciez: 3,
+    gordura: 'Nenhuma',
+    faca: 'Faca do Chef ou Faca Santoku',
+    tabua: 'Tábua de corte ampla',
+    metodo: 'Cozimento de caldos, ensopados e assados rústicos',
+    descricao: 'Corte em cubos médios (cerca de 1 cm a 2 cm) para liberar aromas em preparos longos sem desmanchar.',
+    usoIdeal: 'Caldos de carne e frango, sopa de legumes, carne assada de panela.',
+    dica: 'A proporção clássica do Mirepoix é 50% cebola, 25% cenoura e 25% salsão (aipo).'
   }
 ];
-
+export default CORTES;

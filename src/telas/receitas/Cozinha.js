@@ -20,12 +20,13 @@ const ABAS = [
   { id: 'cortes', titulo: 'Cortes' }
 ];
 
-export default function Cozinha() {
+export default function Cozinha({ route }) {
+  const abaInicialParam = route?.params?.abaInicial;
   const {
     favoritos, alternarFavorito, adicionarItensCompra, itensCompra,
     adicionarItemCompra, alternarItemCompra, removerItemCompra, limparComprados
   } = useApp();
-  const [aba, setAba] = useState('receitas');
+  const [aba, setAba] = useState(abaInicialParam || 'receitas');
   const [busca, setBusca] = useState('');
   const [origemSelecionada, setOrigemSelecionada] = useState('Todas');
   const [receitaAberta, setReceitaAberta] = useState(null);
