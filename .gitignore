@@ -40,3 +40,13 @@ yarn-error.log
 # Temporarios
 *.tmp
 *.temp
+
+node_modules/
+.expo/
+dist/
+android/app/build/
+android/build/
+android/.gradle/
+android/.cxx/
+android/local.properties
+*.log
