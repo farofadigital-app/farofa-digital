@@ -212,7 +212,7 @@ export default function Perfil() {
             <ActivityIndicator color="#0F172A" />
           ) : (
             <Text style={estilos.textoBotaoSalvar}>
-              {perfilCompleto ? 'Salvar Alterações' : 'Salvar e Continuar'}
+              {perfilCompleto ? 'Salvar Perfil' : 'Salvar e Continuar'}
             </Text>
           )}
         </TouchableOpacity>
@@ -349,6 +349,7 @@ const estilos = StyleSheet.create({
   },
   subtituloPrincipal: {
     fontSize: 14,
+    lineHeight: 20,
     color: '#94A3B8',
     textAlign: 'center',
     marginTop: 6,
@@ -368,9 +369,13 @@ const estilos = StyleSheet.create({
     backgroundColor: '#334155',
     borderWidth: 1,
     borderColor: '#475569',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 10
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 120,
   },
   textoBotaoFoto: {
     color: '#F8FAFC',

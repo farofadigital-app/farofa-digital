@@ -1,7 +1,7 @@
 ﻿import { validarPerguntas } from './quiz';
 
 // dificuldade: 1 fácil, 2 médio, 3 difícil
-// "correta" guarda o TEXTO da resposta (n a posiç), ent pode embaralhar à vontade.
+// "correta" guarda o TEXTO da resposta (não a posição), ent pode embaralhar à vontade.
 export const PERGUNTAS_ANA = [
   {
     id: 'ana-001',
@@ -130,7 +130,7 @@ export const PERGUNTAS_ANA = [
     dificuldade: 3,
     exp: 30,
     brasas: 3,
-    pergunta: 'Qual ingrediente é típico da moqueca baiana, mas n da capixaba?',
+    pergunta: 'Qual ingrediente é típico da moqueca baiana, mas não da capixaba?',
     alternativas: ['Azeite de dendê', 'Tomate', 'Coentro', 'Peixe'],
     correta: 'Azeite de dendê',
     explicacao: 'A moqueca baiana leva dendê e leite de coco. A capixaba usa urucum e azeite, e é feita na panela de barro.'
@@ -152,7 +152,7 @@ export const PERGUNTAS_ANA = [
     dificuldade: 2,
     exp: 20,
     brasas: 2,
-    pergunta: 'No salteado, por que é melhor n encher demais a frigideira?',
+    pergunta: 'No salteado, por que é melhor não encher demais a frigideira?',
     alternativas: ['Para evitar que os alimentos soltem vapor e cozinhem em vez de dourar', 'Para esfriar o óleo', 'Para impedir que os temperos se misturem', 'Para cozinhar tudo sem mexer'],
     correta: 'Para evitar que os alimentos soltem vapor e cozinhem em vez de dourar',
     explicacao: 'Com espaço e frigideira quente, a umidade evapora melhor e os alimentos douram em vez de ficarem abafados.'
@@ -208,8 +208,8 @@ export const PERGUNTAS_ANA = [
     exp: 30,
     brasas: 3,
     pergunta: 'O que é uma emuls, como a que dá estrutura à maionese?',
-    alternativas: ['Uma mistura estável de líquidos que normalmente n se combinam', 'Um tipo de fermento seco', 'Uma técnica de congelamento rápido', 'Uma mistura de farinha e água assada'],
-    correta: 'Uma mistura estável de líquidos que normalmente n se combinam',
+    alternativas: ['Uma mistura estável de líquidos que normalmente não se combinam', 'Um tipo de fermento seco', 'Uma técnica de congelamento rápido', 'Uma mistura de farinha e água assada'],
+    correta: 'Uma mistura estável de líquidos que normalmente não se combinam',
     explicacao: 'Na maionese, gotículas de óleo ficam dispersas em uma fase aquosa; a gema ajuda a estabilizar essa emuls.'
   },
   {

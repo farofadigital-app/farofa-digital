@@ -331,7 +331,7 @@ export default function Quiz() {
           <Text style={estilos.emojiGrande}>🧠</Text>
           <Text style={estilos.titulo}>Sala do Saber</Text>
           {banco.length === 0 ? (
-            <Text style={estilos.texto}>Ainda n há perguntas para {mentor.nome}.</Text>
+            <Text style={estilos.texto}>Ainda não há perguntas para {mentor.nome}.</Text>
           ) : (
             <>
               <Text style={estilos.texto}>
@@ -362,7 +362,7 @@ export default function Quiz() {
                 <View style={estilos.regra}>
                   <Ionicons name="trending-up" size={20} color={CORES.sucesso} />
                   <Text style={estilos.textoRegra}>
-                    As perguntas v ficando mais difíceis.
+                    As perguntas vão ficando mais difíceis.
                   </Text>
                 </View>
               </View>
@@ -462,7 +462,7 @@ export default function Quiz() {
     );
   }
 
-  // ---------- Revis dos erros ----------
+  // ---------- Revisão dos erros ----------
   if (fase === 'revisao') {
     return (
       <TelaSegura>

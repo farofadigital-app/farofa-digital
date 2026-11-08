@@ -1,7 +1,7 @@
 ﻿import { validarPerguntas } from './quiz';
 
 // dificuldade: 1 fácil, 2 médio, 3 difícil
-// "correta" guarda o TEXTO da resposta (n a posiç), ent pode embaralhar à vontade.
+// "correta" guarda o TEXTO da resposta (não a posição), ent pode embaralhar à vontade.
 export const PERGUNTAS_JOSE = [
   {
     id: 'jose-001',
@@ -188,7 +188,7 @@ export const PERGUNTAS_JOSE = [
     pergunta: 'Qual é uma prática segura para guardar sobras de comida?',
     alternativas: ['Deixar a panela fora da geladeira durante a noite', 'Refrigerar as sobras em recipientes limpos e rasos sem deixá-las horas em temperatura ambiente', 'Misturar sobras novas às antigas sem identificar', 'Guardar comida quente na bancada até o dia seguinte'],
     correta: 'Refrigerar as sobras em recipientes limpos e rasos sem deixá-las horas em temperatura ambiente',
-    explicacao: 'Divida grandes porções em recipientes rasos e refrigere as sobras prontamente; n deixe alimentos perecíveis horas fora da refrigeraç.'
+    explicacao: 'Divida grandes porções em recipientes rasos e refrigere as sobras prontamente; não deixe alimentos perecíveis horas fora da refrigeraç.'
   },
   {
     id: 'jose-018',
@@ -221,7 +221,7 @@ export const PERGUNTAS_JOSE = [
     pergunta: 'Por que algumas pessoas pingam lim sobre uma maçã cortada?',
     alternativas: ['A acidez ajuda a retardar o escurecimento da superfície', 'O lim congela a maçã', 'O lim transforma a maçã em conserva instantaneamente', 'A acidez remove as fibras'],
     correta: 'A acidez ajuda a retardar o escurecimento da superfície',
-    explicacao: 'O suco ácido reduz a velocidade do escurecimento enzimático da maçã cortada, embora n o impeça para sempre.'
+    explicacao: 'O suco ácido reduz a velocidade do escurecimento enzimático da maçã cortada, embora não o impeça para sempre.'
   },
   {
     id: 'jose-021',
@@ -243,7 +243,7 @@ export const PERGUNTAS_JOSE = [
     pergunta: 'O que pode acontecer se uma massa de p fermentada crescer demais?',
     alternativas: ['A estrutura pode enfraquecer e a massa perder parte do volume', 'A massa vira massa folhada', 'O fermento se transforma em açúcar', 'A farinha deixa de conter amido'],
     correta: 'A estrutura pode enfraquecer e a massa perder parte do volume',
-    explicacao: 'Na fermentaç excessiva, a estrutura pode n sustentar as bolhas de gás; a massa pode murchar e assar com menos volume.'
+    explicacao: 'Na fermentaç excessiva, a estrutura pode não sustentar as bolhas de gás; a massa pode murchar e assar com menos volume.'
   },
   {
     id: 'jose-023',
