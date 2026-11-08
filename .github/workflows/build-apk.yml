@@ -34,14 +34,14 @@ jobs:
       - name: Dar permissao ao Gradle
         run: chmod +x android/gradlew
 
-      - name: Compilar APK de Release
+      - name: Compilar APK de Debug
         run: |
           cd android
-          ./gradlew assembleRelease --no-daemon
+          ./gradlew assembleDebug --no-daemon
 
       - name: Salvar APK para Download
         uses: actions/upload-artifact@v4
         with:
-          name: FarofaDigital-APK
-          path: android/app/build/outputs/apk/release/*.apk
+          name: FarofaDigital-APK-Debug
+          path: android/app/build/outputs/apk/debug/*.apk
           retention-days: 7
