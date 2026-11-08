@@ -1,59 +1,60 @@
-﻿{
-    "expo":  {
-                 "name":  "Farofa Digital",
-                 "slug":  "farofa-digital",
-                 "version":  "3.13.0",
-                 "scheme":  "farofadigital",
-                 "orientation":  "portrait",
-                 "icon":  "./assets/icon.png",
-                 "userInterfaceStyle":  "dark",
-                 "backgroundColor":  "#121826",
-                 "platforms":  [
-                                   "ios",
-                                   "android",
-                                   "web"
-                               ],
-                 "assetBundlePatterns":  [
-                                             "**/*"
-                                         ],
-                 "ios":  {
-                             "supportsTablet":  true,
-                             "bundleIdentifier":  "br.farofa.digital",
-                             "infoPlist":  {
-                                               "ITSAppUsesNonExemptEncryption":  false
-                                           }
-                         },
-                 "android":  {
-                                 "package":  "br.farofa.digital",
-                                 "adaptiveIcon":  {
-                                                      "foregroundImage":  "./assets/adaptive-icon.png",
-                                                      "backgroundColor":  "#121826"
-                                                  }
-                             },
-                 "web":  {
-                             "bundler":  "metro",
-                             "output":  "single",
-                             "favicon":  "./assets/favicon.png"
-                         },
-                 "plugins":  [
-                                 "expo-asset",
-                                 "expo-font",
-                                 [
-                                     "expo-build-properties",
-                                     {
-                                         "android":  {
-                                                         "compileSdkVersion":  37,
-                                                         "targetSdkVersion":  36,
-                                                         "buildToolsVersion":  "36.0.0"
-                                                     }
-                                     }
-                                 ]
-                             ],
-                 "extra":  {
-                               "eas":  {
-                                           "projectId":  "35914e17-6f80-43e4-92b5-b0128b6665c8"
-                                       }
-                           },
-                 "owner":  "iar-noels-team"
-             }
+{
+  "expo": {
+    "name": "Farofa Digital",
+    "slug": "farofa-digital",
+    "version": "3.13.0",
+    "scheme": "farofadigital",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#121826",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "br.farofa.digital",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "br.farofa.digital",
+      "versionCode": 313,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#121826"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-asset",
+      "expo-font",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 37,
+            "targetSdkVersion": 36,
+            "buildToolsVersion": "36.0.0"
+          }
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "35914e17-6f80-43e4-92b5-b0128b6665c8"
+      }
+    },
+    "owner": "iar-noels-team"
+  }
 }
