@@ -69,12 +69,12 @@ const MENTORES = {
       ],
       combo: [
         'Você está pegando fogo! Que sequência!',
-        'Isso é ponto de mestre cuca! N pare agora.'
+        'Isso é ponto de mestre cuca! Não pare agora.'
       ],
       erro: [
         'Sem problema, errar faz parte de aprender.',
-        'Quase! Leia a explicaç e guarde essa.',
-        'Tudo bem, a gente aprende no fog.'
+        'Quase! Leia a explicação e guarde essa.',
+        'Tudo bem, a gente aprende no fogão.'
       ],
       tempo: [
         'O tempo voou! Respire e vá com calma na próxima.',
@@ -130,6 +130,7 @@ export default function Quiz() {
   const { mentorEscolhido, adicionarBrasas, adicionarExp, dadosPerfil } = useApp();
   const nomeJogador = dadosPerfil?.nome?.trim();
   const shake = useRef(new Animated.Value(0)).current;
+  const scaleVitoria = useRef(new Animated.Value(0.6)).current;
   const mentor = MENTORES[mentorEscolhido] || MENTORES.ana;
   const banco = useMemo(() => mentor.perguntas || [], [mentor]);
 
@@ -394,9 +395,9 @@ export default function Quiz() {
     return (
       <TelaSegura>
         <ScrollView contentContainerStyle={estilos.centroRolagem}>
-          <Animated.View style={ehDerrota ? { transform: [{ translateX: shake }] } : null}>
+          <Animated.View style={ehDerrota ? { transform: [{ translateX: shake }] } : { transform: [{ scale: scaleVitoria }] }}>
             <Text style={estilos.emojiDerrota}>
-              {ehDerrota ? '😅🔥' : '🎉👨‍🍳'}
+              {ehDerrota ? '😅🔥' : '🔥🏆'}
             </Text>
           </Animated.View>
 

@@ -43,7 +43,7 @@ export const PERGUNTAS_ANA = [
     exp: 10,
     brasas: 1,
     pergunta: 'Qual ingrediente dá a base cremosa do brigadeiro?',
-    alternativas: ['Leite condensado', 'Creme de leite fresco', 'Leite em pó', 'Requeij'],
+    alternativas: ['Leite condensado', 'Creme de leite fresco', 'Leite em pó', 'Requeijão'],
     correta: 'Leite condensado',
     explicacao: 'O brigadeiro é feito com leite condensado, chocolate em pó e manteiga.'
   },
@@ -56,7 +56,7 @@ export const PERGUNTAS_ANA = [
     pergunta: 'Qual bebida destilada é a base da caipirinha?',
     alternativas: ['Vodka', 'Rum', 'Cachaça', 'Tequila'],
     correta: 'Cachaça',
-    explicacao: 'A caipirinha leva cachaça, lim, açúcar e gelo.'
+    explicacao: 'A caipirinha leva cachaça, limão, açúcar e gelo.'
   },
   {
     id: 'ana-006',
@@ -64,10 +64,10 @@ export const PERGUNTAS_ANA = [
     dificuldade: 2,
     exp: 20,
     brasas: 2,
-    pergunta: 'De qual estado é originário o p de queijo?',
+    pergunta: 'De qual estado é originário o pão de queijo?',
     alternativas: ['Bahia', 'Minas Gerais', 'Rio Grande do Sul', 'Pará'],
     correta: 'Minas Gerais',
-    explicacao: 'O p de queijo é um dos símbolos da culinária mineira.'
+    explicacao: 'O pão de queijo é um dos símbolos da culinária mineira.'
   },
   {
     id: 'ana-007',
@@ -76,9 +76,9 @@ export const PERGUNTAS_ANA = [
     exp: 20,
     brasas: 2,
     pergunta: 'Qual é o principal ingrediente da massa do acarajé?',
-    alternativas: ['Feij-fradinho', 'Milho', 'Mandioca', 'Arroz'],
-    correta: 'Feij-fradinho',
-    explicacao: 'O acarajé é um bolinho de feij-fradinho frito no azeite de dendê, típico da Bahia.'
+    alternativas: ['Feijão-fradinho', 'Milho', 'Mandioca', 'Arroz'],
+    correta: 'Feijão-fradinho',
+    explicacao: 'O acarajé é um bolinho de feijão-fradinho frito no azeite de dendê, típico da Bahia.'
   },
   {
     id: 'ana-008',
@@ -86,10 +86,10 @@ export const PERGUNTAS_ANA = [
     dificuldade: 2,
     exp: 20,
     brasas: 2,
-    pergunta: 'Qual erva é usada no chimarr?',
+    pergunta: 'Qual erva é usada no chimarrão?',
     alternativas: ['Erva-doce', 'Erva-cidreira', 'Erva-mate', 'Hortelã'],
     correta: 'Erva-mate',
-    explicacao: 'O chimarr é preparado com erva-mate e água quente, muito comum no Sul do Brasil.'
+    explicacao: 'O chimarrão é preparado com erva-mate e água quente, muito comum no Sul do Brasil.'
   },
   {
     id: 'ana-009',
@@ -174,10 +174,10 @@ export const PERGUNTAS_ANA = [
     dificuldade: 1,
     exp: 10,
     brasas: 1,
-    pergunta: 'Como reduzir o risco de contaminaç cruzada ao preparar frango cru e salada?',
-    alternativas: ['Usar a mesma tábua sem lavar', 'Separar utensílios e lavar ms e superfícies após tocar no frango cru', 'Enxaguar o frango na pia', 'Cortar a salada antes e depois passar o frango na mesma tábua'],
-    correta: 'Separar utensílios e lavar ms e superfícies após tocar no frango cru',
-    explicacao: 'Separe alimentos crus dos prontos para consumo, lave as ms e higienize utensílios e superfícies entre tarefas. N lave frango cru na pia.'
+    pergunta: 'Como reduzir o risco de contaminação cruzada ao preparar frango cru e salada?',
+    alternativas: ['Usar a mesma tábua sem lavar', 'Separar utensílios e lavar as mãos e superfícies após tocar no frango cru', 'Enxaguar o frango na pia', 'Cortar a salada antes e depois passar o frango na mesma tábua'],
+    correta: 'Separar utensílios e lavar as mãos e superfícies após tocar no frango cru',
+    explicacao: 'Separe alimentos crus dos prontos para consumo, lave as mãos e higienize utensílios e superfícies entre tarefas. Não lave frango cru na pia.'
   },
   {
     id: 'ana-017',
@@ -197,9 +197,9 @@ export const PERGUNTAS_ANA = [
     exp: 20,
     brasas: 2,
     pergunta: 'Que mudança ajuda a criar a crosta dourada e aromática de um alimento tostado?',
-    alternativas: ['A reaç de Maillard entre açúcares e proteínas', 'O congelamento da água', 'A fermentaç do sal', 'A dissoluç completa das fibras'],
-    correta: 'A reaç de Maillard entre açúcares e proteínas',
-    explicacao: 'A reaç de Maillard ocorre com calor e envolve açúcares e compostos de proteínas, formando cor e aromas de tostado.'
+    alternativas: ['A reação de Maillard entre açúcares e proteínas', 'O congelamento da água', 'A fermentação do sal', 'A dissolução completa das fibras'],
+    correta: 'A reação de Maillard entre açúcares e proteínas',
+    explicacao: 'A reação de Maillard ocorre com calor e envolve açúcares e compostos de proteínas, formando cor e aromas de tostado.'
   },
   {
     id: 'ana-019',
@@ -207,58 +207,58 @@ export const PERGUNTAS_ANA = [
     dificuldade: 3,
     exp: 30,
     brasas: 3,
-    pergunta: 'O que é uma emuls, como a que dá estrutura à maionese?',
+    pergunta: 'O que é uma emulsão, como a que dá estrutura à maionese?',
     alternativas: ['Uma mistura estável de líquidos que normalmente não se combinam', 'Um tipo de fermento seco', 'Uma técnica de congelamento rápido', 'Uma mistura de farinha e água assada'],
     correta: 'Uma mistura estável de líquidos que normalmente não se combinam',
-    explicacao: 'Na maionese, gotículas de óleo ficam dispersas em uma fase aquosa; a gema ajuda a estabilizar essa emuls.'
+    explicacao: 'Na maionese, gotículas de óleo ficam dispersas em uma fase aquosa; a gema ajuda a estabilizar essa emulsão.'
   },
   {
     id: 'ana-020',
-    categoria: 'Panificaç',
+    categoria: 'Panificação',
     dificuldade: 1,
     exp: 10,
     brasas: 1,
-    pergunta: 'Qual é a funç principal do fermento biológico em uma massa de p?',
+    pergunta: 'Qual é a função principal do fermento biológico em uma massa de pão?',
     alternativas: ['Produzir gás que ajuda a massa a crescer', 'Tostar a superfície', 'Substituir toda a farinha', 'Impedir a formaç de glúten'],
     correta: 'Produzir gás que ajuda a massa a crescer',
     explicacao: 'A levedura fermenta açúcares e libera dióxido de carbono, que fica retido na massa e contribui para seu crescimento.'
   },
   {
     id: 'ana-021',
-    categoria: 'Panificaç',
+    categoria: 'Panificação',
     dificuldade: 2,
     exp: 20,
     brasas: 2,
-    pergunta: 'Por que sovar uma massa de p feita com farinha de trigo?',
+    pergunta: 'Por que sovar uma massa de pão feita com farinha de trigo?',
     alternativas: ['Para desenvolver a rede de glúten que dá elasticidade à massa', 'Para retirar todo o ar da farinha', 'Para dissolver o fermento', 'Para transformar o amido em açúcar imediatamente'],
     correta: 'Para desenvolver a rede de glúten que dá elasticidade à massa',
-    explicacao: 'A sova ajuda proteínas da farinha a formar uma rede elástica capaz de reter parte do gás produzido na fermentaç.'
+    explicacao: 'A sova ajuda proteínas da farinha a formar uma rede elástica capaz de reter parte do gás produzido na fermentação.'
   },
   {
     id: 'ana-022',
-    categoria: 'Panificaç',
+    categoria: 'Panificação',
     dificuldade: 2,
     exp: 20,
     brasas: 2,
     pergunta: 'Qual ingrediente costuma fornecer acidez para ativar o bicarbonato de sódio em uma receita?',
-    alternativas: ['Suco de lim', 'Óleo vegetal', 'Sal refinado', 'Amido de milho'],
-    correta: 'Suco de lim',
-    explicacao: 'O bicarbonato precisa de um ingrediente ácido, como lim ou iogurte, para reagir e liberar gás que ajuda a massa a crescer.'
+    alternativas: ['Suco de limão', 'Óleo vegetal', 'Sal refinado', 'Amido de milho'],
+    correta: 'Suco de limão',
+    explicacao: 'O bicarbonato precisa de um ingrediente ácido, como limão ou iogurte, para reagir e liberar gás que ajuda a massa a crescer.'
   },
   {
     id: 'ana-023',
-    categoria: 'Nutriç e ingredientes',
+    categoria: 'Nutrição e ingredientes',
     dificuldade: 1,
     exp: 10,
     brasas: 1,
     pergunta: 'Qual destes alimentos é uma leguminosa?',
     alternativas: ['Lentilha', 'Maçã', 'Alface', 'Mandioca'],
     correta: 'Lentilha',
-    explicacao: 'Lentilha, feij e gr-de-bico s leguminosas. Elas fornecem proteínas vegetais e fibras.'
+    explicacao: 'Lentilha, feijão e grão-de-bico são leguminosas. Elas fornecem proteínas vegetais e fibras.'
   },
   {
     id: 'ana-024',
-    categoria: 'Nutriç e ingredientes',
+    categoria: 'Nutrição e ingredientes',
     dificuldade: 2,
     exp: 20,
     brasas: 2,
@@ -269,7 +269,7 @@ export const PERGUNTAS_ANA = [
   },
   {
     id: 'ana-025',
-    categoria: 'Nutriç e ingredientes',
+    categoria: 'Nutrição e ingredientes',
     dificuldade: 3,
     exp: 30,
     brasas: 3,
@@ -287,7 +287,7 @@ export const PERGUNTAS_ANA = [
     pergunta: 'Qual ingrediente costuma dar sabor umami ao missô japonês?',
     alternativas: ['Pasta fermentada de soja', 'Leite de coco', 'Farinha de mandioca', 'Creme de leite'],
     correta: 'Pasta fermentada de soja',
-    explicacao: 'Missô é uma pasta fermentada, geralmente de soja, usada em sopas, molhos e marinadas no Jap.'
+    explicacao: 'Missô é uma pasta fermentada, geralmente de soja, usada em sopas, molhos e marinadas no Japão.'
   },
   {
     id: 'ana-027',
@@ -298,7 +298,7 @@ export const PERGUNTAS_ANA = [
     pergunta: 'Qual arroz é tradicionalmente usado para preparar risoto cremoso?',
     alternativas: ['Arborio', 'Basmati', 'Jasmim', 'Agulhinha parboilizado'],
     correta: 'Arborio',
-    explicacao: 'Arborio é um arroz de gr curto rico em amido; mexer e adicionar caldo aos poucos ajuda a criar a textura cremosa do risoto.'
+    explicacao: 'Arborio é um arroz de grão curto rico em amido; mexer e adicionar caldo aos poucos ajuda a criar a textura cremosa do risoto.'
   },
   {
     id: 'ana-028',
@@ -307,9 +307,9 @@ export const PERGUNTAS_ANA = [
     exp: 30,
     brasas: 3,
     pergunta: 'Qual erva aromática é muito associada ao pesto genovês, da Itália?',
-    alternativas: ['Manjeric', 'Coentro', 'Hortelã', 'Erva-mate'],
-    correta: 'Manjeric',
-    explicacao: 'O pesto genovês tradicional tem manjeric, azeite, alho, pinoli e queijos como parmes e pecorino.'
+    alternativas: ['Manjericão', 'Coentro', 'Hortelã', 'Erva-mate'],
+    correta: 'Manjericão',
+    explicacao: 'O pesto genovês tradicional tem manjericão, azeite, alho, pinoli e queijos como parmesão e pecorino.'
   },
   {
     id: 'ana-029',
@@ -318,7 +318,7 @@ export const PERGUNTAS_ANA = [
     exp: 20,
     brasas: 2,
     pergunta: 'Por que receitas de bolo costumam pedir que o forno seja preaquecido?',
-    alternativas: ['Para a massa começar a assar na temperatura indicada', 'Para deixar o fermento inativo antes de misturar', 'Para evitar que a forma precise ser untada', 'Para dispensar a mediç dos ingredientes'],
+    alternativas: ['Para a massa começar a assar na temperatura indicada', 'Para deixar o fermento inativo antes de misturar', 'Para evitar que a forma precise ser untada', 'Para dispensar a medição dos ingredientes'],
     correta: 'Para a massa começar a assar na temperatura indicada',
     explicacao: 'O preaquecimento ajuda a receita a começar a assar na temperatura prevista, favorecendo crescimento e cozimento mais uniformes.'
   },
@@ -329,9 +329,9 @@ export const PERGUNTAS_ANA = [
     exp: 30,
     brasas: 3,
     pergunta: 'O que acontece principalmente quando o açúcar é aquecido até virar caramelo?',
-    alternativas: ['O açúcar passa por caramelizaç e desenvolve cor e sabor', 'O açúcar fermenta como o p', 'O açúcar vira sal', 'O açúcar se transforma em glúten'],
-    correta: 'O açúcar passa por caramelizaç e desenvolve cor e sabor',
-    explicacao: 'A caramelizaç é uma transformaç do açúcar pelo calor, que cria cor e aromas característicos de caramelo.'
+    alternativas: ['O açúcar passa por caramelização e desenvolve cor e sabor', 'O açúcar fermenta como o pão', 'O açúcar vira sal', 'O açúcar se transforma em glúten'],
+    correta: 'O açúcar passa por caramelização e desenvolve cor e sabor',
+    explicacao: 'A caramelização é uma transformação do açúcar pelo calor, que cria cor e aromas característicos de caramelo.'
   }
 ];
 
