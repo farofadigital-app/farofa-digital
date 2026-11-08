@@ -1,4 +1,4 @@
-{
+﻿{
   "expo": {
     "name": "Farofa Digital",
     "slug": "farofa-digital",
@@ -38,14 +38,6 @@
     "plugins": [
       "expo-asset",
       "expo-font",
-      [
-        "expo-splash-screen",
-        {
-          "image": "./assets/splash.png",
-          "backgroundColor": "#121826",
-          "imageWidth": 200
-        }
-      ],
       [
         "expo-build-properties",
         {
