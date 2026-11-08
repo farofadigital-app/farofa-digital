@@ -1,6 +1,6 @@
 {
     "name":  "farofa-digital",
-    "version":  "3.13.0",
+    "version":  "3.14.0",
     "description":  "Aplicativo educativo e interativo sobre a culinária e a cultura brasileira. Funciona offline.",
     "main":  "index.js",
     "scripts":  {
