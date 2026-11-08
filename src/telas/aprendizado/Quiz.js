@@ -15,6 +15,7 @@ import {
 } from '../../dados/quiz';
 import { PERGUNTAS_ANA } from '../../dados/perguntas_ana';
 import { PERGUNTAS_JOSE } from '../../dados/perguntas_jose';
+import { carregarPerguntasComFallback, sincronizarPerguntasSegundoPlano } from '../../servicos/sincronizacaoPerguntas';
 
 // ---------- Ajustes do jogo (mude aqui) ----------
 const QTD_PERGUNTAS = 8;        // perguntas por rodada
@@ -132,7 +133,31 @@ export default function Quiz() {
   const shake = useRef(new Animated.Value(0)).current;
   const scaleVitoria = useRef(new Animated.Value(0.6)).current;
   const mentor = MENTORES[mentorEscolhido] || MENTORES.ana;
-  const banco = useMemo(() => mentor.perguntas || [], [mentor]);
+  const [bancoPerguntas, setBancoPerguntas] = useState(mentor.perguntas || []);
+
+  useEffect(() => {
+    let ativo = true;
+    setBancoPerguntas(mentor.perguntas || []);
+
+    async function carregarBanco() {
+      try {
+        const chaveMentor = mentorEscolhido === 'jose' ? 'jose' : 'ana';
+        const listaAtualizada = await carregarPerguntasComFallback(chaveMentor, mentor.perguntas || []);
+        if (ativo && Array.isArray(listaAtualizada) && listaAtualizada.length > 0) {
+          setBancoPerguntas(listaAtualizada);
+        }
+      } catch (err) {
+        // Fallback automatico para o banco local
+      }
+    }
+
+    carregarBanco();
+    sincronizarPerguntasSegundoPlano().catch(() => {});
+
+    return () => {
+      ativo = false;
+    };
+  }, [mentor, mentorEscolhido]);
 
   const [fase, setFase] = useState('inicio'); // inicio | jogando | fim | revisao
   const [perguntas, setPerguntas] = useState([]);
@@ -217,7 +242,7 @@ export default function Quiz() {
   }, [fase, motivoFim, acertos, perguntas.length]);
 
   const iniciar = () => {
-    const sorteadas = sortearPerguntas(banco, QTD_PERGUNTAS)
+    const sorteadas = sortearPerguntas(bancoPerguntas, QTD_PERGUNTAS)
       .sort((a, b) => a.dificuldade - b.dificuldade); // do mais fácil ao mais difícil
     setPerguntas(sorteadas);
     setIndice(0);
