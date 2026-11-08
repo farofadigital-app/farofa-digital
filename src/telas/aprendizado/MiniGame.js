@@ -312,7 +312,7 @@ function TabuaDeCorte({ itemNome = 'Ingrediente', meta = 4, aoCompletar, aoAcert
         <View style={estilos.indicadorCortes}>
           <Text style={estilos.textoCortesFeitos}>Cortes: {cortes} de {meta}</Text>
           <View style={estilos.barraProgressoCorte}>
-            <View style={[estilos.progressoCortePreenchido, { width: ${Math.min(100, (cortes / meta) * 100)}% }]} />
+            <View style={[estilos.progressoCortePreenchido, { width: `${Math.min(100, (cortes / meta) * 100)}%` }]} />
           </View>
         </View>
       </Animated.View>
@@ -394,7 +394,7 @@ function PanelaDeMexer({ aoCompletar, aoGirar, aoParar }) {
         <View style={estilos.rodapeMexer}>
           <Text style={estilos.textoVoltas}>Giro: {voltas} / {voltasMeta} voltas</Text>
           <View style={estilos.trilhoProgressoMexer}>
-            <View style={[estilos.barraProgressoMexer, { width: ${Math.min(100, (voltas / voltasMeta) * 100)}% }]} />
+            <View style={[estilos.barraProgressoMexer, { width: `${Math.min(100, (voltas / voltasMeta) * 100)}%` }]} />
           </View>
         </View>
       </View>
@@ -435,7 +435,7 @@ function MedidorDePonto({ zona, duracao = 1800, aoParar }) {
   return (
     <View style={estilos.areaMedidor}>
       <View style={estilos.trilhoMedidor}>
-        <View style={[estilos.zonaMedidor, { left: ${zona.inicio * 100}%, width: ${(zona.fim - zona.inicio) * 100}% }]} />
+        <View style={[estilos.zonaMedidor, { left: `${zona.inicio * 100}%`, width: `${(zona.fim - zona.inicio) * 100}%` }]} />
         <Animated.View style={[estilos.marcadorMedidor, { left: deslocamento }]} />
       </View>
       <View style={estilos.rotulosMedidor}>
@@ -546,7 +546,7 @@ export default function MiniGame() {
     setEtapaAtual(0);
     setFeedback('');
     setHumorMentor('foco');
-    setFala(${nomeJogador ? ${nomeJogador},  : ''}tudo na bancada! Vamos começar o preparo no fogão.);
+    setFala(`${nomeJogador ? `${nomeJogador}, ` : ''}tudo na bancada! Vamos começar o preparo no fogão.`);
   }, [nomeJogador]);
 
   const finalizarReceita = useCallback(() => {
@@ -557,7 +557,7 @@ export default function MiniGame() {
       exp: base.exp + Math.floor(maxCombo * 4)
     };
 
-    adicionarBrasas(final.brasas, Minicozinha: );
+    adicionarBrasas(final.brasas, `Minicozinha: ${receita.nome}`);
     adicionarExp(final.exp);
     setPremioFinal(final);
     setFase('vitoria');
@@ -710,7 +710,7 @@ export default function MiniGame() {
     const instrucao = etapas[etapaAtual] || '';
     const calor = exigeAquecimento(instrucao) ? configurarCalor(instrucao) : null;
     const acao = acaoManual(instrucao);
-    const progressoReceita = ${((etapaAtual + 1) / etapas.length) * 100}%;
+    const progressoReceita = `${((etapaAtual + 1) / etapas.length) * 100}%`;
 
     return (
       <TelaSegura>
@@ -742,7 +742,7 @@ export default function MiniGame() {
           {calor && (
             <View style={estilos.cartaoCalor}>
               <Text style={estilos.rotuloControle}>
-                {calor.equipamento === 'forno' ? Forno a °C : Fogo }
+                {calor.equipamento === 'forno' ? `Forno a ${calor.alvo}°C` : `Fogo ${calor.alvo}`}
               </Text>
               <MedidorDePonto zona={zonaDoPonto(calor)} aoParar={resultadoPonto} />
             </View>
