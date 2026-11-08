@@ -113,9 +113,56 @@ export default function Perfil() {
     }
   };
 
+  const conquistas = [
+    {
+      id: 'perfil',
+      icone: '🍳',
+      titulo: 'Início da Jornada',
+      descricao: 'Criou seu perfil de Chef no Farofa Digital',
+      desbloqueada: Boolean(perfilCompleto || nome.trim())
+    },
+    {
+      id: 'primeira_brasa',
+      icone: '🔥',
+      titulo: 'Primeira Chama',
+      descricao: 'Acumulou suas primeiras brasas',
+      desbloqueada: brasas > 0
+    },
+    {
+      id: 'foco_diario',
+      icone: '⚡',
+      titulo: 'Chef Constante',
+      descricao: '3 ou mais dias consecutivos de acesso',
+      desbloqueada: streak >= 3
+    },
+    {
+      id: 'nivel_2',
+      icone: '👨‍🍳',
+      titulo: 'Promoção na Cozinha',
+      descricao: 'Subiu para o Nível 2 ou superior',
+      desbloqueada: nivel >= 2
+    },
+    {
+      id: 'favoritos',
+      icone: '⭐',
+      titulo: 'Caderno de Receitas',
+      descricao: 'Favoritou pelo menos 1 receita',
+      desbloqueada: favoritos.length >= 1
+    },
+    {
+      id: 'veterano',
+      icone: '🏆',
+      titulo: 'Mestre Farofeiro',
+      descricao: 'Conquistou 500 EXP ou mais',
+      desbloqueada: exp >= 500
+    }
+  ];
+
+  const totalDesbloqueadas = conquistas.filter(c => c.desbloqueada).length;
+
   return (
     <ScrollView style={estilos.container} contentContainerStyle={estilos.conteudo}>
-      {/* CARD PRINCIPAL: FOTO, NOME E SALVAR */}
+      {/* CARD PRINCIPAL */}
       <View style={estilos.cardPrincipal}>
         <Text style={estilos.tituloPrincipal}>
           {perfilCompleto ? 'Meu Perfil' : 'Crie seu Perfil'}
@@ -131,10 +178,10 @@ export default function Perfil() {
         </View>
 
         <View style={estilos.botoesFotoLinha}>
-          <TouchableOpacity style={estilos.botaoFoto} onPress={pegarFotoGaleria}>
+          <TouchableOpacity style={estilos.botaoFoto} onPress={pegarFotoGaleria} activeOpacity={0.7}>
             <Text style={estilos.textoBotaoFoto}>🖼️ Galeria</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={estilos.botaoFoto} onPress={pegarFotoCamera}>
+          <TouchableOpacity style={estilos.botaoFoto} onPress={pegarFotoCamera} activeOpacity={0.7}>
             <Text style={estilos.textoBotaoFoto}>📷 Câmera</Text>
           </TouchableOpacity>
         </View>
@@ -144,7 +191,7 @@ export default function Perfil() {
           <TextInput
             style={estilos.input}
             placeholder="Digite seu nome..."
-            placeholderTextColor="#A0826D"
+            placeholderTextColor="#64748B"
             value={nome}
             onChangeText={setNome}
             autoCapitalize="words"
@@ -152,16 +199,17 @@ export default function Perfil() {
         </View>
 
         {mensagemSucesso ? (
-          <Text style={estilos.textoSucesso}>✅ {mensagemSucesso}</Text>
+          <Text style={estilos.textoSucesso}>✓ {mensagemSucesso}</Text>
         ) : null}
 
         <TouchableOpacity
           style={[estilos.botaoSalvar, salvando && estilos.botaoDesativado]}
           onPress={salvar}
           disabled={salvando}
+          activeOpacity={0.8}
         >
           {salvando ? (
-            <ActivityIndicator color="#FFFFFF" />
+            <ActivityIndicator color="#0F172A" />
           ) : (
             <Text style={estilos.textoBotaoSalvar}>
               {perfilCompleto ? 'Salvar Alterações' : 'Salvar e Continuar'}
@@ -170,16 +218,16 @@ export default function Perfil() {
         </TouchableOpacity>
 
         {perfilCompleto && (
-          <TouchableOpacity style={estilos.botaoSecundario} onPress={irParaInicio}>
+          <TouchableOpacity style={estilos.botaoSecundario} onPress={irParaInicio} activeOpacity={0.7}>
             <Text style={estilos.textoBotaoSecundario}>Ir para o Início (Mentor) →</Text>
           </TouchableOpacity>
         )}
       </View>
 
-      {/* SISTEMA DE NÍVEIS E PROGRESSO DE EXP */}
+      {/* NÍVEIS E EXP */}
       <View style={estilos.card}>
         <View style={estilos.linhaNivelCabecalho}>
-          <Text style={estilos.iconeNivel}>{infoNivel.icone || '🌱'}</Text>
+          <Text style={estilos.iconeNivel}>{infoNivel.icone || '🍳'}</Text>
           <View style={estilos.infoNivelTexto}>
             <Text style={estilos.nomeNivel}>{infoNivel.nome}</Text>
             <Text style={estilos.numeroNivel}>Nível {nivel}</Text>
@@ -197,7 +245,7 @@ export default function Perfil() {
         )}
       </View>
 
-      {/* CARDS DE ESTATÍSTICAS */}
+      {/* ESTATÍSTICAS */}
       <View style={estilos.linhaEstatisticas}>
         <View style={estilos.cardStat}>
           <Text style={estilos.iconeStat}>🔥</Text>
@@ -218,7 +266,38 @@ export default function Perfil() {
         </View>
       </View>
 
-      {/* SISTEMA DE HISTÓRICO DE ATIVIDADES */}
+      {/* CONQUISTAS */}
+      <View style={estilos.card}>
+        <View style={estilos.cabecalhoSecao}>
+          <Text style={estilos.tituloSecao}>🏆 Conquistas do Chef</Text>
+          <Text style={estilos.contadorConquistas}>{totalDesbloqueadas}/{conquistas.length}</Text>
+        </View>
+
+        <View style={estilos.listaConquistas}>
+          {conquistas.map((item) => (
+            <View
+              key={item.id}
+              style={[
+                estilos.itemConquista,
+                item.desbloqueada ? estilos.conquistaDesbloqueada : estilos.conquistaBloqueada
+              ]}
+            >
+              <Text style={estilos.iconeConquista}>{item.icone}</Text>
+              <View style={estilos.infoConquista}>
+                <Text style={[estilos.tituloConquista, !item.desbloqueada && estilos.textoDesbotado]}>
+                  {item.titulo}
+                </Text>
+                <Text style={estilos.descConquista}>{item.descricao}</Text>
+              </View>
+              <View style={[estilos.badgeStatus, item.desbloqueada ? estilos.badgeDesbloqueada : estilos.badgeBloqueada]}>
+                <Text style={estilos.textoBadge}>{item.desbloqueada ? '✓ Desbloqueada' : '🔒 Bloqueada'}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+      </View>
+
+      {/* HISTÓRICO */}
       <View style={estilos.card}>
         <Text style={estilos.tituloSecao}>📜 Histórico de Atividades</Text>
         {historico && historico.length > 0 ? (
@@ -248,35 +327,31 @@ export default function Perfil() {
 const estilos = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF8F0'
+    backgroundColor: '#121826'
   },
   conteudo: {
     padding: 16,
     paddingBottom: 40
   },
   cardPrincipal: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#1E293B',
     borderRadius: 16,
     padding: 20,
     marginBottom: 16,
-    shadowColor: '#000',
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
     borderWidth: 1,
-    borderColor: '#F0E0D0'
+    borderColor: '#334155'
   },
   tituloPrincipal: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#5C3D2E',
+    color: '#F8FAFC',
     textAlign: 'center'
   },
   subtituloPrincipal: {
     fontSize: 14,
-    color: '#8B5A2B',
+    color: '#94A3B8',
     textAlign: 'center',
-    marginTop: 4,
+    marginTop: 6,
     marginBottom: 16
   },
   avatarContainer: {
@@ -290,15 +365,15 @@ const estilos = StyleSheet.create({
     marginBottom: 16
   },
   botaoFoto: {
-    backgroundColor: '#FDF4EB',
+    backgroundColor: '#334155',
     borderWidth: 1,
-    borderColor: '#D4A040',
+    borderColor: '#475569',
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 10
   },
   textoBotaoFoto: {
-    color: '#8B5A2B',
+    color: '#F8FAFC',
     fontSize: 14,
     fontWeight: '600'
   },
@@ -308,60 +383,56 @@ const estilos = StyleSheet.create({
   labelCampo: {
     fontSize: 15,
     fontWeight: 'bold',
-    color: '#5C3D2E',
-    marginBottom: 6
+    color: '#F8FAFC',
+    marginBottom: 8
   },
   input: {
-    backgroundColor: '#FAFAFA',
+    backgroundColor: '#0F172A',
     borderWidth: 1.5,
-    borderColor: '#D4A040',
+    borderColor: '#334155',
     borderRadius: 12,
     padding: 12,
     fontSize: 16,
-    color: '#5C3D2E'
+    color: '#F8FAFC'
   },
   textoSucesso: {
-    color: '#2E7D32',
+    color: '#10B981',
     textAlign: 'center',
     fontWeight: '600',
     marginBottom: 12
   },
   botaoSalvar: {
-    backgroundColor: '#CD6800',
+    backgroundColor: '#F5A623',
     borderRadius: 12,
     paddingVertical: 14,
     alignItems: 'center',
     marginTop: 4
   },
   botaoDesativado: {
-    opacity: 0.7
+    opacity: 0.6
   },
   textoBotaoSalvar: {
-    color: '#FFFFFF',
+    color: '#0F172A',
     fontSize: 16,
     fontWeight: 'bold'
   },
   botaoSecundario: {
-    marginTop: 12,
+    marginTop: 14,
     alignItems: 'center',
     paddingVertical: 8
   },
   textoBotaoSecundario: {
-    color: '#8B5A2B',
+    color: '#94A3B8',
     fontSize: 14,
     fontWeight: '600'
   },
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#1E293B',
     borderRadius: 16,
     padding: 18,
     marginBottom: 16,
-    shadowColor: '#000',
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
     borderWidth: 1,
-    borderColor: '#F0E0D0'
+    borderColor: '#334155'
   },
   linhaNivelCabecalho: {
     flexDirection: 'row',
@@ -378,11 +449,11 @@ const estilos = StyleSheet.create({
   nomeNivel: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#5C3D2E'
+    color: '#F8FAFC'
   },
   numeroNivel: {
     fontSize: 13,
-    color: '#8B5A2B',
+    color: '#94A3B8',
     fontWeight: '600'
   },
   espacoBarra: {
@@ -391,7 +462,7 @@ const estilos = StyleSheet.create({
   proximoNivelTexto: {
     marginTop: 8,
     fontSize: 12,
-    color: '#A0826D',
+    color: '#94A3B8',
     fontStyle: 'italic'
   },
   linhaEstatisticas: {
@@ -402,14 +473,13 @@ const estilos = StyleSheet.create({
   },
   cardStat: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#1E293B',
     borderRadius: 14,
     paddingVertical: 14,
     paddingHorizontal: 8,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#F0E0D0',
-    elevation: 1
+    borderColor: '#334155'
   },
   iconeStat: {
     fontSize: 22,
@@ -418,18 +488,88 @@ const estilos = StyleSheet.create({
   valorStat: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#5C3D2E'
+    color: '#F8FAFC'
   },
   rotuloStat: {
     fontSize: 11,
-    color: '#8B5A2B',
+    color: '#94A3B8',
     marginTop: 2
+  },
+  cabecalhoSecao: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 14
   },
   tituloSecao: {
     fontSize: 17,
     fontWeight: 'bold',
-    color: '#5C3D2E',
-    marginBottom: 12
+    color: '#F8FAFC'
+  },
+  contadorConquistas: {
+    fontSize: 13,
+    fontWeight: 'bold',
+    color: '#F5A623',
+    backgroundColor: '#0F172A',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#334155'
+  },
+  listaConquistas: {
+    gap: 10
+  },
+  itemConquista: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#0F172A',
+    borderRadius: 12,
+    padding: 12,
+    borderWidth: 1
+  },
+  conquistaDesbloqueada: {
+    borderColor: '#F5A623'
+  },
+  conquistaBloqueada: {
+    borderColor: '#334155',
+    opacity: 0.7
+  },
+  iconeConquista: {
+    fontSize: 24,
+    marginRight: 12
+  },
+  infoConquista: {
+    flex: 1
+  },
+  tituloConquista: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#F8FAFC'
+  },
+  textoDesbotado: {
+    color: '#94A3B8'
+  },
+  descConquista: {
+    fontSize: 12,
+    color: '#64748B',
+    marginTop: 2
+  },
+  badgeStatus: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6
+  },
+  badgeDesbloqueada: {
+    backgroundColor: 'rgba(245, 166, 35, 0.15)'
+  },
+  badgeBloqueada: {
+    backgroundColor: 'rgba(51, 65, 85, 0.4)'
+  },
+  textoBadge: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    color: '#F8FAFC'
   },
   itemHistorico: {
     flexDirection: 'row',
@@ -437,7 +577,7 @@ const estilos = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#F5EBE0'
+    borderBottomColor: '#334155'
   },
   infoHistorico: {
     flex: 1,
@@ -446,24 +586,24 @@ const estilos = StyleSheet.create({
   motivoHistorico: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#5C3D2E'
+    color: '#F8FAFC'
   },
   dataHistorico: {
     fontSize: 11,
-    color: '#A0826D',
+    color: '#94A3B8',
     marginTop: 2
   },
   quantidadeHistorico: {
     fontSize: 15,
     fontWeight: 'bold',
-    color: '#CD6800'
+    color: '#F5A623'
   },
   historicoVazio: {
     paddingVertical: 14,
     alignItems: 'center'
   },
   textoHistoricoVazio: {
-    color: '#A0826D',
+    color: '#64748B',
     fontSize: 13,
     textAlign: 'center',
     lineHeight: 18
