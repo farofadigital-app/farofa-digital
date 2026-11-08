@@ -143,7 +143,7 @@ export default function Quiz() {
       try {
         const chaveMentor = mentorEscolhido === 'jose' ? 'jose' : 'ana';
         const listaAtualizada = await carregarPerguntasComFallback(chaveMentor, mentor.perguntas || []);
-        if (ativo && Array.isArray(listaAtualizada) && listaAtualizada.length > 0) {
+        if (ativo && Array.isArray(listaAtualizada)) {
           setBancoPerguntas(listaAtualizada);
         }
       } catch (err) {
