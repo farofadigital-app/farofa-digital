@@ -365,13 +365,13 @@ export default function Quiz() {
 
   // ---------- Início ----------
   if (fase === 'inicio') {
-    const total = Math.min(QTD_PERGUNTAS, banco.length);
+    const total = Math.min(QTD_PERGUNTAS, bancoPerguntas.length);
     return (
       <TelaSegura>
         <ScrollView contentContainerStyle={estilos.centroRolagem}>
           <Text style={estilos.emojiGrande}>🧠</Text>
           <Text style={estilos.titulo}>Sala do Saber</Text>
-          {banco.length === 0 ? (
+          {bancoPerguntas.length === 0 ? (
             <Text style={estilos.texto}>Ainda não há perguntas para {mentor.nome}.</Text>
           ) : (
             <>
