@@ -1,4 +1,4 @@
-﻿import { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { TextoResponsivo as Text } from '../../componentes/comuns/TextoResponsivo';
 import { CORTES } from '../../dados/cortes';
@@ -195,9 +195,11 @@ const estilos = StyleSheet.create({
   },
   cabecalhoCartao: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 2
+    gap: 6,
+    marginBottom: 4
   },
   nome: { fontSize: 18, lineHeight: 24, fontWeight: 'bold', color: CORES.texto, flex: 1, paddingRight: 8 },
   badgeCategoria: {
@@ -214,6 +216,7 @@ const estilos = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
+    gap: 8,
     marginBottom: 10
   },
   rotulo: { fontSize: 13, color: CORES.textoSecundario, marginRight: 8 },

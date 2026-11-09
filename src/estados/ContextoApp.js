@@ -1,4 +1,4 @@
-﻿import { createContext, useContext, useState, useEffect, useRef } from 'react';
+import { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { CHAVES, salvar, carregar, limparTudo } from '../servicos/armazenamento';
 import { salvarPerfil, carregarPerfil } from '../servicos/perfilService';
 import { NIVEIS } from '../dados/niveis';
@@ -103,7 +103,7 @@ export function ProvedorApp({ children }) {
     setStreak(novoStreak);
     setUltimoAcesso(hoje);
     setBrasas(b => b + bonus);
-    adicionarRegistro(bonus, 'Acesso diario');
+    adicionarRegistro(bonus, 'Acesso diário');
     return true;
   };
 
@@ -114,7 +114,7 @@ export function ProvedorApp({ children }) {
     onboardingConcluidoRef.current = true;
     setMentorEscolhido(id);
     setBrasas(b => b + BRASAS_BOAS_VINDAS);
-    adicionarRegistro(BRASAS_BOAS_VINDAS, 'Bonus de boas-vindas');
+    adicionarRegistro(BRASAS_BOAS_VINDAS, 'Bônus de boas-vindas');
     setOnboardingConcluido(true);
     return true;
   };

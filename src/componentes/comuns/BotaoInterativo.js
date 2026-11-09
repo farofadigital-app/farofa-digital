@@ -1,4 +1,4 @@
-﻿import { useRef } from 'react';
+import { useRef } from 'react';
 import { Animated, Platform, TouchableOpacity } from 'react-native';
 import * as Haptics from 'expo-haptics';
 
@@ -8,7 +8,7 @@ export function vibrarToque() {
   if (Platform.OS === 'web') return;
 
   Haptics.selectionAsync().catch(erro => {
-    console.warn('N foi possível reproduzir a vibraç de toque:', erro);
+    console.warn('Não foi possível reproduzir a vibração de toque:', erro);
   });
 }
 

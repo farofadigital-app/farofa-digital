@@ -1,4 +1,4 @@
-﻿const QTD_INTRUSOS = 3;
+const QTD_INTRUSOS = 3;
 const FORNO_MIN = 100;
 const FORNO_MAX = 260;
 const RECOMPENSAS = {
@@ -17,8 +17,19 @@ function embaralhar(lista) {
 }
 
 export function extrairEtapas(receita) {
-  const frases = receita.modoPreparo.match(/[^.!?]+[.!?]?/g) || [];
-  return frases.map(frase => frase.trim()).filter(Boolean);
+  if (!receita || typeof receita.modoPreparo !== 'string') return [];
+  const normalizado = receita.modoPreparo.replace(/\\n/g, '\n');
+  const linhas = normalizado
+    .split(/\r?\n/)
+    .map(linha => linha.replace(/^\d+[\.\)]\s*/, '').trim())
+    .filter(linha => linha.length > 2);
+
+  if (linhas.length > 1) return linhas;
+
+  const frases = normalizado.match(/[^.!?]+[.!?]?/g) || [];
+  return frases
+    .map(frase => frase.replace(/^\d+[\.\)]\s*/, '').trim())
+    .filter(frase => frase.length > 2);
 }
 
 export function exigeAquecimento(instrucao) {
@@ -75,11 +86,22 @@ export function criarBancada(receita, receitas) {
     ...item,
     certo: true
   }));
-  const nomes = new Set((receita.ingredientes || []).map(nome => nome.toLowerCase()));
+  const nomes = new Set((receita.ingredientes || []).map(nome => nome.toLocaleLowerCase()));
   const nomesIntrusos = new Set();
-  const intrusos = embaralhar(receitas
-    .filter(item => item.id !== receita.id)
+  // Prioriza itens de receitas da mesma categoria para evitar intrusos sem sentido
+  // (por exemplo, caldo de peixe em uma sobremesa). Só amplia a busca se faltar opção.
+  const outrasReceitas = receitas.filter(item => item.id !== receita.id);
+  const candidatas = outrasReceitas.filter(item => item.categoria === receita.categoria);
+  const fontesIntrusos = candidatas.length > 0 ? candidatas : outrasReceitas;
+  const nomesDisponiveis = fontesIntrusos
     .flatMap(item => item.ingredientes || [])
+    .filter(nome => !nomes.has(nome.toLocaleLowerCase()));
+  const fontesFallback = outrasReceitas
+    .flatMap(item => item.ingredientes || [])
+    .filter(nome => !nomes.has(nome.toLocaleLowerCase()));
+  const opcoesIntrusos = new Set(nomesDisponiveis.map(nome => nome.toLocaleLowerCase()));
+  const candidatosIntrusos = [...nomesDisponiveis, ...fontesFallback.filter(nome => !opcoesIntrusos.has(nome.toLocaleLowerCase()))];
+  const intrusos = embaralhar(candidatosIntrusos
     .filter(nome => {
       const normalizado = nome.toLowerCase();
       if (nomes.has(normalizado) || nomesIntrusos.has(normalizado)) return false;

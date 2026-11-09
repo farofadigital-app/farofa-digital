@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -15,6 +15,16 @@ import AvatarPerfil from '../../componentes/AvatarPerfil';
 import BarraNivel from '../../componentes/progresso/BarraNivel';
 import { NIVEIS } from '../../dados/niveis';
 import { escolherFotoGaleria, tirarFotoCamera } from '../../servicos/perfilService';
+
+function corrigirRotuloHistorico(motivo) {
+  const rotulosAntigos = {
+    'Acesso diario': 'Acesso diário',
+    'Bonus de boas-vindas': 'Bônus de boas-vindas',
+    'Minicozinha: Feiioada Completa': 'Minicozinha: Feijoada Completa'
+  };
+  const texto = motivo || 'Atividade culinária';
+  return rotulosAntigos[texto] || texto;
+}
 
 export default function Perfil() {
   const {
@@ -304,7 +314,7 @@ export default function Perfil() {
           historico.map((item, index) => (
             <View key={index} style={estilos.itemHistorico}>
               <View style={estilos.infoHistorico}>
-                <Text style={estilos.motivoHistorico}>{item.motivo || 'Atividade culinária'}</Text>
+                <Text style={estilos.motivoHistorico}>{corrigirRotuloHistorico(item.motivo)}</Text>
                 <Text style={estilos.dataHistorico}>{formatarData(item.data)}</Text>
               </View>
               <Text style={estilos.quantidadeHistorico}>
@@ -502,8 +512,10 @@ const estilos = StyleSheet.create({
   },
   cabecalhoSecao: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     justifyContent: 'space-between',
     alignItems: 'center',
+    gap: 8,
     marginBottom: 14
   },
   tituloSecao: {
@@ -527,7 +539,8 @@ const estilos = StyleSheet.create({
   },
   itemConquista: {
     flexDirection: 'row',
-    alignItems: 'center',
+    flexWrap: 'wrap',
+    alignItems: 'flex-start',
     backgroundColor: '#0F172A',
     borderRadius: 12,
     padding: 12,
@@ -545,7 +558,8 @@ const estilos = StyleSheet.create({
     marginRight: 12
   },
   infoConquista: {
-    flex: 1
+    flex: 1,
+    minWidth: 150
   },
   tituloConquista: {
     fontSize: 14,
@@ -557,13 +571,17 @@ const estilos = StyleSheet.create({
   },
   descConquista: {
     fontSize: 12,
-    color: '#64748B',
-    marginTop: 2
+    lineHeight: 18,
+    color: '#94A3B8',
+    marginTop: 2,
+    flexShrink: 1
   },
   badgeStatus: {
     paddingHorizontal: 8,
     paddingVertical: 4,
-    borderRadius: 6
+    borderRadius: 6,
+    marginTop: 6,
+    marginLeft: 36
   },
   badgeDesbloqueada: {
     backgroundColor: 'rgba(245, 166, 35, 0.15)'

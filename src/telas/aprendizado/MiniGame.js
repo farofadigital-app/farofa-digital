@@ -241,6 +241,9 @@ function CartaoArrastavel({ item, estado, onDropNaPanela, onToque }) {
         activeOpacity={0.8}
         onPress={() => onToque(item)}
         disabled={Boolean(estado)}
+        accessibilityRole="button"
+        accessibilityLabel={`Ingrediente: ${item.nome}`}
+        accessibilityState={{ disabled: Boolean(estado), selected: estado === 'certo' }}
         style={[
           estilos.cartaoIngrediente,
           estado === 'certo' && estilos.ingredienteCerto,
@@ -524,7 +527,7 @@ export default function MiniGame() {
     if (item.certo) {
       setCertosEscolhidos(lista => [...lista, item.id]);
       pontuarCombo();
-      setHumorMentor('feliz');
+      setHumorMentor('animada');
       setFala(sorteio(mentor.falas.arrasteCerto));
       vibrar(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light));
 
@@ -566,7 +569,7 @@ export default function MiniGame() {
       setHumorMentor('orgulhosa');
       setFala(mentor.falas.fim3Estrelas);
     } else if (final.estrelas === 2) {
-      setHumorMentor('feliz');
+      setHumorMentor('animada');
       setFala(mentor.falas.fim2Estrelas);
     } else {
       setHumorMentor('padrao');
@@ -596,7 +599,7 @@ export default function MiniGame() {
   const aoAcertarGiroMexer = useCallback((voltas) => {
     pontuarCombo();
     if (voltas % 2 === 0) {
-      setHumorMentor('feliz');
+      setHumorMentor('animada');
       setFala(sorteio(mentor.falas.mexerCerto));
     }
   }, [mentor, pontuarCombo]);
@@ -616,7 +619,7 @@ export default function MiniGame() {
       vibrar(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success));
     } else if (noPonto) {
       pontuarCombo();
-      setHumorMentor('feliz');
+      setHumorMentor('animada');
       setFala(sorteio(mentor.falas.pontoBom));
       setFeedback('✅ Na temperatura certa! Próxima etapa liberada.');
       setFeedbackErro(false);
@@ -647,12 +650,22 @@ export default function MiniGame() {
           </View>
 
           <Text style={estilos.subtitulo}>Escolha uma receita para começar</Text>
-          {RECEITAS.map(item => (
-            <BotaoInterativo key={item.id} style={estilos.cartaoReceita} onPress={() => escolherReceita(item)}>
-              <Text style={estilos.nomeReceita}>{item.nome}</Text>
-              <Text style={estilos.detalheReceita}>{item.regiao} · {item.tempo} · {item.dificuldade}</Text>
-            </BotaoInterativo>
-          ))}
+          {RECEITAS.map(item => {
+            const rotulosDetalhe = [item.regiao, item.tempo, item.dificuldade].filter(Boolean);
+            const detalheTexto = rotulosDetalhe.join(' · ');
+            return (
+              <BotaoInterativo
+                key={item.id}
+                style={estilos.cartaoReceita}
+                onPress={() => escolherReceita(item)}
+                accessibilityRole="button"
+                accessibilityLabel={`Preparar ${item.nome}`}
+              >
+                <Text style={estilos.nomeReceita}>{item.nome}</Text>
+                {detalheTexto ? <Text style={estilos.detalheReceita}>{detalheTexto}</Text> : null}
+              </BotaoInterativo>
+            );
+          })}
         </ScrollView>
       </TelaSegura>
     );
@@ -663,7 +676,7 @@ export default function MiniGame() {
       <TelaSegura>
         <ScrollView contentContainerStyle={estilos.conteudo}>
           <View style={estilos.cabecalhoJogo}>
-            <Text style={estilos.progresso}>{receita.regiao} · {receita.tempo}</Text>
+            <Text style={estilos.progresso}>{[receita.regiao, receita.tempo].filter(Boolean).join(' · ')}</Text>
             <BadgeCombo combo={combo} />
           </View>
 
@@ -674,8 +687,12 @@ export default function MiniGame() {
           <View style={estilos.areaPanelaCentral}>
             <Animated.View style={[estilos.panelaVisual, { transform: [{ scale: panelaEscala }] }]}>
               <Text style={estilos.emojiPanelaGrande}>🥘</Text>
-              <Text style={estilos.textoPanelaCentral}>{certosEscolhidos.length} de {totalCertos} no caldeirão</Text>
-              <Text style={estilos.subtextoPanelaCentral}>{bancadaPronta ? 'Pronto para ir ao fogão!' : 'Solte aqui ou toque nos itens'}</Text>
+              <Text style={estilos.textoPanelaCentral}>
+                {certosEscolhidos.length} de {totalCertos} ingredientes no caldeirão
+              </Text>
+              <Text style={estilos.subtextoPanelaCentral}>
+                {bancadaPronta ? 'Tudo certo! Siga para o fogão.' : 'Arraste um ingrediente até aqui ou toque nele.'}
+              </Text>
             </Animated.View>
           </View>
 
@@ -799,8 +816,10 @@ export default function MiniGame() {
         <View style={estilos.cartaoResultado}>
           <Text style={estilos.recompensa}>🔥 +{premioFinal.brasas} Brasas</Text>
           <Text style={estilos.recompensa}>⭐ +{premioFinal.exp} EXP</Text>
-          {maxCombo > 1 && (
-            <Text style={estilos.destaqueComboFinal}>💥 Bônus de Maior Combo: x{maxCombo}!</Text>
+          {maxCombo > 0 && (
+            <Text style={estilos.destaqueComboFinal}>
+              💥 Bônus de combo: +{Math.floor(maxCombo * 2)} Brasas e +{Math.floor(maxCombo * 4)} EXP (x{maxCombo})
+            </Text>
           )}
           <Text style={estilos.precisaoFinal}>Precisão no preparo: {precisao}%</Text>
           <Text style={estilos.dica}>Confira a receita completa na aba Cozinha e pratique sempre com segurança!</Text>
@@ -853,8 +872,8 @@ const estilos = StyleSheet.create({
     width: '90%'
   },
   emojiPanelaGrande: { fontSize: 44, lineHeight: 52 },
-  textoPanelaCentral: { color: CORES.texto, fontSize: 15, lineHeight: 20, fontWeight: 'bold', marginTop: 4 },
-  subtextoPanelaCentral: { color: CORES.textoSecundario, fontSize: 12, lineHeight: 16, marginTop: 2 },
+  textoPanelaCentral: { color: CORES.texto, fontSize: 15, lineHeight: 22, fontWeight: 'bold', marginTop: 4, textAlign: 'center', width: '100%' },
+  subtextoPanelaCentral: { color: CORES.textoSecundario, fontSize: 12, lineHeight: 18, marginTop: 4, textAlign: 'center', width: '100%' },
 
   grade: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginTop: 6, marginBottom: 10 },
   celulaIngrediente: { width: '48%', marginBottom: 10 },
@@ -871,8 +890,8 @@ const estilos = StyleSheet.create({
   ingredienteCerto: { borderColor: CORES.sucesso, backgroundColor: 'rgba(16,185,129,0.15)' },
   ingredienteErrado: { borderColor: CORES.erro, backgroundColor: 'rgba(239,68,68,0.15)' },
   emojiIngrediente: { fontSize: 26, lineHeight: 32, marginBottom: 2 },
-  nomeIngrediente: { color: CORES.texto, fontSize: 13, lineHeight: 18, fontWeight: 'bold', textAlign: 'center' },
-  dicaArraste: { color: CORES.textoSecundario, fontSize: 10, lineHeight: 14, marginTop: 2 },
+  nomeIngrediente: { color: CORES.texto, fontSize: 13, lineHeight: 19, fontWeight: 'bold', textAlign: 'center', width: '100%' },
+  dicaArraste: { color: CORES.textoSecundario, fontSize: 11, lineHeight: 16, marginTop: 4, textAlign: 'center' },
 
   areaCorteContainer: { backgroundColor: CORES.superficie, borderRadius: RAIO, borderWidth: 1, borderColor: CORES.borda, padding: 14, marginBottom: 14, alignItems: 'center' },
   rotuloGesto: { color: CORES.destaque, fontSize: 12, lineHeight: 16, fontWeight: 'bold', textTransform: 'uppercase', marginBottom: 4 },
@@ -949,6 +968,6 @@ const estilos = StyleSheet.create({
   estrela: { marginHorizontal: 4 },
   cartaoResultado: { backgroundColor: CORES.superficie, borderRadius: RAIO, borderWidth: 1, borderColor: CORES.borda, padding: 16, alignItems: 'center', marginVertical: 10 },
   recompensa: { color: CORES.texto, fontSize: 18, lineHeight: 26, fontWeight: 'bold', marginVertical: 2 },
-  destaqueComboFinal: { color: CORES.destaque, fontSize: 14, fontWeight: 'bold', marginTop: 4 },
-  precisaoFinal: { color: CORES.destaque, fontSize: 14, lineHeight: 20, fontWeight: 'bold', marginTop: 6 }
+  destaqueComboFinal: { color: CORES.destaque, fontSize: 14, lineHeight: 21, fontWeight: 'bold', marginTop: 6, textAlign: 'center', width: '100%' },
+  precisaoFinal: { color: CORES.destaque, fontSize: 14, lineHeight: 22, fontWeight: 'bold', marginTop: 8, textAlign: 'center', width: '100%' }
 });

@@ -1,4 +1,4 @@
-﻿import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import {
   Animated, Easing, Platform, ScrollView, StyleSheet, TouchableOpacity, View
@@ -116,7 +116,7 @@ function vibrar(acao) {
   try {
     Promise.resolve(acao()).catch(() => {});
   } catch (e) {
-    // sem vibraç (navegador/PC): segue normalmente
+    // Sem vibração (navegador/PC), o jogo segue normalmente.
   }
 }
 

@@ -1,4 +1,4 @@
-﻿import { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   ScrollView, StyleSheet, View
 } from 'react-native';
@@ -424,8 +424,8 @@ const estilos = StyleSheet.create({
   },
   descricaoRegional: { fontSize: 13, lineHeight: 20, color: CORES.textoSecundario, marginTop: 4 },
   cartaoRegional: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
+    alignItems: 'stretch',
     backgroundColor: CORES.superficie,
     borderWidth: 1,
     borderColor: CORES.borda,
@@ -434,10 +434,12 @@ const estilos = StyleSheet.create({
     marginTop: 10
   },
   botaoRegional: {
+    alignSelf: 'flex-start',
     backgroundColor: CORES.destaque,
     borderRadius: RAIO,
-    paddingHorizontal: 10,
-    paddingVertical: 9
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginTop: 10
   },
   botaoRegionalAdicionado: { backgroundColor: 'rgba(16,185,129,0.15)' },
   textoRegional: { color: '#000', fontSize: 12, lineHeight: 18, fontWeight: 'bold' },
