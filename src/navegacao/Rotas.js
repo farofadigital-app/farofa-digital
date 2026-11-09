@@ -1,4 +1,4 @@
-﻿import { ActivityIndicator, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { ActivityIndicator, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { TextoResponsivo as Text, escalaFonte } from '../componentes/comuns/TextoResponsivo';
@@ -9,11 +9,10 @@ import { CORES } from '../uteis/constantes';
 import BoasVindas from '../telas/onboarding/BoasVindas';
 import EscolherMentor from '../telas/onboarding/EscolherMentor';
 import CriarPerfil from '../telas/CriarPerfil';
+import Mentor from '../telas/mentor/Mentor';
+import Academia from '../telas/aprendizado/Academia';
 import Cozinha from '../telas/receitas/Cozinha';
 import Perfil from '../telas/perfil/Perfil';
-import Quiz from '../telas/aprendizado/Quiz';
-import MiniGame from '../telas/aprendizado/MiniGame';
-import Mentor from '../telas/mentor/Mentor';
 
 const Tab = createBottomTabNavigator();
 const AuthStack = createNativeStackNavigator();
@@ -35,7 +34,7 @@ function NavegacaoAutenticada() {
         tabBarStyle: { backgroundColor: CORES.superficie, borderTopWidth: 0 },
         tabBarActiveTintColor: CORES.destaque,
         tabBarInactiveTintColor: CORES.textoSecundario,
-        tabBarLabelStyle: { fontSize: escalaFonte(10, width) },
+        tabBarLabelStyle: { fontSize: escalaFonte(11, width), fontWeight: '600' },
       }}
     >
       <Tab.Screen
@@ -48,21 +47,12 @@ function NavegacaoAutenticada() {
         }}
       />
       <Tab.Screen
-        name="Quiz"
-        component={Quiz}
+        name="Academia"
+        component={Academia}
         options={{
-          title: 'Sala do Saber',
-          tabBarLabel: 'Quiz',
-          tabBarIcon: ({ focused }) => <Icone emoji="🧠" focused={focused} />,
-        }}
-      />
-      <Tab.Screen
-        name="Minicozinha"
-        component={MiniGame}
-        options={{
-          title: 'Minicozinha',
-          tabBarLabel: 'Jogo',
-          tabBarIcon: ({ focused }) => <Icone emoji="🍳" focused={focused} />,
+          title: 'Academia Culinária',
+          tabBarLabel: 'Academia',
+          tabBarIcon: ({ focused }) => <Icone emoji="🎓" focused={focused} />,
         }}
       />
       <Tab.Screen
@@ -78,7 +68,36 @@ function NavegacaoAutenticada() {
         name="Perfil"
         component={Perfil}
         options={{
+          title: 'Meu Perfil',
+          tabBarLabel: 'Perfil',
           tabBarIcon: ({ focused }) => <Icone emoji="👤" focused={focused} />,
+        }}
+      />
+      <Tab.Screen
+        name="Quiz"
+        component={Academia}
+        initialParams={{ modulo: 'quiz' }}
+        options={{
+          tabBarItemStyle: { display: 'none' },
+          title: 'Sala do Saber',
+        }}
+      />
+      <Tab.Screen
+        name="Minicozinha"
+        component={Academia}
+        initialParams={{ modulo: 'minigame' }}
+        options={{
+          tabBarItemStyle: { display: 'none' },
+          title: 'Minicozinha',
+        }}
+      />
+      <Tab.Screen
+        name="Cortes"
+        component={Academia}
+        initialParams={{ modulo: 'cortes' }}
+        options={{
+          tabBarItemStyle: { display: 'none' },
+          title: 'Guia de Cortes & Facas',
         }}
       />
     </Tab.Navigator>
@@ -126,4 +145,3 @@ export default function Rotas() {
 
   return <NavegacaoAutenticada />;
 }
-
