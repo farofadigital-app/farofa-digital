@@ -33,7 +33,7 @@ export default function Cozinha({ route }) {
   const [novoItem, setNovoItem] = useState('');
 
   const origens = useMemo(
-    () => ['Todas', ...new Set(RECEITAS.map(receita => receita.regiao))],
+    () => ['Todas', ...new Set(RECEITAS.map(receita => receita.regiao).filter(Boolean))],
     []
   );
 

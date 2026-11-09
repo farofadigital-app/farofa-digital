@@ -508,7 +508,8 @@ const estilos = StyleSheet.create({
   rotuloStat: {
     fontSize: 11,
     color: '#94A3B8',
-    marginTop: 2
+    marginTop: 2,
+    textAlign: 'center'
   },
   cabecalhoSecao: {
     flexDirection: 'row',
