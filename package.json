@@ -42,7 +42,8 @@
     "globals": "^17.14.0",
     "jest": "~30.5.2",
     "jest-expo": "~58.0.14",
-    "react-test-renderer": "^19.3.0"
+    "react-test-renderer": "^19.3.0",
+    "@react-native/jest-preset": "0.88.1"
   },
   "allowScripts": {
     "llama.rn@0.13.0-rc.9": true
