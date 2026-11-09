@@ -33,18 +33,37 @@ jobs:
       - name: Executar testes de regressao e layout
         run: npm test
 
-      - name: Incrementar versionCode automaticamente para sobreposicao no Android
+      - name: Incrementar versao visivel e versionCode automaticamente
         id: version_code
         run: |
           BUILD_NUM=${{ github.run_number }}
           CODE=$(( 1000 + BUILD_NUM ))
-          echo "Injetando versionCode: $CODE no app.json"
+          echo "Processando Build #$BUILD_NUM..."
           node -e "
             const fs = require('fs');
+            
+            // Atualiza app.json
             const app = JSON.parse(fs.readFileSync('app.json', 'utf8'));
+            const currentVer = app.expo.version || '3.14.0';
+            const parts = currentVer.split('.');
+            const major = parts[0] || '3';
+            const minor = parts[1] || '14';
+            const novaVersao = major + '.' + minor + '.' + $BUILD_NUM;
+            
+            app.expo.version = novaVersao;
             app.expo.android = app.expo.android || {};
             app.expo.android.versionCode = $CODE;
             fs.writeFileSync('app.json', JSON.stringify(app, null, 2), 'utf8');
+            
+            // Atualiza package.json
+            try {
+              const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+              pkg.version = novaVersao;
+              fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2), 'utf8');
+            } catch (e) {}
+
+            console.log('Versao visivel definida para:', novaVersao);
+            console.log('versionCode definido para:', $CODE);
           "
           echo "novo_code=$CODE" >> $GITHUB_OUTPUT
 
@@ -94,11 +113,11 @@ jobs:
           echo "versionCode anterior de referencia: $PREV_CODE"
 
           if [ "$APK_CODE" -le "$PREV_CODE" ]; then
-            echo "=========================================================="
+            echo "============================================================"
             echo "ERRO CRITICO: versionCode do APK ($APK_CODE) nao e maior que a versao anterior ($PREV_CODE)!"
             echo "Isso impediria a instalacao por cima no celular Android."
             echo "Interrompendo o build da Actions agora."
-            echo "=========================================================="
+            echo "============================================================"
             exit 1
           fi
 
