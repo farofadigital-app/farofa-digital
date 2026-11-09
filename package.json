@@ -1,7 +1,7 @@
 {
   "name": "farofa-digital",
   "version": "3.14.1",
-  "description": "Aplicativo educativo e interativo sobre a culin\u00e1ria e a cultura brasileira. Funciona offline.",
+  "description": "Aplicativo educativo e interativo sobre a culinária e a cultura brasileira. Funciona offline.",
   "main": "index.js",
   "scripts": {
     "start": "npx expo start",
@@ -29,7 +29,6 @@
     "expo-image-picker": "~58.0.10",
     "expo-splash-screen": "~58.0.13",
     "expo-status-bar": "~58.0.4",
-    "llama.rn": "^0.13.0-rc.9",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "react-native": "0.88.1",
