@@ -28,6 +28,19 @@ jobs:
       - name: Instalar dependencias
         run: npm install --legacy-peer-deps
 
+      - name: Incrementar versionCode automaticamente para sobreposicao no Android
+        run: |
+          BUILD_NUM=${{ github.run_number }}
+          CODE=$(( 1000 + BUILD_NUM ))
+          echo "Injetando versionCode: $CODE no app.json"
+          node -e "
+            const fs = require('fs');
+            const app = JSON.parse(fs.readFileSync('app.json', 'utf8'));
+            app.expo.android = app.expo.android || {};
+            app.expo.android.versionCode = $CODE;
+            fs.writeFileSync('app.json', JSON.stringify(app, null, 2), 'utf8');
+          "
+
       - name: Gerar arquivos nativos do Android
         run: npx expo prebuild --platform android --clean
 
