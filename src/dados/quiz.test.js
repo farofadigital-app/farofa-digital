@@ -39,13 +39,13 @@ describe('dados do Quiz', () => {
   test('respeita filtros de dificuldade e categoria', () => {
     const sorteadas = sortearPerguntas(PERGUNTAS_JOSE, 5, {
       dificuldade: 2,
-      categoria: 'Ingredientes'
+      categoria: 'Utensílios de Cozinha'
     });
 
     expect(sorteadas.length).toBeGreaterThan(0);
     sorteadas.forEach(pergunta => {
       expect(pergunta.dificuldade).toBe(2);
-      expect(pergunta.categoria).toBe('Ingredientes');
+      expect(pergunta.categoria).toBe('Utensílios de Cozinha');
     });
   });
 

@@ -26,71 +26,71 @@ const MENTORES = {
   ana: {
     nome: 'Chef Ana',
     emoji: '👩‍🍳',
-    estilo: 'explicações acolhedoras e passo a passo',
-    saudacao: nome => `Vamos cozinhar com calma${nome ? `, ${nome}` : ''}, uma etapa de cada vez.`,
-    retorno: nome => `Que bom ter você de volta${nome ? `, ${nome}` : ''}! Vamos preparar algo gostoso?`,
+    estilo: 'mentora acolhedora, olho clínico e técnica passo a passo',
+    saudacao: nome => `Vem cá${nome ? `, ${nome}` : ''}, relaxa os ombros que cozinhar não é bicho de sete cabeças. Olha essa bancada, vamos organizar tudo primeiro!`,
+    retorno: nome => `Que bom ter você de volta${nome ? `, ${nome}` : ''}! Vamos com calma, prestando atenção nos aromas e respeitando os ingredientes.`,
     sugestoes: [
-      'Como faço uma farofa soltinha?',
-      'Pode me explicar uma receita passo a passo?',
-      'Como posso substituir um ingrediente?'
+      'Como organizo meu mise en place na bancada?',
+      'Por que não devo lavar o frango na pia?',
+      'Qual o ponto certo da cebola e do alho no refogado?'
     ]
   },
   jose: {
     nome: 'Chef José',
     emoji: '👨‍🍳',
-    estilo: 'sabores brasileiros e dicas práticas',
-    saudacao: nome => `A cozinha está pronta${nome ? `, ${nome}` : ''}. Vamos pôr a mão na massa?`,
-    retorno: nome => `Bom ver você de novo${nome ? `, ${nome}` : ''}! Qual sabor vamos explorar hoje?`,
+    estilo: 'o dono da praça, agilidade e energia carioca contagiante',
+    saudacao: nome => `Aí sim${nome ? `, ${nome}` : ''}! Chegou na hora certa, a praça é nossa e hoje você vai sair daqui sabendo bater ponto de corte e segurar panela sem medo!`,
+    retorno: nome => `Chegou quem faltava${nome ? `, ${nome}` : ''}! Fogo aceso, bancada brilhando e navalha nos cortes. O que vamos mandar pra chapa hoje?`,
     sugestoes: [
-      'Qual receita brasileira você recomenda?',
-      'Como tempero uma carne sem exagerar no sal?',
-      'Que corte é bom para cozinhar devagar?'
+      'Como selar carne sem soltar água na panela?',
+      'O que significa saltear e deglaçar a panela?',
+      'Como evitar queimaduras e acidentes com óleo e panelas quentes?'
     ]
   }
 };
 
 const DICAS = [
   {
-    emoji: '🔪',
-    titulo: 'Corte seguro',
-    texto: 'Estabilize a tábua com um pano úmido por baixo. Use uma faca afiada e mantenha as pontas dos dedos recolhidas, afastadas da lâmina.',
-    pergunta: 'Como corto legumes com segurança?'
+    emoji: '🥣',
+    titulo: 'Mise en Place (Tudo no Lugar)',
+    texto: 'Antes de riscar o fósforo, corte, meça e separe tudo em potinhos na bancada. Quem organiza a praça primeiro, nunca queima o alho por distração!',
+    pergunta: 'Como fazer um bom mise en place na bancada?'
   },
   {
-    emoji: '🥘',
-    titulo: 'Organização do preparo',
-    texto: 'Leia a receita inteira, separe e meça os ingredientes e só então aqueça a panela. Isso ajuda a evitar que algo queime enquanto você procura outro item.',
-    pergunta: 'Como organizo o preparo de uma receita?'
+    emoji: '🍳',
+    titulo: 'Saltear vs. Cozinhar na Água',
+    texto: 'Saltear vem do francês "pular": frigideira bem quente, pouca gordura e espaço entre os pedaços. Se amontoar carne fria, a panela esfria e ela ferve na própria água.',
+    pergunta: 'Qual a diferença entre selar, saltear e cozinhar na própria água?'
   },
   {
-    emoji: '🧼',
-    titulo: 'Higiene',
-    texto: 'Lave as mãos e higienize a tábua e os utensílios. Não lave carnes cruas: os respingos podem espalhar microrganismos. Separe-as dos alimentos prontos e lave frutas e vegetais em água corrente.',
-    pergunta: 'Quais cuidados de higiene devo ter na cozinha?'
+    emoji: '🧅',
+    titulo: 'Dourar vs. Queimar a Cebola',
+    texto: 'A cebola entra antes do alho. Dourar carameliza os açúcares naturais e traz doçura. Passou do ponto e escureceu demais? Vira cinza e amarga a comida toda.',
+    pergunta: 'Como saber o ponto exato da cebola e do alho no refogado?'
   },
   {
-    emoji: '🌿',
-    titulo: 'Aproveitamento integral',
-    texto: 'Talos de couve e folhas de cenoura podem entrar em refogados ou caldos. Lave bem, retire partes danificadas e use apenas o que estiver fresco.',
-    pergunta: 'Como aproveito talos e folhas na cozinha?'
+    emoji: '♨️',
+    titulo: 'Banho-maria & Ponto de Fita',
+    texto: 'Banho-maria cozinha em calor suave e indireto (abaixo de 100°C), ideal para pudins e chocolate. Já o ponto de fita é bater ovos e açúcar até criar dobras volumosas que não desmancham.',
+    pergunta: 'Para que serve o banho-maria e o que é o ponto de fita na confeitaria?'
   },
   {
-    emoji: '🧂',
-    titulo: 'Tempero equilibrado',
-    texto: 'Ajuste o sal aos poucos e prove durante o preparo, quando for seguro. Ervas, alho, cebola, limão e especiarias também realçam o sabor.',
-    pergunta: 'Como ajusto o tempero sem exagerar no sal?'
-  },
-  {
-    emoji: '🔥',
-    titulo: 'Controle do fogo',
-    texto: 'Fogo alto doura rápido; fogo baixo cozinha por mais tempo. Se o alimento começar a escurecer antes de cozinhar por dentro, reduza o fogo.',
-    pergunta: 'Como escolho a intensidade do fogo?'
+    emoji: '🍗',
+    titulo: 'Frango Cru: Nunca na Pia!',
+    texto: 'Água na pia espalha bactérias perigosas por até 1 metro ao redor. O que mata micro-organismos é a temperatura do fogo acima de 74°C, e nunca a água da torneira.',
+    pergunta: 'Por que nunca se deve lavar frango cru na pia da cozinha?'
   },
   {
     emoji: '🧊',
-    titulo: 'Conservação',
-    texto: 'Guarde os alimentos perecíveis refrigerados, em recipientes limpos e fechados. Separe alimentos crus dos que já estão prontos para consumo.',
-    pergunta: 'Como guardo os alimentos com segurança?'
+    titulo: 'Descongelar com Segurança',
+    texto: 'Nunca deixe carne descongelando o dia todo na bancada morna. Passe do congelador para a prateleira de baixo da geladeira na véspera: suco preservado e segurança total!',
+    pergunta: 'Qual é o jeito correto e seguro de descongelar alimentos?'
+  },
+  {
+    emoji: '🔪',
+    titulo: 'Tábua Firme & Dedos em Garra',
+    texto: 'Tábua solta é perigo: coloque um pano úmido por baixo para travar. Curve as pontas dos dedos para dentro ("mão de garra") e deslize a lâmina contra as juntas dos dedos.',
+    pergunta: 'Como posicionar as mãos para cortar alimentos com segurança?'
   }
 ];
 
