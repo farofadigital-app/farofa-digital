@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+﻿import { StyleSheet } from 'react-native';
 import { TextoResponsivo as Text } from '../../componentes/comuns/TextoResponsivo';
 import TelaSegura from '../../componentes/layout/TelaSegura';
 import BotaoPrincipal from '../../componentes/comuns/BotaoPrincipal';

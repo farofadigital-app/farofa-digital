@@ -1,4 +1,4 @@
-import { StatusBar } from 'expo-status-bar';
+﻿import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { ProvedorApp } from './estados/ContextoApp';
 import Rotas from './navegacao/Rotas';

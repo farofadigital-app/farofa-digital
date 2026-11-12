@@ -9,6 +9,7 @@ export const INSUMOS_REGIONAIS = [
   { id: 8, nome: 'Pequi', regiao: 'Centro-Oeste', descricao: 'Fruto do Cerrado usado em pratos goianos.' },
   { id: 9, nome: 'Queijo minas', regiao: 'Sudeste', descricao: 'Queijo tradicional de Minas Gerais.' },
   { id: 10, nome: 'Erva-mate', regiao: 'Sul', descricao: 'Ingrediente usado no chimarrão.' },
-  { id: 11, nome: 'Pinhão', regiao: 'Sul', descricao: 'Semente da araucária, consumida em pratos sulistas.' },
+  { id: 11, nome: 'Pinh', regiao: 'Sul', descricao: 'Semente da araucária, consumida em pratos sulistas.' },
   { id: 12, nome: 'Mandioca', regiao: 'Várias regiões', descricao: 'Ingrediente presente em receitas de todo o Brasil.' }
 ];
+

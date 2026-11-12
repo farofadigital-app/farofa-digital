@@ -1,4 +1,4 @@
-const path = require('node:path');
+﻿const path = require('node:path');
 const { app, BrowserWindow } = require('electron');
 
 function criarJanela() {
@@ -25,7 +25,7 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) criarJanela();
   });
 }).catch(erro => {
-  console.error('Não foi possível iniciar o Farofa Digital:', erro);
+  console.error('N foi possível iniciar o Farofa Digital:', erro);
   app.quit();
 });
 

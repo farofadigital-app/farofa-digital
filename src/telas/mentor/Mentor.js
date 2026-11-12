@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+﻿import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView,
   StyleSheet, View
@@ -26,71 +26,71 @@ const MENTORES = {
   ana: {
     nome: 'Chef Ana',
     emoji: '👩‍🍳',
-    estilo: 'explicações acolhedoras e passo a passo',
-    saudacao: 'Vamos cozinhar com calma, uma etapa de cada vez.',
-    retorno: 'Que bom ter você de volta! Vamos preparar algo gostoso?',
+    estilo: 'mentora acolhedora, olho clínico e técnica passo a passo',
+    saudacao: nome => `Vem cá${nome ? `, ${nome}` : ''}, relaxa os ombros que cozinhar não é bicho de sete cabeças. Olha essa bancada, vamos organizar tudo primeiro!`,
+    retorno: nome => `Que bom ter você de volta${nome ? `, ${nome}` : ''}! Vamos com calma, prestando atenção nos aromas e respeitando os ingredientes.`,
     sugestoes: [
-      'Como faço uma farofa soltinha?',
-      'Pode me explicar uma receita passo a passo?',
-      'Como posso substituir um ingrediente?'
+      'Como organizo meu mise en place na bancada?',
+      'Por que não devo lavar o frango na pia?',
+      'Qual o ponto certo da cebola e do alho no refogado?'
     ]
   },
   jose: {
     nome: 'Chef José',
     emoji: '👨‍🍳',
-    estilo: 'sabores brasileiros e dicas práticas',
-    saudacao: 'A cozinha está pronta. Vamos pôr a mão na massa?',
-    retorno: 'Bom ver você de novo! Qual sabor vamos explorar hoje?',
+    estilo: 'o dono da praça, agilidade e energia carioca contagiante',
+    saudacao: nome => `Aí sim${nome ? `, ${nome}` : ''}! Chegou na hora certa, a praça é nossa e hoje você vai sair daqui sabendo bater ponto de corte e segurar panela sem medo!`,
+    retorno: nome => `Chegou quem faltava${nome ? `, ${nome}` : ''}! Fogo aceso, bancada brilhando e navalha nos cortes. O que vamos mandar pra chapa hoje?`,
     sugestoes: [
-      'Qual receita brasileira você recomenda?',
-      'Como tempero uma carne sem exagerar no sal?',
-      'Que corte é bom para cozinhar devagar?'
+      'Como selar carne sem soltar água na panela?',
+      'O que significa saltear e deglaçar a panela?',
+      'Como evitar queimaduras e acidentes com óleo e panelas quentes?'
     ]
   }
 };
 
 const DICAS = [
   {
-    emoji: '🔪',
-    titulo: 'Corte seguro',
-    texto: 'Estabilize a tábua com um pano úmido por baixo. Use uma faca afiada e mantenha as pontas dos dedos recolhidas, afastadas da lâmina.',
-    pergunta: 'Como corto legumes com segurança?'
+    emoji: '🥣',
+    titulo: 'Mise en Place (Tudo no Lugar)',
+    texto: 'Antes de riscar o fósforo, corte, meça e separe tudo em potinhos na bancada. Quem organiza a praça primeiro, nunca queima o alho por distração!',
+    pergunta: 'Como fazer um bom mise en place na bancada?'
   },
   {
-    emoji: '🥘',
-    titulo: 'Organização do preparo',
-    texto: 'Leia a receita inteira, separe e meça os ingredientes e só então aqueça a panela. Isso ajuda a evitar que algo queime enquanto você procura outro item.',
-    pergunta: 'Como organizo o preparo de uma receita?'
+    emoji: '🍳',
+    titulo: 'Saltear vs. Cozinhar na Água',
+    texto: 'Saltear vem do francês "pular": frigideira bem quente, pouca gordura e espaço entre os pedaços. Se amontoar carne fria, a panela esfria e ela ferve na própria água.',
+    pergunta: 'Qual a diferença entre selar, saltear e cozinhar na própria água?'
   },
   {
-    emoji: '🧼',
-    titulo: 'Higiene',
-    texto: 'Lave as mãos e higienize a tábua e os utensílios. Não lave carnes cruas: os respingos podem espalhar microrganismos. Separe-as dos alimentos prontos e lave frutas e vegetais em água corrente.',
-    pergunta: 'Quais cuidados de higiene devo ter na cozinha?'
+    emoji: '🧅',
+    titulo: 'Dourar vs. Queimar a Cebola',
+    texto: 'A cebola entra antes do alho. Dourar carameliza os açúcares naturais e traz doçura. Passou do ponto e escureceu demais? Vira cinza e amarga a comida toda.',
+    pergunta: 'Como saber o ponto exato da cebola e do alho no refogado?'
   },
   {
-    emoji: '🌿',
-    titulo: 'Aproveitamento integral',
-    texto: 'Talos de couve e folhas de cenoura podem entrar em refogados ou caldos. Lave bem, retire partes danificadas e use apenas o que estiver fresco.',
-    pergunta: 'Como aproveito talos e folhas na cozinha?'
+    emoji: '♨️',
+    titulo: 'Banho-maria & Ponto de Fita',
+    texto: 'Banho-maria cozinha em calor suave e indireto (abaixo de 100°C), ideal para pudins e chocolate. Já o ponto de fita é bater ovos e açúcar até criar dobras volumosas que não desmancham.',
+    pergunta: 'Para que serve o banho-maria e o que é o ponto de fita na confeitaria?'
   },
   {
-    emoji: '🧂',
-    titulo: 'Tempero equilibrado',
-    texto: 'Ajuste o sal aos poucos e prove durante o preparo, quando for seguro. Ervas, alho, cebola, limão e especiarias também realçam o sabor.',
-    pergunta: 'Como ajusto o tempero sem exagerar no sal?'
-  },
-  {
-    emoji: '🔥',
-    titulo: 'Controle do fogo',
-    texto: 'Fogo alto doura rápido; fogo baixo cozinha por mais tempo. Se o alimento começar a escurecer antes de cozinhar por dentro, reduza o fogo.',
-    pergunta: 'Como escolho a intensidade do fogo?'
+    emoji: '🍗',
+    titulo: 'Frango Cru: Nunca na Pia!',
+    texto: 'Água na pia espalha bactérias perigosas por até 1 metro ao redor. O que mata micro-organismos é a temperatura do fogo acima de 74°C, e nunca a água da torneira.',
+    pergunta: 'Por que nunca se deve lavar frango cru na pia da cozinha?'
   },
   {
     emoji: '🧊',
-    titulo: 'Conservação',
-    texto: 'Guarde os alimentos perecíveis refrigerados, em recipientes limpos e fechados. Separe alimentos crus dos que já estão prontos para consumo.',
-    pergunta: 'Como guardo os alimentos com segurança?'
+    titulo: 'Descongelar com Segurança',
+    texto: 'Nunca deixe carne descongelando o dia todo na bancada morna. Passe do congelador para a prateleira de baixo da geladeira na véspera: suco preservado e segurança total!',
+    pergunta: 'Qual é o jeito correto e seguro de descongelar alimentos?'
+  },
+  {
+    emoji: '🔪',
+    titulo: 'Tábua Firme & Dedos em Garra',
+    texto: 'Tábua solta é perigo: coloque um pano úmido por baixo para travar. Curve as pontas dos dedos para dentro ("mão de garra") e deslize a lâmina contra as juntas dos dedos.',
+    pergunta: 'Como posicionar as mãos para cortar alimentos com segurança?'
   }
 ];
 
@@ -115,8 +115,9 @@ function mensagemErro(erro) {
 export default function Mentor() {
   const navigation = useNavigation();
   const {
-    mentorEscolhido, brasas, streak, ultimoAcesso, registrarAcessoDiario
+    mentorEscolhido, brasas, streak, ultimoAcesso, registrarAcessoDiario, dadosPerfil
   } = useApp();
+  const nomeUsuario = dadosPerfil?.nome?.trim();
   const mentor = MENTORES[mentorEscolhido] || MENTORES.ana;
   const sugestoesIniciais = mentor.sugestoes;
   const [tela, setTela] = useState('inicio');
@@ -138,7 +139,9 @@ export default function Mentor() {
   const sequenciaAtual = pontoFeito && ultimoAcesso !== hoje ? streak + 1 : streak;
   const dicaDoDia = DICAS[indiceDica];
   const receitaDoDia = RECEITAS[new Date().getDate() % RECEITAS.length];
-  const falaInicio = pontoFeito ? mentor.retorno : mentor.saudacao;
+  const falaInicio = typeof (pontoFeito ? mentor.retorno : mentor.saudacao) === 'function'
+    ? (pontoFeito ? mentor.retorno(nomeUsuario) : mentor.saudacao(nomeUsuario))
+    : (pontoFeito ? mentor.retorno : mentor.saudacao);
   const ultimaPergunta = [...mensagens].reverse().find(item => item.role === 'user')?.content;
   const sugestoesDinamicas = statusModelo === 'offline' && ultimaPergunta
     ? obterSugestoesOffline(ultimaPergunta, mensagens)
@@ -248,13 +251,14 @@ export default function Mentor() {
         content: respostaFinal || textoParcial || 'Não consegui formular uma resposta. Tente perguntar de outro jeito.',
         pendente: false
       };
-      const atualizadas = [...anteriores, concluida].slice(-40);
-      setMensagens(atualizadas);
-      await salvar(CHAVES.CONVERSA_MENTOR, atualizadas);
+      setMensagens(lista => {
+        const atualizada = lista.map(item => (item.id === resposta.id ? concluida : item));
+        salvar(CHAVES.CONVERSA_MENTOR, atualizada);
+        return atualizada;
+      });
     } catch (falha) {
-      setMensagens(anteriores);
-      await salvar(CHAVES.CONVERSA_MENTOR, anteriores);
       setErro(mensagemErro(falha));
+      setMensagens(anteriores);
     } finally {
       setRespondendo(false);
     }
@@ -262,14 +266,17 @@ export default function Mentor() {
 
   const limparConversa = async () => {
     setMensagens([]);
-    setErro('');
     await salvar(CHAVES.CONVERSA_MENTOR, []);
   };
 
-  const abrirConversa = (pergunta = '') => {
-    setEntrada(pergunta);
-    setErro('');
+  const perguntarSobre = dica => {
     setTela('conversa');
+    setTimeout(() => enviar(dica.pergunta), 150);
+  };
+
+  const perguntarReceita = receita => {
+    setTela('conversa');
+    setTimeout(() => enviar(`Como preparo a receita de ${receita.nome}?`), 150);
   };
 
   const baterPonto = () => {
@@ -287,7 +294,9 @@ export default function Mentor() {
           <View style={estilos.boasVindasInicio}>
             <Text style={estilos.emojiInicio}>{mentor.emoji}</Text>
             <View style={estilos.boasVindasTexto}>
-              <Text style={estilos.saudacao}>Olá! Que bom ter você na cozinha.</Text>
+              <Text style={estilos.saudacao}>
+                {nomeUsuario ? `Olá, ${nomeUsuario}! Que bom ter você na cozinha.` : 'Olá! Que bom ter você na cozinha.'}
+              </Text>
               <Text style={estilos.nomeInicio}>{mentor.nome} · {mentor.estilo}</Text>
               <Text style={estilos.falaInicio}>{falaInicio}</Text>
             </View>
@@ -324,300 +333,183 @@ export default function Mentor() {
             <Text style={estilos.textoCartao}>{dicaDoDia.texto}</Text>
             <View style={estilos.acoesDica}>
               <TouchableOpacity
-                style={estilos.botaoDica}
-                onPress={() => setIndiceDica(indice => (indice + 1) % DICAS.length)}
+                onPress={() => setIndiceDica(atual => (atual + 1) % DICAS.length)}
                 accessibilityRole="button"
-                accessibilityLabel="Ver outra dica de cozinha"
               >
-                <Text style={estilos.textoBotaoDica}>Ver outra dica</Text>
+                <Text style={estilos.linkDica}>Ver outra dica</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={estilos.botaoPerguntaDica}
-                onPress={() => abrirConversa(dicaDoDia.pergunta)}
+                onPress={() => perguntarSobre(dicaDoDia)}
                 accessibilityRole="button"
               >
-                <Text style={estilos.textoBotaoPergunta}>Perguntar ao mentor</Text>
+                <Text style={estilos.linkDicaDestaque}>Perguntar ao mentor</Text>
               </TouchableOpacity>
             </View>
           </View>
 
-          <Text style={estilos.tituloSecao}>Mais dicas para cozinhar melhor</Text>
-          <View style={estilos.gradeDicas}>
-            {DICAS.map(dica => (
-              <View key={dica.titulo} style={estilos.cartaoDica}>
-                <Text style={estilos.tituloDica}>
-                  {dica.emoji} {dica.titulo}
-                </Text>
-                <Text style={estilos.textoDica}>{dica.texto}</Text>
+          <View style={estilos.secaoInicio}>
+            <Text style={estilos.tituloSecao}>Mais dicas para cozinhar melhor</Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={estilos.listaDicasHorizontal}
+            >
+              {DICAS.map((item, index) => (
                 <TouchableOpacity
-                  style={estilos.linkDica}
-                  onPress={() => abrirConversa(dica.pergunta)}
+                  key={item.titulo}
+                  style={[
+                    estilos.cartaoDicaPequeno,
+                    index === indiceDica && estilos.cartaoDicaAtivo
+                  ]}
+                  onPress={() => setIndiceDica(index)}
                   accessibilityRole="button"
-                  accessibilityLabel={`Perguntar ao mentor sobre ${dica.titulo}`}
                 >
-                  <Text style={estilos.textoLinkDica}>Tirar dúvida →</Text>
+                  <Text style={estilos.tituloDicaPequeno}>
+                    {item.emoji} {item.titulo}
+                  </Text>
+                  <Text style={estilos.textoDicaPequeno} numberOfLines={3}>
+                    {item.texto}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+
+          {receitaDoDia ? (
+            <View style={estilos.cartaoReceitaDestaque}>
+              <View style={estilos.cabecalhoDestaque}>
+                <Text style={estilos.rotuloDestaque}>RECEITA DO DIA</Text>
+                <Text style={estilos.nivelDestaque}>⭐ Nível {receitaDoDia.nivel || 1}</Text>
+              </View>
+              <Text style={estilos.tituloReceitaDestaque}>{receitaDoDia.nome}</Text>
+              <Text style={estilos.tempoReceitaDestaque}>
+                ⏱️ {receitaDoDia.tempo} · 🍽️ {receitaDoDia.porcoes}
+              </Text>
+              <Text style={estilos.textoCartao} numberOfLines={2}>
+                {receitaDoDia.modoPreparo}
+              </Text>
+              <View style={estilos.acoesReceitaDestaque}>
+                <TouchableOpacity
+                  style={estilos.botaoReceitaVer}
+                  onPress={() => navigation.navigate('Cozinha')}
+                  accessibilityRole="button"
+                >
+                  <Text style={estilos.textoBotaoReceitaVer}>Ver no livro</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={estilos.botaoReceitaPerguntar}
+                  onPress={() => perguntarReceita(receitaDoDia)}
+                  accessibilityRole="button"
+                >
+                  <Text style={estilos.textoBotaoReceitaPerguntar}>Tirar dúvidas com o mentor</Text>
                 </TouchableOpacity>
               </View>
-            ))}
-          </View>
+            </View>
+          ) : null}
 
-          <View style={estilos.receitaDoDia}>
-            <Text style={estilos.rotuloDica}>SUGESTÃO DO DIA</Text>
-            <Text style={estilos.tituloReceita}>{receitaDoDia.nome}</Text>
-            <Text style={estilos.metaReceita}>
-              {receitaDoDia.regiao} · {receitaDoDia.tempo} · {receitaDoDia.porcoes} porções
-            </Text>
-            <Text style={estilos.textoCartao}>
-              {receitaDoDia.dificuldade} · {receitaDoDia.categoria}
-            </Text>
-            <TouchableOpacity
-              style={estilos.botaoReceita}
-              onPress={() => navigation.navigate('Cozinha')}
-              accessibilityRole="button"
-            >
-              <Text style={estilos.textoBotaoPergunta}>Explorar receitas e cortes</Text>
-            </TouchableOpacity>
-          </View>
-
-          <TouchableOpacity
-            style={estilos.botaoConversar}
-            onPress={() => abrirConversa()}
-            accessibilityRole="button"
-          >
-            <Text style={estilos.textoBotaoConversar}>💬 Conversar com {mentor.nome}</Text>
-            <Text style={estilos.legendaConversar}>
-              Tire dúvidas de receitas, ingredientes e técnicas
-            </Text>
-          </TouchableOpacity>
-
-          <Text style={estilos.tituloSecao}>Continue explorando</Text>
-          <View style={estilos.gradeAtalhos}>
-            {ATALHOS.map(atalho => (
-              <TouchableOpacity
-                key={atalho.rota}
-                style={estilos.atalho}
-                onPress={() => navigation.navigate(atalho.rota)}
-                accessibilityRole="button"
-              >
-                <Text style={estilos.emojiAtalho}>{atalho.emoji}</Text>
-                <Text style={estilos.textoAtalho}>{atalho.titulo}</Text>
-              </TouchableOpacity>
-            ))}
+          <View style={estilos.secaoInicio}>
+            <Text style={estilos.tituloSecao}>Continuar aprendendo</Text>
+            <View style={estilos.gradeAtalhos}>
+              {ATALHOS.map(item => (
+                <TouchableOpacity
+                  key={item.rota}
+                  style={estilos.cartaoAtalho}
+                  onPress={() => navigation.navigate(item.rota)}
+                  accessibilityRole="button"
+                >
+                  <Text style={estilos.emojiAtalho}>{item.emoji}</Text>
+                  <Text style={estilos.tituloAtalho}>{item.titulo}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
           </View>
         </ScrollView>
-      </TelaSegura>
-    );
-  }
-
-  if (tela === 'conversa' && !['pronto', 'offline'].includes(statusModelo)) {
-    const baixando = progresso?.etapa === 'download';
-    const percentual = baixando && progresso.total > 0
-      ? Math.min(progresso.baixado / progresso.total, 1)
-      : 0;
-
-    return (
-      <TelaSegura estilo={estilos.centralizar}>
-        <TouchableOpacity
-          style={estilos.voltarInicio}
-          onPress={() => setTela('inicio')}
-          accessibilityRole="button"
-        >
-          <Text style={estilos.textoBotaoOffline}>← Voltar ao início</Text>
-        </TouchableOpacity>
-        <Text style={estilos.emoji}>{mentor.emoji}</Text>
-        <Text style={estilos.titulo}>Converse com {mentor.nome}</Text>
-        <Text style={estilos.textoWeb}>
-          O modelo Qwen roda no celular. Baixe uma vez para conversar depois, mesmo sem internet.
-          Suas mensagens ficam no aparelho.
-        </Text>
-        {statusModelo === 'verificando' ? (
-          <ActivityIndicator size="large" color={CORES.destaque} />
-        ) : statusModelo === 'preparando' ? (
-          <View style={estilos.progressoCaixa}>
-            <ActivityIndicator size="large" color={CORES.destaque} />
-            <Text style={estilos.textoProgresso}>
-              {baixando
-                ? `Baixando modelo: ${Math.round(percentual * 100)}%`
-                : 'Carregando o modelo no aparelho…'}
-            </Text>
-            {baixando && (
-              <>
-                <View style={estilos.trilho}>
-                  <View style={[estilos.barra, { width: `${percentual * 100}%` }]} />
-                </View>
-                <Text style={estilos.textoSecundario}>
-                  {(progresso.baixado / 1e6).toFixed(0)} MB de{' '}
-                  {(progresso.total / 1e6).toFixed(0)} MB. Recomendamos Wi-Fi.
-                </Text>
-                <TouchableOpacity style={estilos.botaoSecundario} onPress={cancelarDownload}>
-                  <Text style={estilos.textoBotaoSecundario}>Cancelar download</Text>
-                </TouchableOpacity>
-              </>
-            )}
-          </View>
-        ) : (
-          <>
-            <View style={estilos.avisoModelo}>
-              <Text style={estilos.textoAviso}>
-                Download inicial: {formatarTamanho(TAMANHO_MODELO_BYTES)}.
-                Verifique o espaço livre e prefira uma conexão Wi-Fi.
-              </Text>
-            </View>
-            <TouchableOpacity
-              style={estilos.botaoPrincipal}
-              onPress={preparar}
-              accessibilityRole="button"
-            >
-              <Text style={estilos.textoBotaoPrincipal}>
-                {modeloBaixado ? 'Carregar modelo' : 'Baixar e preparar mentor'}
-              </Text>
-            </TouchableOpacity>
-          </>
-        )}
-        {!['verificando', 'preparando'].includes(statusModelo) ? (
-          <TouchableOpacity
-            style={estilos.botaoSecundario}
-            onPress={() => setStatusModelo('offline')}
-            accessibilityRole="button"
-          >
-            <Text style={estilos.textoBotaoOffline}>Continuar com o guia offline</Text>
-          </TouchableOpacity>
-        ) : null}
-        {erro ? <Text style={estilos.erro}>{erro}</Text> : null}
       </TelaSegura>
     );
   }
 
   return (
-    <TelaSegura estilo={estilos.telaChat}>
-      <View style={estilos.cabecalho}>
-        <TouchableOpacity
-          style={estilos.botaoVoltarChat}
-          onPress={() => setTela('inicio')}
-          accessibilityRole="button"
-          accessibilityLabel="Voltar ao início"
-        >
-          <Text style={estilos.limparTexto}>Início</Text>
-        </TouchableOpacity>
-        <Text style={estilos.emojiPequeno}>{mentor.emoji}</Text>
-        <View style={estilos.infoCabecalho}>
-          <Text style={estilos.nomeMentor}>{mentor.nome}</Text>
-          <Text style={estilos.estadoMentor}>
-            {statusModelo === 'pronto'
-              ? 'IA local · mensagens privadas'
-              : 'Guia offline · catálogo e dicas'}
-          </Text>
-        </View>
-        {SUPORTA_IA_LOCAL && statusModelo === 'offline' ? (
-          <TouchableOpacity
-            style={estilos.botaoBaixar}
-            onPress={() => setStatusModelo('ausente')}
-            accessibilityRole="button"
-            accessibilityLabel="Preparar modelo de IA local"
-          >
-            <Text style={estilos.limparTexto}>Baixar IA</Text>
-          </TouchableOpacity>
-        ) : null}
-        <TouchableOpacity
-          onPress={limparConversa}
-          disabled={respondendo}
-          accessibilityRole="button"
-          accessibilityState={{ disabled: respondendo }}
-          accessibilityLabel="Limpar conversa"
-        >
-          <Text style={estilos.limparTexto}>Limpar</Text>
-        </TouchableOpacity>
-      </View>
-
+    <TelaSegura>
       <KeyboardAvoidingView
-        style={estilos.conversa}
+        style={estilos.conteudo}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
       >
+        <View style={estilos.cabecalho}>
+          <TouchableOpacity onPress={() => setTela('inicio')} style={estilos.botaoVoltar}>
+            <Text style={estilos.textoBotaoVoltar}>← Início</Text>
+          </TouchableOpacity>
+          <View style={estilos.infoMentorCabecalho}>
+            <Text style={estilos.emojiCabecalho}>{mentor.emoji}</Text>
+            <Text style={estilos.nomeMentorCabecalho}>{mentor.nome}</Text>
+          </View>
+          <TouchableOpacity onPress={limparConversa} style={estilos.botaoLimpar}>
+            <Text style={estilos.textoBotaoLimpar}>Limpar</Text>
+          </TouchableOpacity>
+        </View>
+
         <ScrollView
           ref={listaRef}
-          style={estilos.lista}
-          contentContainerStyle={estilos.listaConteudo}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
+          style={estilos.listaMensagens}
+          contentContainerStyle={estilos.conteudoMensagens}
           onContentSizeChange={() => listaRef.current?.scrollToEnd({ animated: true })}
         >
           {mensagens.length === 0 ? (
-            <View style={estilos.boasVindas}>
-              <Text style={estilos.titulo}>O que vamos cozinhar?</Text>
-              <Text style={estilos.textoSecundario}>
-                Tire dúvidas de receitas, ingredientes ou técnicas com {mentor.nome}.
+            <View style={estilos.vazioContainer}>
+              <Text style={estilos.emojiVazio}>{mentor.emoji}</Text>
+              <Text style={estilos.textoVazio}>
+                Pergunte qualquer coisa sobre culinária, ingredientes ou técnicas!
               </Text>
-              {sugestoesIniciais.map(sugestao => (
-                <TouchableOpacity
-                  key={sugestao}
-                  style={estilos.sugestao}
-                  onPress={() => enviar(sugestao)}
-                  disabled={respondendo}
-                  accessibilityRole="button"
-                >
-                  <Text style={estilos.textoSugestao}>{sugestao}</Text>
-                </TouchableOpacity>
-              ))}
-              {statusModelo === 'offline' ? (
-                <Text style={estilos.textoSecundario}>
-                  {SUPORTA_IA_LOCAL
-                    ? 'Respostas locais baseadas no catálogo. Para respostas abertas, baixe o modelo no celular.'
-                    : 'Respostas locais baseadas no catálogo; o modelo generativo está disponível nos apps Android e iOS.'}
+              <View style={estilos.sugestoesContainer}>
+                {sugestoesIniciais.map((sug, i) => (
+                  <TouchableOpacity
+                    key={i}
+                    style={estilos.botaoSugestao}
+                    onPress={() => enviar(sug)}
+                  >
+                    <Text style={estilos.textoSugestao}>{sug}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          ) : (
+            mensagens.map(msg => (
+              <View
+                key={msg.id}
+                style={[
+                  estilos.balaoMensagem,
+                  msg.role === 'user' ? estilos.balaoUsuario : estilos.balaoAssistente
+                ]}
+              >
+                <Text style={msg.role === 'user' ? estilos.textoMensagemUsuario : estilos.textoMensagemAssistente}>
+                  {msg.content}
                 </Text>
-              ) : null}
+              </View>
+            ))
+          )}
+          {respondendo && (
+            <View style={estilos.carregandoContainer}>
+              <ActivityIndicator color={CORES.destaque} size="small" />
+              <Text style={estilos.textoCarregando}>{mentor.nome} está respondendo...</Text>
             </View>
-          ) : mensagens.map(item => (
-            <View
-              key={item.id}
-              style={[
-                estilos.balao,
-                item.role === 'user' ? estilos.balaoUsuario : estilos.balaoMentor
-              ]}
-            >
-              <Text style={estilos.textoMensagem}>
-                {item.pendente && !item.content ? 'Pensando…' : item.content}
-              </Text>
-            </View>
-          ))}
-          {!respondendo && sugestoesDinamicas.length > 0 ? (
-            <View style={estilos.sugestoesDinamicas}>
-              <Text style={estilos.rotuloSugestoes}>Próximo passo</Text>
-              {sugestoesDinamicas.map(sugestao => (
-                <TouchableOpacity
-                  key={sugestao}
-                  style={estilos.sugestaoRapida}
-                  onPress={() => enviar(sugestao)}
-                  accessibilityRole="button"
-                >
-                  <Text style={estilos.textoSugestao}>{sugestao}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          ) : null}
-          {erro ? <Text style={estilos.erro}>{erro}</Text> : null}
+          )}
         </ScrollView>
 
-        <View style={estilos.compositor}>
+        <View style={estilos.areaEntrada}>
           <TextInput
-            style={estilos.campoMensagem}
+            style={estilos.campoEntrada}
+            placeholder={`Pergunte ao ${mentor.nome}...`}
+            placeholderTextColor={CORES.textoSecundario}
             value={entrada}
             onChangeText={setEntrada}
-            placeholder="Pergunte algo ao seu mentor"
-            placeholderTextColor={CORES.textoSecundario}
-            multiline
-            maxLength={1000}
-            editable={!respondendo}
-            accessibilityLabel="Mensagem para o mentor"
+            onSubmitEditing={() => enviar(entrada)}
+            returnKeyType="send"
           />
           <TouchableOpacity
-            style={[estilos.botaoEnviar, (respondendo || !entrada.trim()) && estilos.botaoDesativado]}
+            style={[estilos.botaoEnviar, (!entrada.trim() || respondendo) && estilos.botaoDesativado]}
             onPress={() => enviar(entrada)}
-            disabled={respondendo || !entrada.trim()}
-            accessibilityRole="button"
-            accessibilityLabel="Enviar mensagem"
+            disabled={!entrada.trim() || respondendo}
           >
-            <Text style={estilos.textoEnviar}>{respondendo ? '…' : 'Enviar'}</Text>
+            <Text style={estilos.textoBotaoEnviar}>Enviar</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -626,292 +518,198 @@ export default function Mentor() {
 }
 
 const estilos = StyleSheet.create({
-  inicioConteudo: { paddingTop: 16, paddingBottom: 32 },
+  inicioConteudo: { padding: 16, paddingBottom: 32 },
   boasVindasInicio: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 18
+    backgroundColor: CORES.superficie,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: CORES.borda
   },
-  emojiInicio: { fontSize: 42, lineHeight: 52, marginRight: 12 },
+  emojiInicio: { fontSize: 42, marginRight: 14 },
   boasVindasTexto: { flex: 1 },
-  saudacao: {
-    color: CORES.texto,
-    fontSize: 21,
-    lineHeight: 28,
-    fontWeight: 'bold'
-  },
-  nomeInicio: { color: CORES.textoSecundario, fontSize: 14, lineHeight: 21, marginTop: 2 },
-  falaInicio: { color: CORES.texto, fontSize: 14, lineHeight: 21, marginTop: 6 },
+  saudacao: { color: CORES.texto, fontSize: 18, fontWeight: 'bold' },
+  nomeInicio: { color: CORES.destaque, fontSize: 12, marginTop: 2, fontWeight: '600' },
+  falaInicio: { color: CORES.textoSecundario, fontSize: 14, lineHeight: 20, marginTop: 4 },
   cartaoPonto: {
     backgroundColor: CORES.superficie,
-    borderWidth: 1,
-    borderColor: CORES.destaque,
-    borderRadius: RAIO,
+    borderRadius: 16,
     padding: 16,
-    marginBottom: 14
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: CORES.borda
   },
   pontoTexto: { marginBottom: 12 },
-  tituloCartao: { color: CORES.texto, fontSize: 17, lineHeight: 24, fontWeight: 'bold' },
-  textoCartao: { color: CORES.textoSecundario, fontSize: 14, lineHeight: 21, marginTop: 4 },
+  tituloCartao: { color: CORES.texto, fontSize: 16, fontWeight: 'bold', marginBottom: 4 },
+  textoCartao: { color: CORES.textoSecundario, fontSize: 14, lineHeight: 20 },
   botaoPonto: {
-    minHeight: 48,
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: CORES.destaque,
-    borderRadius: RAIO,
-    paddingHorizontal: 16,
-    paddingVertical: 12
+    borderRadius: 12,
+    paddingVertical: 12,
+    alignItems: 'center',
+    marginBottom: 8
   },
-  botaoPontoFeito: { backgroundColor: CORES.borda },
-  textoBotaoPonto: { color: '#000', fontSize: 15, lineHeight: 21, fontWeight: 'bold' },
-  saldoBrasas: {
-    color: CORES.destaque,
-    fontSize: 13,
-    lineHeight: 19,
-    fontWeight: 'bold',
-    marginTop: 10,
-    textAlign: 'right'
-  },
+  botaoPontoFeito: { backgroundColor: '#334155' },
+  textoBotaoPonto: { color: '#0F172A', fontSize: 15, fontWeight: 'bold' },
+  saldoBrasas: { color: CORES.destaque, fontSize: 13, fontWeight: 'bold', textAlign: 'right' },
   dicaDoDia: {
     backgroundColor: CORES.superficie,
-    borderRadius: RAIO,
+    borderRadius: 16,
     padding: 16,
-    marginBottom: 22
-  },
-  acoesDica: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 8 },
-  botaoDica: {
-    minHeight: 40,
-    justifyContent: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 8
-  },
-  textoBotaoDica: { color: CORES.textoSecundario, fontSize: 13, lineHeight: 19, fontWeight: 'bold' },
-  botaoPerguntaDica: {
-    minHeight: 40,
-    justifyContent: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 8
-  },
-  textoBotaoPergunta: { color: CORES.destaque, fontSize: 13, lineHeight: 19, fontWeight: 'bold' },
-  rotuloDica: {
-    color: CORES.destaque,
-    fontSize: 11,
-    lineHeight: 16,
-    fontWeight: 'bold',
-    letterSpacing: 1
-  },
-  tituloDica: { color: CORES.texto, fontSize: 16, lineHeight: 23, fontWeight: 'bold' },
-  tituloSecao: {
-    color: CORES.texto,
-    fontSize: 18,
-    lineHeight: 25,
-    fontWeight: 'bold',
-    marginBottom: 10
-  },
-  gradeDicas: { flexDirection: 'row', flexWrap: 'wrap', marginHorizontal: -5, marginBottom: 14 },
-  cartaoDica: {
-    flexGrow: 1,
-    flexBasis: 220,
-    backgroundColor: CORES.superficie,
-    borderRadius: RAIO,
-    padding: 12,
-    margin: 4
-  },
-  textoDica: { color: CORES.textoSecundario, fontSize: 13, lineHeight: 19, marginTop: 4 },
-  linkDica: { alignSelf: 'flex-start', minHeight: 40, justifyContent: 'center', marginTop: 4 },
-  textoLinkDica: { color: CORES.destaque, fontSize: 13, lineHeight: 19, fontWeight: 'bold' },
-  receitaDoDia: {
-    backgroundColor: CORES.superficie,
+    marginBottom: 16,
     borderWidth: 1,
-    borderColor: CORES.borda,
-    borderRadius: RAIO,
-    padding: 16,
-    marginBottom: 22
+    borderColor: CORES.borda
   },
-  tituloReceita: {
-    color: CORES.texto,
-    fontSize: 19,
-    lineHeight: 26,
-    fontWeight: 'bold',
-    marginTop: 4
-  },
-  metaReceita: { color: CORES.destaque, fontSize: 13, lineHeight: 19, marginTop: 4 },
-  botaoReceita: { alignSelf: 'flex-start', minHeight: 44, justifyContent: 'center', marginTop: 6 },
-  botaoConversar: {
+  rotuloDica: { color: CORES.destaque, fontSize: 11, fontWeight: 'bold', marginBottom: 6 },
+  tituloDica: { color: CORES.texto, fontSize: 17, fontWeight: 'bold', marginBottom: 8 },
+  acoesDica: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 12 },
+  linkDica: { color: CORES.textoSecundario, fontSize: 13, fontWeight: '600' },
+  linkDicaDestaque: { color: CORES.destaque, fontSize: 13, fontWeight: 'bold' },
+  secaoInicio: { marginBottom: 16 },
+  tituloSecao: { color: CORES.texto, fontSize: 17, fontWeight: 'bold', marginBottom: 12 },
+  listaDicasHorizontal: { gap: 12 },
+  cartaoDicaPequeno: {
+    width: 200,
     backgroundColor: CORES.superficie,
-    borderWidth: 1,
-    borderColor: CORES.borda,
-    borderRadius: RAIO,
-    padding: 16,
-    marginBottom: 22
-  },
-  textoBotaoConversar: { color: CORES.destaque, fontSize: 16, lineHeight: 23, fontWeight: 'bold' },
-  legendaConversar: { color: CORES.textoSecundario, fontSize: 13, lineHeight: 19, marginTop: 4 },
-  gradeAtalhos: { flexDirection: 'row', flexWrap: 'wrap', marginHorizontal: -4 },
-  atalho: {
-    minWidth: 100,
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: CORES.superficie,
-    borderRadius: RAIO,
-    paddingVertical: 14,
-    paddingHorizontal: 8,
-    margin: 4
-  },
-  emojiAtalho: { fontSize: 24, lineHeight: 32 },
-  textoAtalho: { color: CORES.texto, fontSize: 12, lineHeight: 17, textAlign: 'center', marginTop: 4 },
-  voltarInicio: { alignSelf: 'flex-start', paddingVertical: 10, marginBottom: 12 },
-  botaoVoltarChat: { paddingVertical: 8, paddingRight: 12 },
-  centralizar: { alignItems: 'center', justifyContent: 'center', paddingVertical: 28 },
-  emoji: { fontSize: 56, lineHeight: 68, marginBottom: 8 },
-  titulo: {
-    fontSize: 23,
-    lineHeight: 31,
-    fontWeight: 'bold',
-    color: CORES.destaque,
-    textAlign: 'center',
-    marginBottom: 10
-  },
-  textoWeb: {
-    maxWidth: 420,
-    fontSize: 15,
-    lineHeight: 23,
-    color: CORES.textoSecundario,
-    textAlign: 'center',
-    marginBottom: 20
-  },
-  avisoModelo: {
-    maxWidth: 420,
-    backgroundColor: CORES.superficie,
-    borderRadius: RAIO,
+    borderRadius: 14,
     padding: 14,
-    marginBottom: 12
+    borderWidth: 1,
+    borderColor: CORES.borda
   },
-  textoAviso: { color: CORES.texto, fontSize: 14, lineHeight: 21, textAlign: 'center' },
-  botaoPrincipal: {
-    alignSelf: 'stretch',
-    maxWidth: 420,
+  cartaoDicaAtivo: { borderColor: CORES.destaque },
+  tituloDicaPequeno: { color: CORES.texto, fontSize: 14, fontWeight: 'bold', marginBottom: 6 },
+  textoDicaPequeno: { color: CORES.textoSecundario, fontSize: 12, lineHeight: 18 },
+  cartaoGuiaCortes: {
+    backgroundColor: '#1E293B',
+    borderRadius: 14,
+    padding: 16,
+    marginHorizontal: 16,
+    marginTop: 12,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: '#334155',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  infoGuiaCortes: { flex: 1, paddingRight: 12 },
+  tituloGuiaCortes: { color: CORES.destaque, fontSize: 15, fontWeight: 'bold' },
+  subtituloGuiaCortes: { color: CORES.textoSecundario, fontSize: 12, marginTop: 2 },
+  botaoAbrirCortes: {
     backgroundColor: CORES.destaque,
-    borderRadius: RAIO,
-    paddingVertical: 14,
-    paddingHorizontal: 18,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  textoBotaoAbrirCortes: { color: '#0F172A', fontSize: 12, fontWeight: 'bold' },
+  cartaoReceitaDestaque: {
+    backgroundColor: CORES.superficie,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: CORES.borda
+  },
+  cabecalhoDestaque: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
+  rotuloDestaque: { color: CORES.destaque, fontSize: 11, fontWeight: 'bold' },
+  nivelDestaque: { color: CORES.textoSecundario, fontSize: 12 },
+  tituloReceitaDestaque: { color: CORES.texto, fontSize: 18, fontWeight: 'bold', marginBottom: 4 },
+  tempoReceitaDestaque: { color: CORES.textoSecundario, fontSize: 13, marginBottom: 8 },
+  acoesReceitaDestaque: { flexDirection: 'row', gap: 10, marginTop: 12 },
+  botaoReceitaVer: {
+    flex: 1,
+    backgroundColor: '#334155',
+    paddingVertical: 10,
+    borderRadius: 10,
     alignItems: 'center'
   },
-  textoBotaoPrincipal: { color: '#000', fontSize: 15, lineHeight: 21, fontWeight: 'bold' },
-  progressoCaixa: { alignItems: 'center', alignSelf: 'stretch', maxWidth: 420 },
-  textoProgresso: {
-    color: CORES.texto,
-    fontSize: 15,
-    lineHeight: 22,
-    marginTop: 12,
-    textAlign: 'center'
+  textoBotaoReceitaVer: { color: CORES.texto, fontSize: 13, fontWeight: 'bold' },
+  botaoReceitaPerguntar: {
+    flex: 1.4,
+    backgroundColor: CORES.destaque,
+    paddingVertical: 10,
+    borderRadius: 10,
+    alignItems: 'center'
   },
-  trilho: {
-    alignSelf: 'stretch',
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: CORES.borda,
-    overflow: 'hidden',
-    marginTop: 14
+  textoBotaoReceitaPerguntar: { color: '#0F172A', fontSize: 13, fontWeight: 'bold' },
+  gradeAtalhos: { flexDirection: 'row', gap: 10 },
+  cartaoAtalho: {
+    flex: 1,
+    backgroundColor: CORES.superficie,
+    borderRadius: 14,
+    padding: 14,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: CORES.borda
   },
-  barra: { height: '100%', backgroundColor: CORES.destaque },
-  textoSecundario: {
-    color: CORES.textoSecundario,
-    fontSize: 13,
-    lineHeight: 20,
-    textAlign: 'center',
-    marginTop: 8
-  },
-  botaoSecundario: { padding: 12, marginTop: 6 },
-  textoBotaoSecundario: { color: CORES.erro, fontSize: 14, fontWeight: 'bold' },
-  textoBotaoOffline: { color: CORES.destaque, fontSize: 14, fontWeight: 'bold' },
-  erro: { alignSelf: 'stretch', color: CORES.erro, fontSize: 14, lineHeight: 21, marginTop: 12 },
-  telaChat: { paddingHorizontal: 0 },
+  emojiAtalho: { fontSize: 28, marginBottom: 6 },
+  tituloAtalho: { color: CORES.texto, fontSize: 12, fontWeight: '600', textAlign: 'center' },
+  conteudo: { flex: 1, backgroundColor: CORES.fundo },
   cabecalho: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: CORES.borda
-  },
-  emojiPequeno: { fontSize: 28, lineHeight: 36, marginRight: 10 },
-  infoCabecalho: { flex: 1 },
-  botaoBaixar: { paddingHorizontal: 10, paddingVertical: 8 },
-  nomeMentor: { color: CORES.texto, fontSize: 16, lineHeight: 22, fontWeight: 'bold' },
-  estadoMentor: { color: CORES.textoSecundario, fontSize: 12, lineHeight: 18 },
-  limparTexto: { color: CORES.destaque, fontSize: 13, fontWeight: 'bold' },
-  conversa: { flex: 1 },
-  lista: { flex: 1 },
-  listaConteudo: { padding: 16, paddingBottom: 20, flexGrow: 1 },
-  boasVindas: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingVertical: 24 },
-  sugestao: {
-    alignSelf: 'stretch',
-    backgroundColor: CORES.superficie,
-    borderWidth: 1,
-    borderColor: CORES.borda,
-    borderRadius: RAIO,
     padding: 12,
-    marginTop: 8
+    borderBottomWidth: 1,
+    borderBottomColor: CORES.borda,
+    backgroundColor: CORES.superficie
   },
-  textoSugestao: { color: CORES.texto, fontSize: 14, lineHeight: 20 },
-  sugestoesDinamicas: { alignSelf: 'stretch', marginTop: 4, marginBottom: 8 },
-  rotuloSugestoes: {
-    color: CORES.textoSecundario,
-    fontSize: 12,
-    lineHeight: 18,
-    marginBottom: 2
-  },
-  sugestaoRapida: {
-    alignSelf: 'flex-start',
-    maxWidth: '100%',
+  botaoVoltar: { padding: 6 },
+  textoBotaoVoltar: { color: CORES.destaque, fontSize: 14, fontWeight: 'bold' },
+  infoMentorCabecalho: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  emojiCabecalho: { fontSize: 22 },
+  nomeMentorCabecalho: { color: CORES.texto, fontSize: 16, fontWeight: 'bold' },
+  botaoLimpar: { padding: 6 },
+  textoBotaoLimpar: { color: CORES.textoSecundario, fontSize: 13 },
+  listaMensagens: { flex: 1 },
+  conteudoMensagens: { padding: 16, gap: 12 },
+  balaoMensagem: { maxWidth: '82%', borderRadius: 14, padding: 12 },
+  balaoUsuario: { alignSelf: 'flex-end', backgroundColor: '#1E3A8A' },
+  balaoAssistente: { alignSelf: 'flex-start', backgroundColor: CORES.superficie, borderWidth: 1, borderColor: CORES.borda },
+  textoMensagemUsuario: { color: '#FFFFFF', fontSize: 15, lineHeight: 22 },
+  textoMensagemAssistente: { color: CORES.texto, fontSize: 15, lineHeight: 22 },
+  vazioContainer: { alignItems: 'center', paddingVertical: 30 },
+  emojiVazio: { fontSize: 48, marginBottom: 12 },
+  textoVazio: { color: CORES.textoSecundario, textAlign: 'center', fontSize: 15, marginBottom: 20 },
+  sugestoesContainer: { gap: 10, width: '100%' },
+  botaoSugestao: {
+    backgroundColor: CORES.superficie,
+    padding: 12,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: CORES.borda,
-    borderRadius: 18,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    marginTop: 6
+    borderColor: CORES.borda
   },
-  balao: {
-    maxWidth: '88%',
-    borderRadius: RAIO,
-    paddingVertical: 10,
-    paddingHorizontal: 13,
-    marginBottom: 10
-  },
-  balaoUsuario: { alignSelf: 'flex-end', backgroundColor: CORES.destaque },
-  balaoMentor: { alignSelf: 'flex-start', backgroundColor: CORES.superficie },
-  textoMensagem: { color: CORES.texto, fontSize: 15, lineHeight: 22 },
-  compositor: {
+  textoSugestao: { color: CORES.texto, fontSize: 14, textAlign: 'center' },
+  carregandoContainer: { flexDirection: 'row', alignItems: 'center', gap: 8, padding: 10 },
+  textoCarregando: { color: CORES.textoSecundario, fontSize: 13, fontStyle: 'italic' },
+  areaEntrada: {
     flexDirection: 'row',
-    alignItems: 'flex-end',
     padding: 12,
     borderTopWidth: 1,
-    borderTopColor: CORES.borda
-  },
-  campoMensagem: {
-    flex: 1,
-    maxHeight: 120,
-    minHeight: 44,
+    borderTopColor: CORES.borda,
     backgroundColor: CORES.superficie,
-    borderWidth: 1,
-    borderColor: CORES.borda,
-    borderRadius: RAIO,
-    paddingHorizontal: 12,
+    gap: 8
+  },
+  campoEntrada: {
+    flex: 1,
+    backgroundColor: CORES.fundo,
+    borderRadius: 12,
+    paddingHorizontal: 14,
     paddingVertical: 10,
     color: CORES.texto,
     fontSize: 15,
-    lineHeight: 21,
-    marginRight: 8
+    borderWidth: 1,
+    borderColor: CORES.borda
   },
   botaoEnviar: {
-    minHeight: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: RAIO,
     backgroundColor: CORES.destaque,
-    paddingHorizontal: 14
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    justifyContent: 'center'
   },
   botaoDesativado: { opacity: 0.5 },
-  textoEnviar: { color: '#000', fontWeight: 'bold', fontSize: 14 }
+  textoBotaoEnviar: { color: '#0F172A', fontWeight: 'bold', fontSize: 14 }
 });

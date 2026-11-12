@@ -87,7 +87,7 @@ function responderConhecimentoLocal(mentor, texto, historico) {
     return 'Refogue os temperos, junte a farinha aos poucos e mexa em fogo baixo até dourar. Acerte o sal no final.';
   }
   if (/arroz/.test(pergunta) && /solt|como fazer|como preparo|dica/.test(pergunta)) {
-    return 'Refogue os grãos, adicione o líquido na proporção da receita e cozinhe tampado em fogo baixo. Descanse alguns minutos antes de soltar com um garfo.';
+    return 'Refogue os grãos, adicione o líquido na proporção indicada pela receita e cozinhe em panela tampada, em fogo baixo. Descanse alguns minutos antes de soltar os grãos com um garfo.';
   }
 
   const receita = receitaPorNome(pergunta);
@@ -105,16 +105,16 @@ function responderConhecimentoLocal(mentor, texto, historico) {
     return 'Qual ingrediente falta e em qual receita? Com esses dois detalhes, sugiro uma troca mais certeira.';
   }
   if (/frango cru|lavar frango|lavar carne/.test(pergunta)) {
-    return 'Não lave frango ou outras carnes cruas: os respingos podem espalhar microrganismos pela pia e pelas superfícies. Cozinhe completamente e higienize mãos, utensílios e bancada depois do contato.';
+    return 'Não lave frango nem outras carnes cruas: os respingos podem espalhar microrganismos pela pia e pelas superfícies. Cozinhe completamente e higienize as mãos, os utensílios e a bancada depois do contato.';
   }
   if (/seguranca|higien|contamin|carne crua|validade|conserv|geladeira|descongel/.test(pergunta)) {
-    return 'Lave as mãos antes e depois de manipular alimentos. Separe carnes cruas dos alimentos prontos, higienize utensílios e mantenha perecíveis refrigerados. Não lave carnes cruas; cozinhe-as completamente.';
+    return 'Lave as mãos antes e depois de manipular alimentos. Separe carnes cruas dos alimentos prontos, higienize os utensílios e mantenha os perecíveis refrigerados. Não lave carnes cruas; cozinhe-as completamente.';
   }
   if (/cortar|corte|faca|julienne|brunoise|chiffonade|rodela|bastao|cubo/.test(pergunta)) {
-    return 'Use uma tábua firme e mantenha os dedos recolhidos. Julienne são tiras finas; brunoise, cubinhos; rodelas, fatias transversais. Veja o guia em Receitas > Cortes.';
+    return 'Use uma tábua firme e mantenha os dedos recolhidos. Julienne são tiras finas; brunoise são cubinhos; rodelas são fatias transversais. Veja o guia em Receitas > Cortes.';
   }
   if (/veg|vegetarian|sem carne/.test(pergunta)) {
-    return 'Feijão, lentilha, grão-de-bico, cogumelos ou tofu podem substituir carne, conforme o prato. Qual receita você quer adaptar?';
+    return 'Feijão, lentilha, grão-de-bico, cogumelos ou tofu podem substituir a carne, conforme o prato. Qual receita você quer adaptar?';
   }
   if (/assar|frit|cozinh|ferver|temperatura|fogo|refog/.test(pergunta)) {
     return 'Fogo baixo cozinha devagar; fogo alto sela e doura rápido. Para assar, preaqueça o forno e siga o tempo indicado na receita.';

@@ -2,7 +2,7 @@
   "expo": {
     "name": "Farofa Digital",
     "slug": "farofa-digital",
-    "version": "3.11.3",
+    "version": "3.14.1",
     "scheme": "farofadigital",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,10 +18,14 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "br.farofa.digital"
+      "bundleIdentifier": "br.farofa.digital",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "br.farofa.digital",
+      "versionCode": 1000,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#121826"
@@ -36,21 +40,13 @@
       "expo-asset",
       "expo-font",
       [
-        "expo-splash-screen",
+        "expo-build-properties",
         {
-          "image": "./assets/splash.png",
-          "backgroundColor": "#121826",
-          "imageWidth": 200
-        }
-      ],
-      "expo-build-properties",
-      [
-        "llama.rn",
-        {
-          "enableEntitlements": true,
-          "entitlementsProfile": "production",
-          "forceCxx20": true,
-          "enableOpenCLAndHexagon": true
+          "android": {
+            "compileSdkVersion": 38,
+            "targetSdkVersion": 34,
+            "buildToolsVersion": "36.0.0"
+          }
         }
       ]
     ],

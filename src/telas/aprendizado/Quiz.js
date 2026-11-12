@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import {
   Animated, Easing, Platform, ScrollView, StyleSheet, TouchableOpacity, View
 } from 'react-native';
@@ -15,6 +15,7 @@ import {
 } from '../../dados/quiz';
 import { PERGUNTAS_ANA } from '../../dados/perguntas_ana';
 import { PERGUNTAS_JOSE } from '../../dados/perguntas_jose';
+import { carregarPerguntasComFallback, sincronizarPerguntasSegundoPlano } from '../../servicos/sincronizacaoPerguntas';
 
 // ---------- Ajustes do jogo (mude aqui) ----------
 const QTD_PERGUNTAS = 8;        // perguntas por rodada
@@ -26,6 +27,36 @@ const NATIVO = Platform.OS !== 'web';
 const LETRAS = ['A', 'B', 'C', 'D', 'E', 'F'];
 const DIFICULDADES = { 1: 'Fácil', 2: 'Médio', 3: 'Difícil' };
 
+const FALAS_DERROTA = {
+  ana: [
+    'Sem estresse, meu querido! Até chef estrelado já queimou alho. Respira fundo, revisa a dica e vem comigo!',
+    'Vem cá, relaxa os ombros que cozinhar não é bicho de sete cabeças. O segredo vem com calma e carinho.',
+    'Errar faz parte do ofício! O importante é entender o porquê na bancada e tentar de novo com capricho.',
+  ],
+  jose: [
+    'Segura a onda, parceiro! Caiu na praça, levanta e sacode a poeira que a cozinha tá a mil!',
+    'Sem crise, campeão! Fogão é treino e agilidade. Dá aquela respirada, ajusta a mira e vamo pra cima!',
+    'Faltou um detalhe no fundamento, parceiro! Mas aqui ninguém desiste: limpa a tábua e vamo de novo!',
+  ],
+};
+
+const FALAS_VITORIA = {
+  ana: [
+    'Pegou o ritmo certinho! Já tá pensando com o capricho e o olho clínico de quem comanda a cozinha!',
+    'Que orgulho danado! Bancada organizada, técnica afiada e muito amor pelo que faz!',
+    'Maravilhoso! Cada detalhe no lugar certo: você tem mão de ouro pra gastronomia!',
+  ],
+  jose: [
+    'Aí sim, parceiro! Tá afiado igual faca na chaira, dominou a praça todinha!',
+    'Sensacional, craque! Ritmo forte, bancada brilhando e conhecimento na ponta da língua!',
+    'Golaço culinário! É disso que eu tô falando, tem futuro garantido no comando do fogão!',
+  ],
+};
+
+function sortearFala(lista) {
+  return lista[Math.floor(Math.random() * lista.length)];
+}
+
 const MENTORES = {
   ana: {
     emoji: '👩‍🍳',
@@ -33,22 +64,22 @@ const MENTORES = {
     perguntas: PERGUNTAS_ANA,
     falas: {
       certo: [
-        'Isso aí! Você manda bem na cozinha!',
-        'Perfeito! Mais uma para o seu caderno de receitas.',
-        'Mandou bem! Continue assim.'
+        'Pegou o ritmo certinho, já tá pensando como quem comanda o fogão!',
+        'Perfeito, meu querido! Olho clínico e capricho impecável.',
+        'Muito bem! Organização e respeito ao ingrediente é tudo!'
       ],
       combo: [
-        'Você está pegando fogo! Que sequência!',
-        'Isso é ponto de mestre cuca! Não pare agora.'
+        'Olha essa sequência linda! Você tá brilhando na bancada!',
+        'Ritmo maravilhoso! Cozinha em perfeita harmonia, não para não!'
       ],
       erro: [
-        'Sem problema, errar faz parte de aprender.',
-        'Quase! Leia a explicação e guarde essa.',
-        'Tudo bem, a gente aprende no fogão.'
+        'Sem estresse, até chef estrelado já queimou alho. Guarda essa dica!',
+        'Quase lá! Calma, relaxa os ombros que a gente acerta na próxima.',
+        'Tudo bem, errar no treino é o melhor jeito de fixar na cabeça!'
       ],
       tempo: [
-        'O tempo voou! Respire e vá com calma na próxima.',
-        'Acontece! Na próxima, confie no seu instinto.'
+        'O tempo voou! Respira fundo, confia no método e vamos em frente.',
+        'Acontece na correria do serviço! Na próxima você pega no ar.'
       ]
     }
   },
@@ -58,22 +89,22 @@ const MENTORES = {
     perguntas: PERGUNTAS_JOSE,
     falas: {
       certo: [
-        'Show! Está afiado igual faca de açougueiro!',
-        'Isso! Você conhece a cultura, hein?',
-        'É isso aí, craque da cozinha!'
+        'Aí sim, parceiro! Cravou no ponto igual faca afiada na chaira!',
+        'Show de bola! Já tá pensando ligeiro como quem segura a praça!',
+        'No talento! Mandou a brasa com moral de mestre!'
       ],
       combo: [
-        'Sequência de respeito! O fogo está alto!',
-        'Que combo! Assim você vira mestre rapidinho.'
+        'FOGO TOTAL! Combo pegando brasa na cozinha, segura o homem!',
+        'Tá voando baixo, compadre! Ritmo de restaurante lotado no sábado!'
       ],
       erro: [
-        'Fica tranquilo, a próxima é sua.',
-        'Essa pegou, mas agora você já sabe.',
-        'Errou hoje, acerta amanhã. Bora!'
+        'Segura a emoção, parceiro! Até o melhor cozinheiro já derramou leite. Foco na dica!',
+        'Passou raspando! Respira, firma a bancada e vamo que a praça é nossa!',
+        'Errou no detalhe, mas tá valendo! Levanta a cabeça e solta o braço!'
       ],
       tempo: [
-        'O relógio correu! Bora com mais foco.',
-        'Faltou tempo, mas sobra vontade. Vamos de novo!'
+        'O relógio correu, meu consagrado! Agilidade com atenção, bora pra cima!',
+        'Faltou milésimo no cronômetro! Mas a vontade sobra, vamo acelerar!'
       ]
     }
   }
@@ -85,7 +116,7 @@ function vibrar(acao) {
   try {
     Promise.resolve(acao()).catch(() => {});
   } catch (e) {
-    // sem vibração (navegador/PC): segue normalmente
+    // Sem vibração (navegador/PC), o jogo segue normalmente.
   }
 }
 
@@ -95,10 +126,38 @@ function escolherFala(falas, certo, tempoEsgotado, combo) {
 }
 
 export default function Quiz() {
+  const navigation = useNavigation();
   const telaAtiva = useIsFocused();
-  const { mentorEscolhido, adicionarBrasas, adicionarExp } = useApp();
+  const { mentorEscolhido, adicionarBrasas, adicionarExp, dadosPerfil } = useApp();
+  const nomeJogador = dadosPerfil?.nome?.trim();
+  const shake = useRef(new Animated.Value(0)).current;
+  const scaleVitoria = useRef(new Animated.Value(0.6)).current;
   const mentor = MENTORES[mentorEscolhido] || MENTORES.ana;
-  const banco = useMemo(() => mentor.perguntas || [], [mentor]);
+  const [bancoPerguntas, setBancoPerguntas] = useState(mentor.perguntas || []);
+
+  useEffect(() => {
+    let ativo = true;
+    setBancoPerguntas(mentor.perguntas || []);
+
+    async function carregarBanco() {
+      try {
+        const chaveMentor = mentorEscolhido === 'jose' ? 'jose' : 'ana';
+        const listaAtualizada = await carregarPerguntasComFallback(chaveMentor, mentor.perguntas || []);
+        if (ativo && Array.isArray(listaAtualizada)) {
+          setBancoPerguntas(listaAtualizada);
+        }
+      } catch (err) {
+        // Fallback automatico para o banco local
+      }
+    }
+
+    carregarBanco();
+    sincronizarPerguntasSegundoPlano().catch(() => {});
+
+    return () => {
+      ativo = false;
+    };
+  }, [mentor, mentorEscolhido]);
 
   const [fase, setFase] = useState('inicio'); // inicio | jogando | fim | revisao
   const [perguntas, setPerguntas] = useState([]);
@@ -127,7 +186,7 @@ export default function Quiz() {
   const premiado = useRef(false);
   const esgotar = useRef(() => {});
 
-  // Cada pergunta entra com animação e liga o cronômetro
+  // Cada pergunta entra com animaç e liga o cronômetro
   useEffect(() => {
     if (fase !== 'jogando' || !telaAtiva) return undefined;
 
@@ -155,9 +214,24 @@ export default function Quiz() {
     };
   }, [fase, indice, telaAtiva]);
 
-  // Estrelas pulam na tela de resultado
+  // Animacao na tela de resultado (derrota treme o emoji, vitoria salta o trofeu e estrelas)
   useEffect(() => {
     if (fase !== 'fim') return;
+    const total = perguntas.length;
+    const ehDerrotaFim = motivoFim === 'vidas' || (total > 0 && acertos / total < 0.6);
+
+    if (ehDerrotaFim) {
+      shake.setValue(0);
+      Animated.sequence(
+        [-10, 10, -8, 8, 0].map(v =>
+          Animated.timing(shake, { toValue: v, duration: 60, useNativeDriver: NATIVO })
+        )
+      ).start();
+    } else {
+      scaleVitoria.setValue(0.6);
+      Animated.spring(scaleVitoria, { toValue: 1, friction: 5, useNativeDriver: NATIVO }).start();
+    }
+
     estrelas.forEach(e => e.setValue(0));
     Animated.stagger(
       220,
@@ -165,10 +239,10 @@ export default function Quiz() {
         Animated.spring(e, { toValue: 1, friction: 4, useNativeDriver: NATIVO })
       )
     ).start();
-  }, [fase]);
+  }, [fase, motivoFim, acertos, perguntas.length]);
 
   const iniciar = () => {
-    const sorteadas = sortearPerguntas(banco, QTD_PERGUNTAS)
+    const sorteadas = sortearPerguntas(bancoPerguntas, QTD_PERGUNTAS)
       .sort((a, b) => a.dificuldade - b.dificuldade); // do mais fácil ao mais difícil
     setPerguntas(sorteadas);
     setIndice(0);
@@ -291,13 +365,13 @@ export default function Quiz() {
 
   // ---------- Início ----------
   if (fase === 'inicio') {
-    const total = Math.min(QTD_PERGUNTAS, banco.length);
+    const total = Math.min(QTD_PERGUNTAS, bancoPerguntas.length);
     return (
       <TelaSegura>
         <ScrollView contentContainerStyle={estilos.centroRolagem}>
           <Text style={estilos.emojiGrande}>🧠</Text>
           <Text style={estilos.titulo}>Sala do Saber</Text>
-          {banco.length === 0 ? (
+          {bancoPerguntas.length === 0 ? (
             <Text style={estilos.texto}>Ainda não há perguntas para {mentor.nome}.</Text>
           ) : (
             <>
@@ -348,35 +422,50 @@ export default function Quiz() {
     const nEstrelas = !total
       ? 0
       : acertos === total ? 3 : acertos / total >= 0.6 ? 2 : acertos > 0 ? 1 : 0;
-    const titulo = motivoFim === 'vidas' ? 'Acabaram as vidas!' : 'Rodada completa!';
-    const mensagem =
-      nEstrelas === 3 ? 'Perfeito! Você mandou muito bem.'
-      : nEstrelas === 2 ? 'Muito bem! Continue assim.'
-      : 'Boa tentativa! Jogue de novo para melhorar.';
+    const ehDerrota = motivoFim === 'vidas' || (total > 0 && acertos / total < 0.6);
+    const titulo = motivoFim === 'vidas' ? 'Acabaram as vidas!' : (ehDerrota ? 'Quase lá!' : 'Rodada completa!');
+
+    const chaveMentor = mentorEscolhido === 'jose' ? 'jose' : 'ana';
+    const listaFalas = ehDerrota ? FALAS_DERROTA[chaveMentor] : FALAS_VITORIA[chaveMentor];
+    const falaBase = sortearFala(listaFalas);
+    const falaPersonalizada = nomeJogador
+      ? `${nomeJogador}, ${falaBase.charAt(0).toLowerCase()}${falaBase.slice(1)}`
+      : falaBase;
 
     return (
       <TelaSegura>
         <ScrollView contentContainerStyle={estilos.centroRolagem}>
-          <Text style={estilos.titulo}>{titulo}</Text>
+          <Animated.View style={ehDerrota ? { transform: [{ translateX: shake }] } : { transform: [{ scale: scaleVitoria }] }}>
+            <Text style={estilos.emojiDerrota}>
+              {ehDerrota ? '😅🔥' : '🔥🏆'}
+            </Text>
+          </Animated.View>
 
-          <View style={estilos.linhaEstrelas}>
-            {[0, 1, 2].map(i => (
-              <Animated.View key={i} style={{ transform: [{ scale: estrelas[i] }] }}>
-                <Ionicons
-                  name={i < nEstrelas ? 'star' : 'star-outline'}
-                  size={52}
-                  color={CORES.destaque}
-                  style={estilos.estrela}
-                />
-              </Animated.View>
-            ))}
-          </View>
+          <Text style={[estilos.titulo, ehDerrota && estilos.tituloDerrota]}>{titulo}</Text>
 
-          <Text style={estilos.texto}>
-            {mentor.emoji} {mensagem}
+          {!ehDerrota && (
+            <View style={estilos.linhaEstrelas}>
+              {[0, 1, 2].map(i => (
+                <Animated.View key={i} style={{ transform: [{ scale: estrelas[i] }] }}>
+                  <Ionicons
+                    name={i < nEstrelas ? 'star' : 'star-outline'}
+                    size={52}
+                    color={CORES.destaque}
+                    style={estilos.estrela}
+                  />
+                </Animated.View>
+              ))}
+            </View>
+          )}
+
+          <Text style={estilos.falaMentorResultado}>
+            "{falaPersonalizada}"
+          </Text>
+          <Text style={estilos.mentorAssinatura}>
+            {mentor.emoji} {mentor.nome}
           </Text>
 
-          <View style={estilos.cartaoResultado}>
+          <View style={[estilos.cartaoResultado, ehDerrota && estilos.cartaoResultadoDerrota]}>
             <View style={estilos.linhaResultado}>
               <Text style={estilos.rotulo}>Acertos</Text>
               <Text style={estilos.valor}>{acertos} de {total}</Text>
@@ -403,6 +492,12 @@ export default function Quiz() {
               </Text>
             </TouchableOpacity>
           )}
+          <TouchableOpacity
+            style={estilos.botaoVoltarInicio}
+            onPress={() => navigation.navigate('Mentor')}
+          >
+            <Text style={estilos.textoBotaoVoltarInicio}>🏠 Voltar ao Início</Text>
+          </TouchableOpacity>
         </ScrollView>
       </TelaSegura>
     );
@@ -827,5 +922,43 @@ const estilos = StyleSheet.create({
   },
   respostaErrada: { fontSize: 14, lineHeight: 22, color: CORES.erro },
   respostaCerta: { fontSize: 14, lineHeight: 22, fontWeight: 'bold', color: CORES.sucesso },
-  explicacao: { fontSize: 14, lineHeight: 22, color: CORES.textoSecundario, marginTop: 6 }
+  explicacao: { fontSize: 14, lineHeight: 22, color: CORES.textoSecundario, marginTop: 6 },
+  emojiDerrota: {
+    fontSize: 48,
+    textAlign: 'center',
+    marginBottom: 6,
+  },
+  tituloDerrota: {
+    color: '#EF4444',
+  },
+  falaMentorResultado: {
+    color: '#F8FAFC',
+    fontSize: 15,
+    fontStyle: 'italic',
+    textAlign: 'center',
+    marginHorizontal: 16,
+    marginTop: 6,
+    lineHeight: 22,
+  },
+  mentorAssinatura: {
+    color: '#94A3B8',
+    fontSize: 13,
+    fontWeight: '600',
+    marginTop: 4,
+    marginBottom: 14,
+  },
+  cartaoResultadoDerrota: {
+    borderWidth: 1,
+    borderColor: '#7F1D1D',
+  },
+  botaoVoltarInicio: {
+    marginTop: 12,
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  textoBotaoVoltarInicio: {
+    color: '#94A3B8',
+    fontSize: 14,
+    fontWeight: '600',
+  },
 });

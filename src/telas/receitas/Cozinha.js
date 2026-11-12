@@ -20,19 +20,20 @@ const ABAS = [
   { id: 'cortes', titulo: 'Cortes' }
 ];
 
-export default function Cozinha() {
+export default function Cozinha({ route }) {
+  const abaInicialParam = route?.params?.abaInicial;
   const {
     favoritos, alternarFavorito, adicionarItensCompra, itensCompra,
     adicionarItemCompra, alternarItemCompra, removerItemCompra, limparComprados
   } = useApp();
-  const [aba, setAba] = useState('receitas');
+  const [aba, setAba] = useState(abaInicialParam || 'receitas');
   const [busca, setBusca] = useState('');
   const [origemSelecionada, setOrigemSelecionada] = useState('Todas');
   const [receitaAberta, setReceitaAberta] = useState(null);
   const [novoItem, setNovoItem] = useState('');
 
   const origens = useMemo(
-    () => ['Todas', ...new Set(RECEITAS.map(receita => receita.regiao))],
+    () => ['Todas', ...new Set(RECEITAS.map(receita => receita.regiao).filter(Boolean))],
     []
   );
 
@@ -423,8 +424,8 @@ const estilos = StyleSheet.create({
   },
   descricaoRegional: { fontSize: 13, lineHeight: 20, color: CORES.textoSecundario, marginTop: 4 },
   cartaoRegional: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
+    alignItems: 'stretch',
     backgroundColor: CORES.superficie,
     borderWidth: 1,
     borderColor: CORES.borda,
@@ -433,10 +434,12 @@ const estilos = StyleSheet.create({
     marginTop: 10
   },
   botaoRegional: {
+    alignSelf: 'flex-start',
     backgroundColor: CORES.destaque,
     borderRadius: RAIO,
-    paddingHorizontal: 10,
-    paddingVertical: 9
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginTop: 10
   },
   botaoRegionalAdicionado: { backgroundColor: 'rgba(16,185,129,0.15)' },
   textoRegional: { color: '#000', fontSize: 12, lineHeight: 18, fontWeight: 'bold' },

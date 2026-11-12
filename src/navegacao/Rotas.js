@@ -8,16 +8,15 @@ import { CORES } from '../uteis/constantes';
 
 import BoasVindas from '../telas/onboarding/BoasVindas';
 import EscolherMentor from '../telas/onboarding/EscolherMentor';
+import CriarPerfil from '../telas/CriarPerfil';
+import Mentor from '../telas/mentor/Mentor';
+import Academia from '../telas/aprendizado/Academia';
 import Cozinha from '../telas/receitas/Cozinha';
 import Perfil from '../telas/perfil/Perfil';
-import Quiz from '../telas/aprendizado/Quiz';
-import MiniGame from '../telas/aprendizado/MiniGame';
-import Mentor from '../telas/mentor/Mentor';
 
 const Tab = createBottomTabNavigator();
 const AuthStack = createNativeStackNavigator();
 
-// Emoji não muda de cor, então a aba ativa fica em destaque pela opacidade.
 const Icone = ({ emoji, focused }) => (
   <Text style={[estilos.iconeAba, !focused && estilos.iconeInativo]}>{emoji}</Text>
 );
@@ -35,7 +34,7 @@ function NavegacaoAutenticada() {
         tabBarStyle: { backgroundColor: CORES.superficie, borderTopWidth: 0 },
         tabBarActiveTintColor: CORES.destaque,
         tabBarInactiveTintColor: CORES.textoSecundario,
-        tabBarLabelStyle: { fontSize: escalaFonte(10, width) },
+        tabBarLabelStyle: { fontSize: escalaFonte(11, width), fontWeight: '600' },
       }}
     >
       <Tab.Screen
@@ -48,28 +47,19 @@ function NavegacaoAutenticada() {
         }}
       />
       <Tab.Screen
-        name="Quiz"
-        component={Quiz}
+        name="Academia"
+        component={Academia}
         options={{
-          title: 'Sala do Saber',
-          tabBarLabel: 'Quiz',
-          tabBarIcon: ({ focused }) => <Icone emoji="🧠" focused={focused} />,
-        }}
-      />
-      <Tab.Screen
-        name="Minicozinha"
-        component={MiniGame}
-        options={{
-          title: 'Minicozinha',
-          tabBarLabel: 'Jogo',
-          tabBarIcon: ({ focused }) => <Icone emoji="🍳" focused={focused} />,
+          title: 'Academia Culinária',
+          tabBarLabel: 'Academia',
+          tabBarIcon: ({ focused }) => <Icone emoji="🎓" focused={focused} />,
         }}
       />
       <Tab.Screen
         name="Cozinha"
         component={Cozinha}
         options={{
-          title: 'Cozinha do mundo',
+          title: 'Cozinha do Mundo',
           tabBarLabel: 'Receitas',
           tabBarIcon: ({ focused }) => <Icone emoji="🍲" focused={focused} />,
         }}
@@ -78,7 +68,36 @@ function NavegacaoAutenticada() {
         name="Perfil"
         component={Perfil}
         options={{
+          title: 'Meu Perfil',
+          tabBarLabel: 'Perfil',
           tabBarIcon: ({ focused }) => <Icone emoji="👤" focused={focused} />,
+        }}
+      />
+      <Tab.Screen
+        name="Quiz"
+        component={Academia}
+        initialParams={{ modulo: 'quiz' }}
+        options={{
+          tabBarItemStyle: { display: 'none' },
+          title: 'Sala do Saber',
+        }}
+      />
+      <Tab.Screen
+        name="Minicozinha"
+        component={Academia}
+        initialParams={{ modulo: 'minigame' }}
+        options={{
+          tabBarItemStyle: { display: 'none' },
+          title: 'Minicozinha',
+        }}
+      />
+      <Tab.Screen
+        name="Cortes"
+        component={Academia}
+        initialParams={{ modulo: 'cortes' }}
+        options={{
+          tabBarItemStyle: { display: 'none' },
+          title: 'Guia de Cortes & Facas',
         }}
       />
     </Tab.Navigator>
@@ -97,7 +116,7 @@ const estilos = StyleSheet.create({
 });
 
 export default function Rotas() {
-  const { onboardingConcluido, carregando } = useApp();
+  const { carregando, onboardingConcluido, perfilCompleto } = useApp();
 
   if (carregando) {
     return (
@@ -112,6 +131,14 @@ export default function Rotas() {
       <AuthStack.Navigator screenOptions={{ headerShown: false }}>
         <AuthStack.Screen name="BoasVindas" component={BoasVindas} />
         <AuthStack.Screen name="EscolherMentor" component={EscolherMentor} />
+      </AuthStack.Navigator>
+    );
+  }
+
+  if (!perfilCompleto) {
+    return (
+      <AuthStack.Navigator screenOptions={{ headerShown: false }}>
+        <AuthStack.Screen name="CriarPerfil" component={CriarPerfil} />
       </AuthStack.Navigator>
     );
   }

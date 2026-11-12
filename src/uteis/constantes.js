@@ -1,4 +1,4 @@
-import TEMA from '../../assets/tema.json';
+﻿import TEMA from '../../assets/tema.json';
 
 export const CORES = TEMA.cores;
 export const ESP = TEMA.espacamento;
