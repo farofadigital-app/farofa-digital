@@ -37,56 +37,56 @@ const MENTORES = {
     humores: { padrao: '👩‍🍳', foco: '🧐', animada: '🤩', alerta: '🤔', orgulhosa: '🥰' },
     falas: {
       inicio: [
-        'Olá! Separe os ingredientes com calma. Uma boa bancada garante o sucesso do prato.',
-        'Mise en place pronto: arraste os ingredientes certos direto para a nossa panela!'
+        'Relaxa os ombros e vem comigo: mise en place organizado é meio caminho andado!',
+        'Bancada limpa e ingredientes separados: arraste tudo pro caldeirão com capricho.'
       ],
       arrasteCerto: [
-        'Ingrediente perfeito na panela! A base do sabor está impecável.',
-        'Muito bem! Organização na bancada é meio caminho andado.',
-        'Excelente! Já sinto o aroma tomando conta da cozinha.'
+        'Perfeito! Esse ingrediente entra na hora certa com todo o carinho.',
+        'Muito bem, meu querido! Organização impecável na bancada.',
+        'Já sinto aquele cheirinho gostoso tomando conta da nossa cozinha.'
       ],
       arrasteErro: [
-        'Calma! Esse ingrediente não pertence a esta receita. Leia a lista com atenção.',
-        'Cuidado com os intrusos! Isso alteraria o equilíbrio do prato tradicional.',
-        'Não foi dessa vez. Respire fundo e escolha o ingrediente certo.'
+        'Calma, meu querido! Esse intruso não vai nessa receita. Lê a lista com atenção.',
+        'Sem pressa: olha a bancada direitinho e pega o ingrediente certo.',
+        'Respira fundo. Na cozinha da Ana o capricho começa na escolha certa.'
       ],
       corteCerto: [
-        'Corte limpo e uniforme! Assim tudo cozinha no mesmo tempo.',
-        'Lâmina afiada e movimento firme! Técnica profissional.',
-        'Muito bem! Dedos curvados para proteger e ritmo impecável.'
+        'Corte lindo e uniforme! Dedos em garra protegidos e lâmina afiada.',
+        'Muito bem! Pedaços regulares cozinham todos no mesmo tempo.',
+        'Técnica e delicadeza pura! Dá gosto de ver você trabalhar.'
       ],
       corteRitmo: [
-        'Mantenha o ritmo! Deslize a faca com firmeza pela guia.',
-        'Perfeito! Fatias regulares valorizam a apresentação.'
+        'Mantém o ritmo suave! Deixa o peso da lâmina fazer o trabalho.',
+        'Fatias perfeitas! A apresentação do prato vai brilhar.'
       ],
       mexerCerto: [
-        'Isso! Movimento circular constante para o calor penetrar por igual.',
-        'Perfeito! Raspando as bordas e o fundo sem machucar os ingredientes.',
-        'Ritmo maravilhoso! O molho está emulsionando como deve ser.'
+        'Isso, movimento circular constante para o calor abraçar a panela toda.',
+        'Raspando o fundo com suavidade sem machucar o refogado. Que beleza!',
+        'Ritmo maravilhoso! Já tá emulsionando no ponto certo.'
       ],
       mexerParou: [
-        'Atenção! Não pare de mexer, senão o fundo gruda e queima.',
-        'Fogo ligado exige colher em movimento constante! Continue girando.'
+        'Atenção aos ombros! Não para de mexer, senão o fundo gruda e queima.',
+        'Fogo aceso pede colher em movimento! Continua mexendo com amor.'
       ],
       pontoOuro: [
-        'PONTO DE OURO! Temperatura milimetricamente perfeita!',
-        'Incrível! Selagem impecável no calor exato da técnica clássica.'
+        'PONTO DE OURO! Temperatura milimetricamente perfeita de chef!',
+        'Incrível! Selagem impecável no calor exato, sem perder suco.'
       ],
       pontoBom: [
-        'No ponto certo! Agora sim o preparo vai brilhar.',
-        'Acertou em cheio o calor! Vamos para a próxima etapa.'
+        'No ponto certo! Agora sim o preparo vai apurar divinamente.',
+        'Temperatura perfeita! Vamos dar o próximo passo.'
       ],
       pontoErro: [
-        'Passou um pouco da temperatura ideal. Observe o medidor com calma.',
-        'O fogo desregulou! Respire e tente parar dentro da faixa verde.'
+        'Passou um pouquinho da temperatura ideal. Observa o calor com calma.',
+        'O fogo desregulou! Respira e tenta parar dentro da faixa verde.'
       ],
       comboAlto: [
-        'Sequência brilhante! Você tem mão de chef de alta gastronomia!',
-        'Uau! Cozinha em perfeita harmonia e ritmo impressionante!'
+        'Que sequência espetacular! Você tem mão de chef de alta gastronomia!',
+        'Uau! Cozinha em perfeita harmonia, orgulho da Chef Ana!'
       ],
-      fim3Estrelas: 'Prato magistral! Sabor, apresentação e técnica com três estrelas!',
-      fim2Estrelas: 'Muito bem feito! Com mais um pouco de prática você alcança a perfeição.',
-      fim1Estrela: 'Prato concluído! Continue praticando os gestos para dominar todos os pontos.'
+      fim3Estrelas: 'Prato magistral! Sabor, apresentação, técnica e três estrelas merecidas!',
+      fim2Estrelas: 'Muito bem feito! Com mais um pouquinho de prática você alcança a perfeição.',
+      fim1Estrela: 'Prato pronto e servido! Continua praticando os gestos que o aprendizado é lindo.'
     }
   },
   jose: {
@@ -95,55 +95,55 @@ const MENTORES = {
     humores: { padrao: '👨‍🍳', foco: '🤠', animada: '🔥', alerta: '🤨', orgulhosa: '💪' },
     falas: {
       inicio: [
-        'Bora pro fogão! Cozinha brasileira é brasa, tempero e agilidade!',
-        'Aquece a chapa que a fome é grande! Arraste os ingredientes pra panela!'
+        'Aí sim, parceiro! A praça é nossa e a chapa tá quente: arraste os ingredientes!',
+        'Agilidade com segurança, compadre! Mise en place montado e caldeirão no fogo!'
       ],
       arrasteCerto: [
-        'Show de bola! Esse vai direto pro caldeirão!',
-        'É isso aí, craque! Tá dominando a bancada!',
-        'Boa jogada! O caldeirão já tá fervendo no capricho!'
+        'Show de bola, parceiro! Esse vai direto pro caldeirão ferver!',
+        'É isso aí, craque! Tá dominando a bancada igual profissional!',
+        'Na gaveta! O caldeirão já tá chiando no capricho!'
       ],
       arrasteErro: [
-        'Opa! Esse aí entrou de gaiato no navio, não vai nessa receita!',
-        'Esse não, patrão! Vai estragar o tempero tradicional.',
-        'Segura a empolgação! Escolhe o ingrediente certo do prato.'
+        'Opa! Esse aí entrou de gaiato no navio, parceiro! Não entra nessa receita!',
+        'Esse não, meu consagrado! Vai estragar o tempero da casa.',
+        'Segura a empolgação! Escolhe o ingrediente certo e vamo pra cima.'
       ],
       corteCerto: [
-        'Corte afiado demais! Passou a lâmina com moral!',
-        'No talento! Pedaços no capricho pra refogar rápido!',
-        'Machado de cozinheiro! Mandou muito bem no corte!'
+        'Corte afiado demais! Passou a faca com moral de chef!',
+        'No talento! Pedaços no capricho pra refogar rápido sem atrasar!',
+        'Navalha pura! Mandou muito bem no corte!'
       ],
       corteRitmo: [
-        'Passa a faca sem dó! Desliza com vontade!',
-        'Ritmo forte, é assim que a cozinha não atrasa o serviço!'
+        'Passa a lâmina com vontade! Desliza e mantém o ritmo!',
+        'Ritmo forte, é assim que a praça não atrasa o serviço!'
       ],
       mexerCerto: [
         'Gira essa colher de pau! Faz a mágica acontecer na panela!',
-        'No ritmo certo! Não deixa nada grudar no fundo!',
-        'Sensacional! O refogado tá chiando do jeito que tem que ser!'
+        'No compasso certo! Não deixa grudar nada no fundo, sujou limpou!',
+        'Sensacional! O refogado tá chiando do jeito que tem que chiar!'
       ],
       mexerParou: [
-        'Acorda o braço! Se parar de mexer, queima o fundo da panela!',
-        'Mexe essa panela, guerreiro! O calor tá subindo!'
+        'Acorda o braço, parceiro! Se parar de girar, queima o fundo da panela!',
+        'Mexe essa panela, guerreiro! O fogo não espera ninguém!'
       ],
       pontoOuro: [
-        'NO PONTO DE OURO! Que tiro certo, brasa viva!',
-        'Golaço culinário! Cravou a temperatura na mosca!'
+        'NO PONTO DE OURO! Cravou a temperatura na mosca, brasa viva!',
+        'Golaço culinário! Cravou a temperatura no milímetro!'
       ],
       pontoBom: [
-        'Tá na chapa! Temperatura boa demais, segue o jogo!',
-        'Fogo calibrado! Agora é só manter a pegada.'
+        'Tá na chapa! Fogo calibrado, agora é só manter a pegada!',
+        'Temperatura de primeira! Segue o jogo na velocidade certa.'
       ],
       pontoErro: [
-        'Quase queimou! Segura a mão e mira na marca verde.',
-        'Passou do ponto, compadre! De olho no marcador!'
+        'Quase queimou! Segura a mão, parceiro, e mira na marca verde.',
+        'Passou do ponto, compadre! De olho aberto no marcador!'
       ],
       comboAlto: [
-        'FOGO TOTAL! Combo pegando fogo na cozinha!',
-        'Tá voando baixo! Cozinha profissional pura aqui!'
+        'FOGO TOTAL! Combo pegando fogo na cozinha, tá voando baixo!',
+        'Cozinha profissional pura aqui! Segura o homem!'
       ],
-      fim3Estrelas: 'Prato nota dez, padrão de festa com três estrelas no peito!',
-      fim2Estrelas: 'Ficou show de bola! Só afinar mais os cortes e fica impecável.',
+      fim3Estrelas: 'Prato nota dez, padrão de festa com três estrelas no peito, parceiro!',
+      fim2Estrelas: 'Ficou show de bola! Só afinar mais o ponto de fogo e fica nota 100.',
       fim1Estrela: 'Prato na mesa! Valeu a batalha, na próxima a gente busca as 3 estrelas!'
     }
   }
