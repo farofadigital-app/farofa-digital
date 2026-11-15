@@ -1,8 +1,9 @@
-﻿export const salgados = [
+export const salgados = [
   {
     id: 'coxinha-de-frango',
     nome: 'Coxinha de Frango com Catupiry',
     categoria: 'salgados',
+    regiao: 'Sudeste',
     tempo: '1h 30 min',
     porcoes: '25 unidades',
     dificuldade: 'Média',
@@ -26,6 +27,7 @@
     id: 'pastel-de-feira',
     nome: 'Pastel de Feira Crocante',
     categoria: 'salgados',
+    regiao: 'Sudeste',
     tempo: '50 min',
     porcoes: '12 pastéis',
     dificuldade: 'Fácil',
@@ -45,6 +47,7 @@
     id: 'pao-de-queijo',
     nome: 'Pão de Queijo Mineiro',
     categoria: 'salgados',
+    regiao: 'Sudeste',
     tempo: '40 min',
     porcoes: '30 unidades',
     dificuldade: 'Fácil',
@@ -65,6 +68,7 @@
     id: 'acaraje',
     nome: 'Acarajé Baiano',
     categoria: 'salgados',
+    regiao: 'Nordeste',
     tempo: '2h',
     porcoes: '15 bolinhos',
     dificuldade: 'Difícil',

@@ -1,6 +1,7 @@
 import { CORTES } from '../dados/cortes';
 import { RECEITAS } from '../dados/receitas';
 import { normalizarBusca } from '../uteis/formatacao';
+import { textoPorcoes } from '../uteis/receitas';
 
 const RECOMENDACOES_INICIAIS = [
   'Qual receita rápida você recomenda?',
@@ -59,7 +60,7 @@ function resumirPreparo(texto = '') {
 function formatarReceita(receita) {
   const ingredientes = (receita.ingredientes || []).slice(0, 4);
   const extra = (receita.ingredientes || []).length > ingredientes.length ? ' e outros' : '';
-  return `${receita.nome} · ${receita.tempo} · ${receita.porcoes} porções.\nIngredientes: ${ingredientes.join(', ')}${extra}.\nPreparo: ${resumirPreparo(receita.modoPreparo)}`;
+  return `${receita.nome} · ${receita.tempo} · ${textoPorcoes(receita.porcoes)}.\nIngredientes: ${ingredientes.join(', ')}${extra}.\nPreparo: ${resumirPreparo(receita.modoPreparo)}`;
 }
 
 function responderReceita(receita, pergunta) {

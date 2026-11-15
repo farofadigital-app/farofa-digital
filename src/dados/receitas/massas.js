@@ -1,8 +1,9 @@
-﻿export const massas = [
+export const massas = [
   {
     id: 'torta-de-liquidificador',
     nome: 'Torta Salgada de Liquidificador',
     categoria: 'massas',
+    regiao: 'Todo o Brasil',
     tempo: '50 min',
     porcoes: '8 porções',
     dificuldade: 'Fácil',

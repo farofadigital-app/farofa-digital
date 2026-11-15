@@ -1,8 +1,9 @@
-﻿export const pratosPrincipais = [
+export const pratosPrincipais = [
   {
     id: 'feijoada-completa',
     nome: 'Feijoada Completa',
     categoria: 'pratosPrincipais',
+    regiao: 'Sudeste',
     tempo: '3h',
     porcoes: '8 porções',
     dificuldade: 'Média',
@@ -26,6 +27,7 @@
     id: 'moqueca-baiana',
     nome: 'Moqueca Baiana',
     categoria: 'pratosPrincipais',
+    regiao: 'Nordeste',
     tempo: '50 min',
     porcoes: '4 porções',
     dificuldade: 'Média',
@@ -49,6 +51,7 @@
     id: 'vatapa',
     nome: 'Vatapá Tradicional',
     categoria: 'pratosPrincipais',
+    regiao: 'Nordeste',
     tempo: '45 min',
     porcoes: '6 porções',
     dificuldade: 'Média',
@@ -71,6 +74,7 @@
     id: 'bobo-de-camarao',
     nome: 'Bobó de Camarão',
     categoria: 'pratosPrincipais',
+    regiao: 'Nordeste',
     tempo: '1h',
     porcoes: '6 porções',
     dificuldade: 'Média',
@@ -93,6 +97,7 @@
     id: 'barreado',
     nome: 'Barreado Paranaense',
     categoria: 'pratosPrincipais',
+    regiao: 'Sul',
     tempo: '8h',
     porcoes: '8 porções',
     dificuldade: 'Difícil',

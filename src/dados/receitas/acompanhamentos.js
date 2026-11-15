@@ -1,8 +1,9 @@
-﻿export const acompanhamentos = [
+export const acompanhamentos = [
   {
     id: 'farofa-especial-de-bacon',
     nome: 'Farofa Especial de Bacon e Cebola',
     categoria: 'acompanhamentos',
+    regiao: 'Todo o Brasil',
     tempo: '20 min',
     porcoes: '6 porções',
     dificuldade: 'Fácil',

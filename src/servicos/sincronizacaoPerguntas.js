@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const CHAVE_CACHE_ANA = '@farofa_perguntas_cache_ana';
-const CHAVE_CACHE_JOSE = '@farofa_perguntas_cache_jose';
+const CHAVE_CACHE_ANA = '@farofa_perguntas_cache_ana_v2';
+const CHAVE_CACHE_JOSE = '@farofa_perguntas_cache_jose_v2';
 const CHAVE_ULTIMA_SINC = '@farofa_ultima_sincronizacao';
 
 const URLS_PADRAO = [

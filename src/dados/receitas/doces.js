@@ -1,8 +1,9 @@
-﻿export const doces = [
+export const doces = [
   {
     id: 'brigadeiro-tradicional',
     nome: 'Brigadeiro Tradicional',
     categoria: 'doces',
+    regiao: 'Todo o Brasil',
     tempo: '25 min',
     porcoes: '20 unidades',
     dificuldade: 'Fácil',
@@ -20,6 +21,7 @@
     id: 'quindim',
     nome: 'Quindim Dourado',
     categoria: 'doces',
+    regiao: 'Nordeste',
     tempo: '1h',
     porcoes: '12 porções',
     dificuldade: 'Média',
@@ -37,6 +39,7 @@
     id: 'pudim-de-leite',
     nome: 'Pudim de Leite Condensado',
     categoria: 'doces',
+    regiao: 'Todo o Brasil',
     tempo: '1h 30 min',
     porcoes: '10 fatias',
     dificuldade: 'Fácil',

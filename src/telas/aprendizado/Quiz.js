@@ -186,7 +186,7 @@ export default function Quiz() {
   const premiado = useRef(false);
   const esgotar = useRef(() => {});
 
-  // Cada pergunta entra com animaç e liga o cronômetro
+  // Cada pergunta entra com animação e liga o cronômetro
   useEffect(() => {
     if (fase !== 'jogando' || !telaAtiva) return undefined;
 

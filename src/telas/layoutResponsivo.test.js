@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Dimensions, StyleSheet, Text, TextInput } from 'react-native';
 import TestRenderer, { act } from 'react-test-renderer';
 import {
@@ -336,7 +336,7 @@ describe('Layout Responsivo - Telas Android Estreitas (320dp) e Fontes Ampliadas
 
       expect(encontrarPorTexto(rendererAtual, 'Receitas').length).toBeGreaterThan(0);
       expect(encontrarPorTexto(rendererAtual, 'Lista').length).toBeGreaterThan(0);
-      expect(encontrarPorTexto(rendererAtual, 'Cortes').length).toBeGreaterThan(0);
+      expect(encontrarPorTexto(rendererAtual, 'Cortes')).toHaveLength(0);
 
       const infoReceitaNos = rendererAtual.root.findAll(node => {
         if (!node.props?.style) return false;
