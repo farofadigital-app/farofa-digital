@@ -295,7 +295,7 @@ export const PERGUNTAS_JOSE = [
     dificuldade: 2,
     exp: 20,
     brasas: 2,
-    pergunta: 'O molho de tomate ou vinagrete ficou excessivamente ácido na boca. O que ajuda a redondear o sabor?',
+    pergunta: 'O molho de tomate ou vinagrete ficou excessivamente ácido na boca. O que ajuda a arredondar o sabor?',
     alternativas: [
       'Uma pitadinha de açúcar ou cenoura ralada para equilibrar a acidez natural',
       'Colocar um copo de vinagre puro a mais',

@@ -281,13 +281,13 @@ export const PERGUNTAS_ANA = [
     brasas: 2,
     pergunta: 'Você provou o ensopado e sentiu que ficou ligeiramente salgado além da conta. Qual truque caseiro ajuda a equilibrar?',
     alternativas: [
-      'Acrescentar um pouco de água ou caldo sem sal, ou rodelas de batata crua para puxar o excesso',
+      'Acrescentar um pouco de água ou caldo sem sal para diluir o excesso',
       'Jogar uma colherada de farinha de trigo crua diretamente no prato',
       'Ferver em fogo alto para reduzir e evaporar o líquido',
       'Adicionar bicarbonato de sódio em pó'
     ],
-    correta: 'Acrescentar um pouco de água ou caldo sem sal, ou rodelas de batata crua para puxar o excesso',
-    explicacao: 'Diluir com caldo neutro ou cozinhar pedaços de batata ajuda a absorver e dispersar a concentração de sódio.'
+    correta: 'Acrescentar um pouco de água ou caldo sem sal para diluir o excesso',
+    explicacao: 'Diluir com água ou caldo sem sal é o que funciona de verdade. A batata crua é um mito de cozinha: ela absorve líquido, não o sal.'
   },
   {
     id: 'ana-018',
