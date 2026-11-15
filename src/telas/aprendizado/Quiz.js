@@ -29,27 +29,27 @@ const DIFICULDADES = { 1: 'Fácil', 2: 'Médio', 3: 'Difícil' };
 
 const FALAS_DERROTA = {
   ana: [
-    'Quase lá! A cozinha brasileira é generosa com quem tenta de novo.',
-    'Não desanima. O sabor verdadeiro vem com a prática e o carinho.',
-    'Errar faz parte. Na próxima você acerta com mais gosto.',
+    'Sem estresse, meu querido! Até chef estrelado já queimou alho. Respira fundo, revisa a dica e vem comigo!',
+    'Vem cá, relaxa os ombros que cozinhar não é bicho de sete cabeças. O segredo vem com calma e carinho.',
+    'Errar faz parte do ofício! O importante é entender o porquê na bancada e tentar de novo com capricho.',
   ],
   jose: [
-    'Ainda não. Revise o fundamento e tente com mais precisão.',
-    'Erro registrado. Foque no método e avance.',
-    'Não é o fim. Organização e atenção resolvem na próxima.',
+    'Segura a onda, parceiro! Caiu na praça, levanta e sacode a poeira que a cozinha tá a mil!',
+    'Sem crise, campeão! Fogão é treino e agilidade. Dá aquela respirada, ajusta a mira e vamo pra cima!',
+    'Faltou um detalhe no fundamento, parceiro! Mas aqui ninguém desiste: limpa a tábua e vamo de novo!',
   ],
 };
 
 const FALAS_VITORIA = {
   ana: [
-    'Perfeito! Você mandou muito bem na cozinha!',
-    'Que orgulho! Cada receita fica melhor quando colocamos dedicação.',
-    'Maravilhoso! Seu talento para os temperos está brilhando.',
+    'Pegou o ritmo certinho! Já tá pensando com o capricho e o olho clínico de quem comanda a cozinha!',
+    'Que orgulho danado! Bancada organizada, técnica afiada e muito amor pelo que faz!',
+    'Maravilhoso! Cada detalhe no lugar certo: você tem mão de ouro pra gastronomia!',
   ],
   jose: [
-    'Show de bola! Está afiado igual faca de açougueiro!',
-    'Sensacional! Pegou o jeito da cozinha brasileira rapidinho!',
-    'É disso que eu estou falando! Mestre cuca de primeira!',
+    'Aí sim, parceiro! Tá afiado igual faca na chaira, dominou a praça todinha!',
+    'Sensacional, craque! Ritmo forte, bancada brilhando e conhecimento na ponta da língua!',
+    'Golaço culinário! É disso que eu tô falando, tem futuro garantido no comando do fogão!',
   ],
 };
 
@@ -64,22 +64,22 @@ const MENTORES = {
     perguntas: PERGUNTAS_ANA,
     falas: {
       certo: [
-        'Isso aí! Você manda bem na cozinha!',
-        'Perfeito! Mais uma para o seu caderno de receitas.',
-        'Mandou bem! Continue assim.'
+        'Pegou o ritmo certinho, já tá pensando como quem comanda o fogão!',
+        'Perfeito, meu querido! Olho clínico e capricho impecável.',
+        'Muito bem! Organização e respeito ao ingrediente é tudo!'
       ],
       combo: [
-        'Você está pegando fogo! Que sequência!',
-        'Isso é ponto de mestre cuca! Não pare agora.'
+        'Olha essa sequência linda! Você tá brilhando na bancada!',
+        'Ritmo maravilhoso! Cozinha em perfeita harmonia, não para não!'
       ],
       erro: [
-        'Sem problema, errar faz parte de aprender.',
-        'Quase! Leia a explicação e guarde essa.',
-        'Tudo bem, a gente aprende no fogão.'
+        'Sem estresse, até chef estrelado já queimou alho. Guarda essa dica!',
+        'Quase lá! Calma, relaxa os ombros que a gente acerta na próxima.',
+        'Tudo bem, errar no treino é o melhor jeito de fixar na cabeça!'
       ],
       tempo: [
-        'O tempo voou! Respire e vá com calma na próxima.',
-        'Acontece! Na próxima, confie no seu instinto.'
+        'O tempo voou! Respira fundo, confia no método e vamos em frente.',
+        'Acontece na correria do serviço! Na próxima você pega no ar.'
       ]
     }
   },
@@ -89,22 +89,22 @@ const MENTORES = {
     perguntas: PERGUNTAS_JOSE,
     falas: {
       certo: [
-        'Show! Está afiado igual faca de açougueiro!',
-        'Isso! Você conhece a cultura, hein?',
-        'É isso aí, craque da cozinha!'
+        'Aí sim, parceiro! Cravou no ponto igual faca afiada na chaira!',
+        'Show de bola! Já tá pensando ligeiro como quem segura a praça!',
+        'No talento! Mandou a brasa com moral de mestre!'
       ],
       combo: [
-        'Sequência de respeito! O fogo está alto!',
-        'Que combo! Assim você vira mestre rapidinho.'
+        'FOGO TOTAL! Combo pegando brasa na cozinha, segura o homem!',
+        'Tá voando baixo, compadre! Ritmo de restaurante lotado no sábado!'
       ],
       erro: [
-        'Fica tranquilo, a próxima é sua.',
-        'Essa pegou, mas agora você já sabe.',
-        'Errou hoje, acerta amanhã. Bora!'
+        'Segura a emoção, parceiro! Até o melhor cozinheiro já derramou leite. Foco na dica!',
+        'Passou raspando! Respira, firma a bancada e vamo que a praça é nossa!',
+        'Errou no detalhe, mas tá valendo! Levanta a cabeça e solta o braço!'
       ],
       tempo: [
-        'O relógio correu! Bora com mais foco.',
-        'Faltou tempo, mas sobra vontade. Vamos de novo!'
+        'O relógio correu, meu consagrado! Agilidade com atenção, bora pra cima!',
+        'Faltou milésimo no cronômetro! Mas a vontade sobra, vamo acelerar!'
       ]
     }
   }
