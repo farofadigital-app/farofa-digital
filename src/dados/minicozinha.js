@@ -81,6 +81,34 @@ export function criarDesafioIngredientes(receita) {
   }));
 }
 
+// Palavras de medida e de preparo: nao ajudam a identificar o ingrediente
+const PALAVRAS_DE_MEDIDA = new Set('colher colheres sopa sopas cha xicara xicaras copo copos medida lata pitada dente dentes gosto picado picada picados picadas fatiado fatiada fatiados ralado ralada fresco fresca fresquinho grande grandes media medio pequeno pequena maduro maduros madura cortado cortada cortados temperado aproximadamente pacote porcao gramas grama litro litros mililitros para com sem bem uns umas pedacos pedaco rodelas rodela cubos cubo inteiro inteiros inteira cozido cozida cozidos meia lua opcional dos das uma por que ate sob mas'.split(' '));
+
+// Nome-base do ingrediente: tira numeros, medidas, acentos e o que vem entre parenteses
+export function nucleoIngrediente(nome) {
+  return String(nome)
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\(.*?\)/g, ' ')
+    .split(/[^a-z]+/)
+    .filter(palavra => palavra.length > 2 && !PALAVRAS_DE_MEDIDA.has(palavra))
+    .map(palavra => (palavra.length > 3 && palavra.endsWith('s') ? palavra.slice(0, -1) : palavra))
+    .filter(palavra => palavra.length > 2 && !PALAVRAS_DE_MEDIDA.has(palavra));
+}
+
+// True quando o intruso e o mesmo ingrediente de um item certo, so com outra medida ou preparo
+// (ex.: "500 ml de leite integral" x "2 xícaras de leite integral")
+export function mesmoIngrediente(intruso, certo) {
+  const a = new Set(nucleoIngrediente(intruso));
+  const b = new Set(nucleoIngrediente(certo));
+  if (a.size === 0 || b.size === 0) return false;
+  const contido = (menor, maior) => [...menor].every(palavra => maior.has(palavra));
+  // igual ou mais simples que o item certo, ou o item certo com ate 2 palavras a mais
+  // (ex.: "azeite de dende para fritar")
+  return contido(a, b) || (contido(b, a) && a.size - b.size <= 2);
+}
+
 export function criarBancada(receita, receitas) {
   const certos = criarDesafioIngredientes(receita).map(item => ({
     ...item,
@@ -101,7 +129,10 @@ export function criarBancada(receita, receitas) {
     .filter(nome => !nomes.has(nome.toLocaleLowerCase()));
   const opcoesIntrusos = new Set(nomesDisponiveis.map(nome => nome.toLocaleLowerCase()));
   const candidatosIntrusos = [...nomesDisponiveis, ...fontesFallback.filter(nome => !opcoesIntrusos.has(nome.toLocaleLowerCase()))];
-  const intrusos = embaralhar(candidatosIntrusos
+  const ehConfuso = nome => (receita.ingredientes || []).some(certo => mesmoIngrediente(nome, certo));
+  // Opcoes que repetem o ingrediente de um item certo so entram se faltar opcao melhor
+  const priorizar = lista => [...embaralhar(lista.filter(nome => !ehConfuso(nome))), ...embaralhar(lista.filter(ehConfuso))];
+  const intrusos = priorizar(candidatosIntrusos
     .filter(nome => {
       const normalizado = nome.toLowerCase();
       if (nomes.has(normalizado) || nomesIntrusos.has(normalizado)) return false;

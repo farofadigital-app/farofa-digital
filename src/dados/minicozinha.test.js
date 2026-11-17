@@ -3,6 +3,7 @@ import {
   acaoManual,
   calcularRecompensaMinicozinha,
   criarBancada,
+  mesmoIngrediente,
   configurarCalor,
   criarDesafioIngredientes,
   exigeAquecimento,
@@ -46,7 +47,7 @@ describe('regras da Minicozinha', () => {
     });
   });
 
-  test('usa a temperatura padr quando a receita cita forno sem informar graus', () => {
+  test('usa a temperatura padrão quando a receita cita forno sem informar graus', () => {
     expect(configurarCalor('Leve ao forno até dourar.')).toEqual({
       equipamento: 'forno',
       alvo: 180,
@@ -81,7 +82,7 @@ describe('regras da Minicozinha', () => {
   test('mistura ingredientes corretos e até três opções de outras receitas', () => {
     const receita = {
       id: 1,
-      ingredientes: ['Feij', 'Sal']
+      ingredientes: ['Feijão', 'Sal']
     };
     const receitas = [
       receita,
@@ -100,7 +101,29 @@ describe('regras da Minicozinha', () => {
     expect(new Set(bancada.map(item => item.id)).size).toBe(bancada.length);
   });
 
-  test('calcula a faixa do medidor para forno e fog', () => {
+  test('mesmoIngrediente reconhece o mesmo ingrediente com outra medida', () => {
+    expect(mesmoIngrediente('500 ml de leite integral', '2 xícaras de leite integral')).toBe(true);
+    expect(mesmoIngrediente('1 dente de alho (opcional)', '2 dentes de alho amassados')).toBe(true);
+    expect(mesmoIngrediente('Sal e pimenta a gosto', 'Cominho, pimenta-do-reino e sal a gosto')).toBe(true);
+    expect(mesmoIngrediente('200 ml de leite de coco', '2 xícaras de leite integral')).toBe(false);
+    expect(mesmoIngrediente('Farinha de trigo', '3 ovos')).toBe(false);
+  });
+
+  test('a bancada das receitas não traz intruso que repete um item certo', () => {
+    RECEITAS.forEach(receita => {
+      for (let tentativa = 0; tentativa < 40; tentativa++) {
+        const intrusos = criarBancada(receita, RECEITAS).filter(item => !item.certo);
+        expect(intrusos).toHaveLength(3);
+        intrusos.forEach(intruso => {
+          receita.ingredientes.forEach(certo => {
+            expect(mesmoIngrediente(intruso.nome, certo)).toBe(false);
+          });
+        });
+      }
+    });
+  });
+
+  test('calcula a faixa do medidor para forno e fogão', () => {
     expect(zonaDoPonto({
       equipamento: 'forno',
       minimo: 190,
@@ -129,7 +152,7 @@ describe('regras da Minicozinha', () => {
     [70, { estrelas: 2, brasas: 12, exp: 30 }],
     [69, { estrelas: 1, brasas: 10, exp: 25 }],
     [0, { estrelas: 1, brasas: 10, exp: 25 }]
-  ])('atribui recompensas para precis %i', (precisao, recompensa) => {
+  ])('atribui recompensas para precisão %i', (precisao, recompensa) => {
     expect(calcularRecompensaMinicozinha(precisao)).toEqual(recompensa);
   });
 });
