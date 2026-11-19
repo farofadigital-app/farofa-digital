@@ -31,6 +31,8 @@ function NavegacaoAutenticada() {
         headerStyle: { backgroundColor: CORES.fundo },
         headerTintColor: CORES.destaque,
         headerTitleStyle: { fontSize: escalaFonte(18, width) },
+        headerTitleAllowFontScaling: false,
+        headerTitleAllowFontScaling: false,
         tabBarStyle: { backgroundColor: CORES.superficie, borderTopWidth: 0 },
         tabBarActiveTintColor: CORES.destaque,
         tabBarInactiveTintColor: CORES.textoSecundario,
@@ -79,7 +81,7 @@ function NavegacaoAutenticada() {
         initialParams={{ modulo: 'quiz' }}
         options={{
           tabBarItemStyle: { display: 'none' },
-          title: 'Sala do Saber',
+          title: 'Quiz',
         }}
       />
       <Tab.Screen
@@ -97,7 +99,7 @@ function NavegacaoAutenticada() {
         initialParams={{ modulo: 'cortes' }}
         options={{
           tabBarItemStyle: { display: 'none' },
-          title: 'Guia de Cortes & Facas',
+          title: 'Guia de Cortes',
         }}
       />
     </Tab.Navigator>

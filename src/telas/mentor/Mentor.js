@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView,
   StyleSheet, View
@@ -95,7 +95,7 @@ const DICAS = [
 ];
 
 const ATALHOS = [
-  { rota: 'Cozinha', emoji: '🍲', titulo: 'Receitas e cortes' },
+  { rota: 'Cozinha', emoji: '🍲', titulo: 'Receitas' },
   { rota: 'Minicozinha', emoji: '🍳', titulo: 'Praticar no jogo' },
   { rota: 'Quiz', emoji: '🧠', titulo: 'Testar conhecimentos' }
 ];
