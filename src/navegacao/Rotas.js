@@ -32,7 +32,6 @@ function NavegacaoAutenticada() {
         headerTintColor: CORES.destaque,
         headerTitleStyle: { fontSize: escalaFonte(18, width) },
         headerTitleAllowFontScaling: false,
-        headerTitleAllowFontScaling: false,
         tabBarStyle: { backgroundColor: CORES.superficie, borderTopWidth: 0 },
         tabBarActiveTintColor: CORES.destaque,
         tabBarInactiveTintColor: CORES.textoSecundario,
