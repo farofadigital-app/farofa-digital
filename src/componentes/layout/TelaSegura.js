@@ -1,4 +1,4 @@
-import { View, StyleSheet, StatusBar } from 'react-native';
+﻿import { View, StyleSheet, StatusBar } from 'react-native';
 import { CORES } from '../../uteis/constantes';
 
 export default function TelaSegura({ children, estilo }) {

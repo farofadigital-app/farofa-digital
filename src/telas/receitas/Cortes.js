@@ -33,17 +33,18 @@ export default function Cortes() {
       showsVerticalScrollIndicator={false}
       contentContainerStyle={estilos.conteudo}
     >
-      <Text style={estilos.titulo}>Guia de cortes e preparos</Text>
+      <Text style={estilos.titulo}>Guia de Cortes, Facas & Técnicas</Text>
       <Text style={estilos.descricao}>
-        Explore carnes, frutas e vegetais. A maciez indicada para carnes é uma referência geral.
+        Aprenda a escolher o corte certo, a faca ideal, a tábua correta e as técnicas clássicas de cozinha.
       </Text>
 
       <View style={estilos.aviso}>
-        <Text style={estilos.avisoTitulo}>Segurança com alimentos</Text>
+        <Text style={estilos.avisoTitulo}>🛡️ Boas Práticas & Segurança com Alimentos</Text>
         <Text style={estilos.avisoTexto}>
-          Use tábuas e utensílios separados para carnes cruas e alimentos prontos.
-          Não lave carnes cruas: os respingos podem espalhar microrganismos.
-          Lave as mãos e higienize frutas e vegetais antes de cortar.
+          • Use tábuas separadas para carnes cruas e alimentos prontos para evitar contaminação cruzada.
+          • Não lave carnes cruas: a água espalha bactérias pela pia e bancada.
+          • Mantenha as lâminas sempre afiadas: faca cega exige força e escorrega com facilidade.
+          • Lave bem as mãos antes de iniciar e após manusear carnes.
         </Text>
       </View>
 
@@ -75,22 +76,49 @@ export default function Cortes() {
         const expandido = aberto === corte.id;
         return (
           <View key={corte.id} style={estilos.cartao}>
-            <Text style={estilos.nome}>{corte.nome}</Text>
+            <View style={estilos.cabecalhoCartao}>
+              <Text style={estilos.nome}>{corte.nome}</Text>
+              <Text style={estilos.badgeCategoria}>{corte.categoria}</Text>
+            </View>
+
             <Text style={estilos.regiao}>
               {corte.categoria === 'Frutas e vegetais'
-                ? corte.tipo
+                ? corte.parte
                 : `${corte.parte} · Dificuldade: ${corte.dificuldade}`}
             </Text>
 
-            {corte.categoria !== 'Frutas e vegetais' ? (
+            {corte.categoria !== 'Frutas e vegetais' && corte.maciez ? (
               <View style={estilos.linhaMaciez}>
-                <Text style={estilos.rotulo}>Maciez</Text>
+                <Text style={estilos.rotulo}>Maciez:</Text>
                 <Pontos valor={corte.maciez} />
                 <Text style={estilos.gordura}>Gordura: {corte.gordura}</Text>
               </View>
             ) : null}
 
-            <Text style={estilos.texto}>{corte.descricao}</Text>
+            <Text style={estilos.textoDescricao}>{corte.descricao}</Text>
+
+            {/* Faca e Tabua recomendadas */}
+            <View style={estilos.caixaUtensilios}>
+              {corte.faca ? (
+                <Text style={estilos.itemUtensilio}>
+                  <Text style={estilos.rotuloUtensilio}>🔪 Faca ideal: </Text>
+                  {corte.faca}
+                </Text>
+              ) : null}
+              {corte.tabua ? (
+                <Text style={estilos.itemUtensilio}>
+                  <Text style={estilos.rotuloUtensilio}>🪵 Tábua indicada: </Text>
+                  {corte.tabua}
+                </Text>
+              ) : null}
+              {corte.metodo ? (
+                <Text style={estilos.itemUtensilio}>
+                  <Text style={estilos.rotuloUtensilio}>🔥 Método: </Text>
+                  {corte.metodo}
+                </Text>
+              ) : null}
+            </View>
+
             <Text style={estilos.subtitulo}>Uso ideal</Text>
             <Text style={estilos.texto}>{corte.usoIdeal}</Text>
 
@@ -99,16 +127,16 @@ export default function Cortes() {
               onPress={() => setAberto(expandido ? null : corte.id)}
               accessibilityRole="button"
               accessibilityState={{ expanded: expandido }}
-              accessibilityLabel={`${expandido ? 'Esconder' : 'Ver'} dica de preparo de ${corte.nome}`}
+              accessibilityLabel={`${expandido ? 'Esconder' : 'Ver'} dica do Chef para ${corte.nome}`}
             >
               <Text style={estilos.textoBotaoDica}>
-                {expandido ? 'Esconder dica de preparo' : 'Ver dica de preparo'}
+                {expandido ? '▲ Esconder dica do Chef' : '▼ Ver dica técnica do Chef'}
               </Text>
             </TouchableOpacity>
 
             {expandido ? (
               <View style={estilos.caixaDica}>
-                <Text style={estilos.texto}>{corte.dica}</Text>
+                <Text style={estilos.textoDica}>{corte.dica}</Text>
               </View>
             ) : null}
           </View>
@@ -119,7 +147,7 @@ export default function Cortes() {
 }
 
 const estilos = StyleSheet.create({
-  conteudo: { padding: 16, paddingBottom: 32 },
+  conteudo: { padding: 16, paddingBottom: 40 },
   titulo: { fontSize: 24, lineHeight: 32, fontWeight: 'bold', color: CORES.destaque },
   descricao: {
     fontSize: 14,
@@ -129,19 +157,19 @@ const estilos = StyleSheet.create({
     marginBottom: 14
   },
   aviso: {
-    backgroundColor: CORES.superficie,
+    backgroundColor: '#1E293B',
     borderWidth: 1,
-    borderColor: CORES.borda,
+    borderColor: '#334155',
     borderRadius: RAIO,
     padding: 14,
-    marginBottom: 14
+    marginBottom: 16
   },
   avisoTitulo: {
-    color: CORES.texto,
+    color: CORES.destaque,
     fontSize: 14,
     lineHeight: 20,
     fontWeight: 'bold',
-    marginBottom: 4
+    marginBottom: 6
   },
   avisoTexto: { color: CORES.textoSecundario, fontSize: 13, lineHeight: 20 },
   filtros: { flexGrow: 0, marginBottom: 14 },
@@ -156,24 +184,42 @@ const estilos = StyleSheet.create({
   },
   filtroAtivo: { backgroundColor: CORES.destaque, borderColor: CORES.destaque },
   textoFiltro: { fontSize: 13, lineHeight: 18, color: CORES.texto },
-  textoFiltroAtivo: { color: '#000', fontWeight: 'bold' },
+  textoFiltroAtivo: { color: '#0F172A', fontWeight: 'bold' },
   cartao: {
-    backgroundColor: CORES.superficie,
+    backgroundColor: '#1E293B',
     borderWidth: 1,
-    borderColor: CORES.borda,
+    borderColor: '#334155',
     borderRadius: RAIO,
     padding: 16,
-    marginBottom: 12
+    marginBottom: 14
   },
-  nome: { fontSize: 19, lineHeight: 26, fontWeight: 'bold', color: CORES.texto },
-  regiao: { fontSize: 13, lineHeight: 19, color: CORES.destaque, marginTop: 2 },
+  cabecalhoCartao: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 4
+  },
+  nome: { fontSize: 18, lineHeight: 24, fontWeight: 'bold', color: CORES.texto, flex: 1, paddingRight: 8 },
+  badgeCategoria: {
+    backgroundColor: 'rgba(245, 166, 35, 0.15)',
+    color: CORES.destaque,
+    fontSize: 11,
+    fontWeight: 'bold',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6
+  },
+  regiao: { fontSize: 13, lineHeight: 19, color: CORES.destaque, marginBottom: 8 },
   linhaMaciez: {
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    marginVertical: 10
+    gap: 8,
+    marginBottom: 10
   },
-  rotulo: { fontSize: 13, lineHeight: 19, color: CORES.textoSecundario, marginRight: 8 },
+  rotulo: { fontSize: 13, color: CORES.textoSecundario, marginRight: 8 },
   pontos: { flexDirection: 'row', marginRight: 14 },
   ponto: {
     width: 10,
@@ -184,26 +230,41 @@ const estilos = StyleSheet.create({
     marginRight: 4
   },
   pontoCheio: { backgroundColor: CORES.destaque },
-  gordura: { fontSize: 13, lineHeight: 19, color: CORES.textoSecundario },
-  texto: { fontSize: 14, lineHeight: 22, color: CORES.textoSecundario },
-  subtitulo: {
-    fontSize: 15,
-    lineHeight: 22,
-    fontWeight: 'bold',
-    color: CORES.texto,
-    marginTop: 12,
-    marginBottom: 2
+  gordura: { fontSize: 13, color: CORES.textoSecundario },
+  textoDescricao: { fontSize: 14, lineHeight: 21, color: '#E2E8F0', marginBottom: 10 },
+  caixaUtensilios: {
+    backgroundColor: 'rgba(15, 23, 42, 0.6)',
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#334155'
   },
-  botaoDica: { alignSelf: 'flex-start', paddingVertical: 10, marginTop: 4 },
-  textoBotaoDica: {
+  itemUtensilio: { fontSize: 13, lineHeight: 19, color: '#CBD5E1', marginVertical: 2 },
+  rotuloUtensilio: { fontWeight: 'bold', color: CORES.destaque },
+  subtitulo: {
     fontSize: 14,
     lineHeight: 20,
+    fontWeight: 'bold',
+    color: CORES.texto,
+    marginTop: 6,
+    marginBottom: 2
+  },
+  texto: { fontSize: 13, lineHeight: 20, color: CORES.textoSecundario },
+  botaoDica: { alignSelf: 'flex-start', paddingVertical: 8, marginTop: 8 },
+  textoBotaoDica: {
+    fontSize: 13,
+    lineHeight: 18,
     fontWeight: 'bold',
     color: CORES.destaque
   },
   caixaDica: {
-    borderTopWidth: 1,
-    borderTopColor: CORES.borda,
-    paddingTop: 10
-  }
+    backgroundColor: 'rgba(245, 166, 35, 0.08)',
+    borderLeftWidth: 3,
+    borderLeftColor: CORES.destaque,
+    padding: 10,
+    marginTop: 6,
+    borderRadius: 4
+  },
+  textoDica: { fontSize: 13, lineHeight: 20, color: '#FDE68A' }
 });

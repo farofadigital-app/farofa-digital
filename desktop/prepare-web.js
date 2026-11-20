@@ -1,4 +1,4 @@
-const fs = require('node:fs');
+﻿const fs = require('node:fs');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 
@@ -23,7 +23,7 @@ if (resultado.status !== 0) {
 } else {
   const arquivoHtml = path.join(pastaExportada, 'index.html');
   if (!fs.existsSync(arquivoHtml)) {
-    throw new Error(`O export web não gerou o arquivo esperado: ${arquivoHtml}`);
+    throw new Error(`O export web n gerou o arquivo esperado: ${arquivoHtml}`);
   }
 
   fs.rmSync(pastaDesktop, { recursive: true, force: true });

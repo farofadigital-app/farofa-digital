@@ -1,6 +1,13 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
-  Animated, Easing, Platform, ScrollView, StyleSheet, View
+  Animated,
+  Easing,
+  PanResponder,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
@@ -8,11 +15,16 @@ import { TextoResponsivo as Text } from '../../componentes/comuns/TextoResponsiv
 import TelaSegura from '../../componentes/layout/TelaSegura';
 import BotaoInterativo from '../../componentes/comuns/BotaoInterativo';
 import BotaoPrincipal from '../../componentes/comuns/BotaoPrincipal';
-import { RECEITAS } from '../../dados/receitas';
 import {
-  acaoManual, calcularRecompensaMinicozinha, configurarCalor, criarBancada,
-  exigeAquecimento, extrairEtapas, zonaDoPonto
+  acaoManual,
+  calcularRecompensaMinicozinha,
+  configurarCalor,
+  criarBancada,
+  exigeAquecimento,
+  extrairEtapas,
+  zonaDoPonto
 } from '../../dados/minicozinha';
+import { RECEITAS } from '../../dados/receitas';
 import { useApp } from '../../estados/ContextoApp';
 import { CORES, RAIO } from '../../uteis/constantes';
 
@@ -20,600 +32,761 @@ const NATIVO = Platform.OS !== 'web';
 
 const MENTORES = {
   ana: {
+    nome: 'Chef Ana',
     emoji: '👩‍🍳',
+    humores: { padrao: '👩‍🍳', foco: '🧐', animada: '🤩', alerta: '🤔', orgulhosa: '🥰' },
     falas: {
-      certo: ['Isso! Ingrediente certo na bancada.', 'Muito bem, a receita agradece!', 'Boa escolha!'],
-      intruso: ['Esse ingrediente não vai nessa receita. Leia de novo!', 'Hum, esse não é daqui. Tente outro.'],
-      ponto: ['Ponto certinho! Você tem mão de cozinheira.', 'Perfeito, é assim que se faz!'],
-      erroPonto: ['Calma, observe e tente de novo.', 'Quase no ponto! Mais uma tentativa.'],
-      acao: ['Que movimento bonito!', 'Assim mesmo, com capricho!'],
-      fim: 'Prato pronto! Dá vontade de provar.'
+      inicio: [
+        'Relaxa os ombros e vem comigo: mise en place organizado é meio caminho andado!',
+        'Bancada limpa e ingredientes separados: arraste tudo pro caldeirão com capricho.'
+      ],
+      arrasteCerto: [
+        'Perfeito! Esse ingrediente entra na hora certa com todo o carinho.',
+        'Muito bem, meu querido! Organização impecável na bancada.',
+        'Já sinto aquele cheirinho gostoso tomando conta da nossa cozinha.'
+      ],
+      arrasteErro: [
+        'Calma, meu querido! Esse intruso não vai nessa receita. Lê a lista com atenção.',
+        'Sem pressa: olha a bancada direitinho e pega o ingrediente certo.',
+        'Respira fundo. Na cozinha da Ana o capricho começa na escolha certa.'
+      ],
+      corteCerto: [
+        'Corte lindo e uniforme! Dedos em garra protegidos e lâmina afiada.',
+        'Muito bem! Pedaços regulares cozinham todos no mesmo tempo.',
+        'Técnica e delicadeza pura! Dá gosto de ver você trabalhar.'
+      ],
+      corteRitmo: [
+        'Mantém o ritmo suave! Deixa o peso da lâmina fazer o trabalho.',
+        'Fatias perfeitas! A apresentação do prato vai brilhar.'
+      ],
+      mexerCerto: [
+        'Isso, movimento circular constante para o calor abraçar a panela toda.',
+        'Raspando o fundo com suavidade sem machucar o refogado. Que beleza!',
+        'Ritmo maravilhoso! Já tá emulsionando no ponto certo.'
+      ],
+      mexerParou: [
+        'Atenção aos ombros! Não para de mexer, senão o fundo gruda e queima.',
+        'Fogo aceso pede colher em movimento! Continua mexendo com amor.'
+      ],
+      pontoOuro: [
+        'PONTO DE OURO! Temperatura milimetricamente perfeita de chef!',
+        'Incrível! Selagem impecável no calor exato, sem perder suco.'
+      ],
+      pontoBom: [
+        'No ponto certo! Agora sim o preparo vai apurar divinamente.',
+        'Temperatura perfeita! Vamos dar o próximo passo.'
+      ],
+      pontoErro: [
+        'Passou um pouquinho da temperatura ideal. Observa o calor com calma.',
+        'O fogo desregulou! Respira e tenta parar dentro da faixa verde.'
+      ],
+      comboAlto: [
+        'Que sequência espetacular! Você tem mão de chef de alta gastronomia!',
+        'Uau! Cozinha em perfeita harmonia, orgulho da Chef Ana!'
+      ],
+      fim3Estrelas: 'Prato magistral! Sabor, apresentação, técnica e três estrelas merecidas!',
+      fim2Estrelas: 'Muito bem feito! Com mais um pouquinho de prática você alcança a perfeição.',
+      fim1Estrela: 'Prato pronto e servido! Continua praticando os gestos que o aprendizado é lindo.'
     }
   },
   jose: {
+    nome: 'Chef José',
     emoji: '👨‍🍳',
+    humores: { padrao: '👨‍🍳', foco: '🤠', animada: '🔥', alerta: '🤨', orgulhosa: '💪' },
     falas: {
-      certo: ['Show! Esse vai na panela mesmo.', 'É isso aí, craque!', 'Boa, tá afiado!'],
-      intruso: ['Opa, esse não entra nessa receita!', 'Esse aí é de outro prato, hein?'],
-      ponto: ['No ponto! Agora sim!', 'Acertou em cheio o fogo!'],
-      erroPonto: ['Quase! Segura a mão e tenta de novo.', 'Faz parte, de novo!'],
-      acao: ['Mandou bem na pegada!', 'Isso! Ritmo bom.'],
-      fim: 'Prato na mesa! Mandou bem demais.'
+      inicio: [
+        'Aí sim, parceiro! A praça é nossa e a chapa tá quente: arraste os ingredientes!',
+        'Agilidade com segurança, compadre! Mise en place montado e caldeirão no fogo!'
+      ],
+      arrasteCerto: [
+        'Show de bola, parceiro! Esse vai direto pro caldeirão ferver!',
+        'É isso aí, craque! Tá dominando a bancada igual profissional!',
+        'Na gaveta! O caldeirão já tá chiando no capricho!'
+      ],
+      arrasteErro: [
+        'Opa! Esse aí entrou de gaiato no navio, parceiro! Não entra nessa receita!',
+        'Esse não, meu consagrado! Vai estragar o tempero da casa.',
+        'Segura a empolgação! Escolhe o ingrediente certo e vamo pra cima.'
+      ],
+      corteCerto: [
+        'Corte afiado demais! Passou a faca com moral de chef!',
+        'No talento! Pedaços no capricho pra refogar rápido sem atrasar!',
+        'Navalha pura! Mandou muito bem no corte!'
+      ],
+      corteRitmo: [
+        'Passa a lâmina com vontade! Desliza e mantém o ritmo!',
+        'Ritmo forte, é assim que a praça não atrasa o serviço!'
+      ],
+      mexerCerto: [
+        'Gira essa colher de pau! Faz a mágica acontecer na panela!',
+        'No compasso certo! Não deixa grudar nada no fundo, sujou limpou!',
+        'Sensacional! O refogado tá chiando do jeito que tem que chiar!'
+      ],
+      mexerParou: [
+        'Acorda o braço, parceiro! Se parar de girar, queima o fundo da panela!',
+        'Mexe essa panela, guerreiro! O fogo não espera ninguém!'
+      ],
+      pontoOuro: [
+        'NO PONTO DE OURO! Cravou a temperatura na mosca, brasa viva!',
+        'Golaço culinário! Cravou a temperatura no milímetro!'
+      ],
+      pontoBom: [
+        'Tá na chapa! Fogo calibrado, agora é só manter a pegada!',
+        'Temperatura de primeira! Segue o jogo na velocidade certa.'
+      ],
+      pontoErro: [
+        'Quase queimou! Segura a mão, parceiro, e mira na marca verde.',
+        'Passou do ponto, compadre! De olho aberto no marcador!'
+      ],
+      comboAlto: [
+        'FOGO TOTAL! Combo pegando fogo na cozinha, tá voando baixo!',
+        'Cozinha profissional pura aqui! Segura o homem!'
+      ],
+      fim3Estrelas: 'Prato nota dez, padrão de festa com três estrelas no peito, parceiro!',
+      fim2Estrelas: 'Ficou show de bola! Só afinar mais o ponto de fogo e fica nota 100.',
+      fim1Estrela: 'Prato na mesa! Valeu a batalha, na próxima a gente busca as 3 estrelas!'
     }
   }
 };
 
-const sorteio = lista => lista[Math.floor(Math.random() * lista.length)];
+function sorteio(lista) {
+  if (!Array.isArray(lista) || lista.length === 0) return '';
+  return lista[Math.floor(Math.random() * lista.length)];
+}
 
 function vibrar(acao) {
   if (!NATIVO) return;
-  Promise.resolve()
-    .then(acao)
-    .catch(erro => console.warn('Não foi possível reproduzir a vibração do jogo:', erro));
+  Promise.resolve().then(acao).catch(() => {});
 }
 
-function CartaoIngrediente({ item, estado, onPress }) {
+function BalaoMentor({ mentor, humor = 'padrao', fala, combo = 0 }) {
   const escala = useRef(new Animated.Value(1)).current;
-  const tremer = useRef(new Animated.Value(0)).current;
+  const emojiExibido = mentor.humores[humor] || mentor.emoji;
 
   useEffect(() => {
-    if (estado === 'certo') {
-      Animated.sequence([
-        Animated.timing(escala, { toValue: 1.12, duration: 120, useNativeDriver: NATIVO }),
-        Animated.spring(escala, { toValue: 1, friction: 5, useNativeDriver: NATIVO })
-      ]).start();
-    } else if (estado === 'errado') {
-      Animated.sequence(
-        [-8, 8, -6, 6, 0].map(valor =>
-          Animated.timing(tremer, { toValue: valor, duration: 55, useNativeDriver: NATIVO })
-        )
-      ).start();
+    Animated.sequence([
+      Animated.timing(escala, { toValue: 1.15, duration: 90, useNativeDriver: NATIVO }),
+      Animated.spring(escala, { toValue: 1, friction: 5, useNativeDriver: NATIVO })
+    ]).start();
+  }, [fala, humor, escala]);
+
+  return (
+    <View style={[estilos.balao, combo >= 3 && estilos.balaoCombo]}>
+      <Animated.Text style={[estilos.emojiMentor, { transform: [{ scale: escala }] }]}>
+        {emojiExibido}
+      </Animated.Text>
+      <View style={estilos.balaoTexto}>
+        <Text style={estilos.nomeMentor}>{mentor.nome}</Text>
+        <Text style={estilos.falaMentor}>{fala}</Text>
+      </View>
+    </View>
+  );
+}
+
+function BadgeCombo({ combo }) {
+  const anim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (combo > 1) {
+      anim.setValue(1.35);
+      Animated.spring(anim, { toValue: 1, friction: 4, useNativeDriver: NATIVO }).start();
     }
-  }, [estado, escala, tremer]);
+  }, [combo, anim]);
+
+  if (combo <= 1) return null;
+
+  return (
+    <Animated.View style={[estilos.badgeCombo, { transform: [{ scale: anim }] }]}>
+      <Text style={estilos.textoBadgeCombo}>
+        🔥 COMBO x{combo} {combo >= 4 ? 'BRASA VIVA!' : ''}
+      </Text>
+    </Animated.View>
+  );
+}
+
+function CartaoArrastavel({ item, estado, onDropNaPanela, onToque }) {
+  const pan = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
+  const escala = useRef(new Animated.Value(1)).current;
+
+  const panResponder = useMemo(() => {
+    return PanResponder.create({
+      onStartShouldSetPanResponder: () => !estado,
+      onMoveShouldSetPanResponder: (_, g) => !estado && (Math.abs(g.dx) > 6 || Math.abs(g.dy) > 6),
+      onPanResponderGrant: () => {
+        Animated.spring(escala, { toValue: 1.12, friction: 5, useNativeDriver: false }).start();
+      },
+      onPanResponderMove: Animated.event([null, { dx: pan.x, dy: pan.y }], { useNativeDriver: false }),
+      onPanResponderRelease: (_, g) => {
+        Animated.spring(escala, { toValue: 1, friction: 5, useNativeDriver: false }).start();
+        if (g.dy > 60 || Math.abs(g.dx) > 120) {
+          Animated.timing(pan, { toValue: { x: 0, y: 0 }, duration: 150, useNativeDriver: false }).start(() => {
+            onDropNaPanela(item);
+          });
+        } else {
+          Animated.spring(pan, { toValue: { x: 0, y: 0 }, friction: 5, useNativeDriver: false }).start();
+        }
+      }
+    });
+  }, [estado, item, onDropNaPanela, pan, escala]);
 
   return (
     <Animated.View
-      style={[estilos.celulaIngrediente, {
-        transform: [{ translateX: tremer }, { scale: escala }]
-      }]}
+      {...panResponder.panHandlers}
+      style={[
+        estilos.celulaIngrediente,
+        { transform: [{ translateX: pan.x }, { translateY: pan.y }, { scale: escala }] }
+      ]}
     >
-      <BotaoInterativo
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={() => onToque(item)}
+        disabled={Boolean(estado)}
+        accessibilityRole="button"
+        accessibilityLabel={`Ingrediente: ${item.nome}`}
+        accessibilityState={{ disabled: Boolean(estado), selected: estado === 'certo' }}
         style={[
           estilos.cartaoIngrediente,
           estado === 'certo' && estilos.ingredienteCerto,
           estado === 'errado' && estilos.ingredienteErrado
         ]}
-        onPress={onPress}
-        disabled={Boolean(estado)}
-        feedbackHaptico={false}
-        accessibilityRole="button"
-        accessibilityLabel={`Ingrediente: ${item.nome}`}
-        accessibilityState={{ selected: estado === 'certo', disabled: Boolean(estado) }}
       >
         <Text style={estilos.emojiIngrediente}>
-          {estado === 'certo' ? '✅' : estado === 'errado' ? '❌' : '🥣'}
+          {estado === 'certo' ? '✅' : estado === 'errado' ? '❌' : '🧂'}
         </Text>
         <Text style={estilos.nomeIngrediente}>{item.nome}</Text>
-      </BotaoInterativo>
+        <Text style={estilos.dicaArraste}>{estado ? (estado === 'certo' ? 'Na panela!' : 'Intruso!') : 'Arraste ou toque'}</Text>
+      </TouchableOpacity>
     </Animated.View>
   );
 }
 
-function Medidor({ zona, duracao, aoParar }) {
-  const posicao = useRef(new Animated.Value(0)).current;
-  const parado = useRef(false);
+function TabuaDeCorte({ itemNome = 'Ingrediente', meta = 4, aoCompletar, aoAcertoCorte }) {
+  const [cortes, setCortes] = useState(0);
+  const flashAnim = useRef(new Animated.Value(0)).current;
+  const shakeAnim = useRef(new Animated.Value(0)).current;
+
+  const registrarCorte = useCallback(() => {
+    setCortes(atual => {
+      const novo = atual + 1;
+      vibrar(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium));
+
+      flashAnim.setValue(1);
+      Animated.timing(flashAnim, { toValue: 0, duration: 180, useNativeDriver: NATIVO }).start();
+
+      Animated.sequence([
+        Animated.timing(shakeAnim, { toValue: 5, duration: 40, useNativeDriver: NATIVO }),
+        Animated.timing(shakeAnim, { toValue: -5, duration: 40, useNativeDriver: NATIVO }),
+        Animated.timing(shakeAnim, { toValue: 0, duration: 40, useNativeDriver: NATIVO })
+      ]).start();
+
+      aoAcertoCorte(novo);
+      if (novo >= meta) setTimeout(aoCompletar, 250);
+      return novo;
+    });
+  }, [meta, aoCompletar, aoAcertoCorte, flashAnim, shakeAnim]);
+
+  const panResponder = useMemo(() => {
+    let ultimoSwipe = 0;
+    return PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: (_, g) => {
+        const agora = Date.now();
+        if (agora - ultimoSwipe < 200) return;
+        if (Math.hypot(g.dx, g.dy) > 45) {
+          ultimoSwipe = agora;
+          registrarCorte();
+        }
+      }
+    });
+  }, [registrarCorte]);
+
+  return (
+    <View style={estilos.areaCorteContainer}>
+      <Text style={estilos.rotuloGesto}>🔪 TÁBUA DE CORTE</Text>
+      <Text style={estilos.instrucaoGesto}>Deslize o dedo pela linha para fatiar!</Text>
+
+      <Animated.View {...panResponder.panHandlers} style={[estilos.tabuaMadeira, { transform: [{ translateX: shakeAnim }] }]}>
+        <Animated.View pointerEvents="none" style={[estilos.flashLamina, { opacity: flashAnim }]} />
+        <View style={estilos.alimentoTabua}>
+          <Text style={estilos.emojiAlimento}>🧅</Text>
+          <Text style={estilos.nomeAlimentoCorte}>{itemNome}</Text>
+        </View>
+        <View style={estilos.linhaGuiaCorte} />
+        <View style={estilos.indicadorCortes}>
+          <Text style={estilos.textoCortesFeitos}>Cortes: {cortes} de {meta}</Text>
+          <View style={estilos.barraProgressoCorte}>
+            <View style={[estilos.progressoCortePreenchido, { width: `${Math.min(100, (cortes / meta) * 100)}%` }]} />
+          </View>
+        </View>
+      </Animated.View>
+    </View>
+  );
+}
+
+function PanelaDeMexer({ aoCompletar, aoGirar, aoParar }) {
+  const [voltas, setVoltas] = useState(0);
+  const anguloRef = useRef(0);
+  const voltasMeta = 6;
+  const ultimoGiroRef = useRef(Date.now());
+  const rotacaoColher = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    const animacao = Animated.loop(
+    const timer = setInterval(() => {
+      if (Date.now() - ultimoGiroRef.current > 1500) aoParar();
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [aoParar]);
+
+  const panResponder = useMemo(() => {
+    let ultimoAngulo = null;
+    let acumuloGraus = 0;
+
+    return PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: (evt) => {
+        const { locationX, locationY } = evt.nativeEvent;
+        const cx = 130;
+        const cy = 130;
+        const rad = Math.atan2(locationY - cy, locationX - cx);
+        const graus = (rad * 180) / Math.PI;
+
+        if (ultimoAngulo !== null) {
+          let delta = graus - ultimoAngulo;
+          if (delta > 180) delta -= 360;
+          if (delta < -180) delta += 360;
+
+          if (Math.abs(delta) > 4) {
+            acumuloGraus += Math.abs(delta);
+            ultimoGiroRef.current = Date.now();
+            anguloRef.current = graus;
+            rotacaoColher.setValue(graus);
+
+            if (acumuloGraus >= 360) {
+              acumuloGraus -= 360;
+              vibrar(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light));
+              setVoltas(v => {
+                const prox = v + 1;
+                aoGirar(prox);
+                if (prox >= voltasMeta) setTimeout(aoCompletar, 300);
+                return prox;
+              });
+            }
+          }
+        }
+        ultimoAngulo = graus;
+      }
+    });
+  }, [aoCompletar, aoGirar, rotacaoColher]);
+
+  const rotacaoInterpolada = rotacaoColher.interpolate({
+    inputRange: [-180, 180],
+    outputRange: ['-180deg', '180deg']
+  });
+
+  return (
+    <View style={estilos.areaMexerContainer}>
+      <Text style={estilos.rotuloGesto}>🥄 MEXER NA PANELA</Text>
+      <Text style={estilos.instrucaoGesto}>Gire o dedo em círculos para mexer sem queimar!</Text>
+
+      <View {...panResponder.panHandlers} style={estilos.corpoPanelaCircular}>
+        <Text style={estilos.fumacaPanela}>♨️ ✨</Text>
+        <Text style={estilos.alimentoCozinhando}>🥘</Text>
+        <Animated.View pointerEvents="none" style={[estilos.colherMadeira, { transform: [{ rotate: rotacaoInterpolada }] }]}>
+          <Text style={estilos.emojiColher}>🥄</Text>
+        </Animated.View>
+        <View style={estilos.rodapeMexer}>
+          <Text style={estilos.textoVoltas}>Giro: {voltas} / {voltasMeta} voltas</Text>
+          <View style={estilos.trilhoProgressoMexer}>
+            <View style={[estilos.barraProgressoMexer, { width: `${Math.min(100, (voltas / voltasMeta) * 100)}%` }]} />
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+}
+
+function MedidorDePonto({ zona, duracao = 1800, aoParar }) {
+  const posicao = useRef(new Animated.Value(0)).current;
+  const loopAnim = useRef(null);
+
+  useEffect(() => {
+    loopAnim.current = Animated.loop(
       Animated.sequence([
-        Animated.timing(posicao, {
-          toValue: 1,
-          duration: duracao,
-          easing: Easing.inOut(Easing.quad),
-          useNativeDriver: false
-        }),
-        Animated.timing(posicao, {
-          toValue: 0,
-          duration: duracao,
-          easing: Easing.inOut(Easing.quad),
-          useNativeDriver: false
-        })
+        Animated.timing(posicao, { toValue: 1, duration: duracao, easing: Easing.inOut(Easing.quad), useNativeDriver: false }),
+        Animated.timing(posicao, { toValue: 0, duration: duracao, easing: Easing.inOut(Easing.quad), useNativeDriver: false })
       ])
     );
-    animacao.start();
-    return () => animacao.stop();
+    loopAnim.current.start();
+    return () => loopAnim.current && loopAnim.current.stop();
   }, [duracao, posicao]);
 
   const parar = () => {
-    if (parado.current) return;
-    parado.current = true;
-    posicao.stopAnimation(valor => aoParar(valor >= zona.inicio && valor <= zona.fim));
+    if (loopAnim.current) loopAnim.current.stop();
+    posicao.stopAnimation(valor => {
+      const noPonto = valor >= zona.inicio && valor <= zona.fim;
+      const meioZona = (zona.inicio + zona.fim) / 2;
+      const ouro = noPonto && Math.abs(valor - meioZona) < 0.08;
+      aoParar(noPonto, ouro);
+    });
   };
 
+  const deslocamento = posicao.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0%', '94%']
+  });
+
   return (
-    <View>
+    <View style={estilos.areaMedidor}>
       <View style={estilos.trilhoMedidor}>
-        <View
-          style={[
-            estilos.zonaMedidor,
-            {
-              left: `${zona.inicio * 100}%`,
-              width: `${(zona.fim - zona.inicio) * 100}%`
-            }
-          ]}
-        />
-        <Animated.View
-          style={[
-            estilos.marcadorMedidor,
-            { left: posicao.interpolate({ inputRange: [0, 1], outputRange: ['0%', '98%'] }) }
-          ]}
-        />
+        <View style={[estilos.zonaMedidor, { left: `${zona.inicio * 100}%`, width: `${(zona.fim - zona.inicio) * 100}%` }]} />
+        <Animated.View style={[estilos.marcadorMedidor, { left: deslocamento }]} />
       </View>
       <View style={estilos.rotulosMedidor}>
         {zona.rotulos.map(rotulo => (
           <Text key={rotulo} style={estilos.rotuloMedidor}>{rotulo}</Text>
         ))}
       </View>
-      <BotaoInterativo
-        style={estilos.botaoParar}
-        onPress={parar}
-        accessibilityRole="button"
-        accessibilityLabel="Parar o marcador"
-      >
-        <Text style={estilos.textoBotaoParar}>PARAR AGORA</Text>
+      <BotaoInterativo style={estilos.botaoParar} onPress={parar}>
+        <Text style={estilos.textoBotaoParar}>PARAR NO PONTO!</Text>
       </BotaoInterativo>
-    </View>
-  );
-}
-
-function AcaoRapida({ acao, aoConcluir }) {
-  const [progresso, setProgresso] = useState(0);
-  const progressoRef = useRef(0);
-  const concluido = useRef(false);
-  const pulso = useRef(new Animated.Value(1)).current;
-
-  useEffect(() => {
-    const intervalo = setInterval(() => {
-      if (concluido.current) return;
-      progressoRef.current = Math.max(0, progressoRef.current - 0.04);
-      setProgresso(progressoRef.current);
-    }, 150);
-    return () => clearInterval(intervalo);
-  }, []);
-
-  const tocar = () => {
-    if (concluido.current) return;
-    progressoRef.current = Math.min(1, progressoRef.current + 0.12);
-    setProgresso(progressoRef.current);
-    pulso.setValue(1);
-    Animated.sequence([
-      Animated.timing(pulso, { toValue: 1.18, duration: 70, useNativeDriver: NATIVO }),
-      Animated.timing(pulso, { toValue: 1, duration: 90, useNativeDriver: NATIVO })
-    ]).start();
-    vibrar(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light));
-
-    if (progressoRef.current >= 1) {
-      concluido.current = true;
-      aoConcluir();
-    }
-  };
-
-  return (
-    <View style={estilos.areaAcao}>
-      <Animated.Text style={[estilos.emojiAcao, { transform: [{ scale: pulso }] }]}>
-        {acao.emoji}
-      </Animated.Text>
-      <Text style={estilos.acaoTitulo}>{acao.nome}</Text>
-      <Text style={estilos.dica}>
-        Toque rápido para {acao.verbo.toLowerCase()}. A barra desce se você parar!
-      </Text>
-      <View style={estilos.trilhoAcao}>
-        <View style={[estilos.barraAcao, { width: `${Math.round(progresso * 100)}%` }]} />
-      </View>
-      <BotaoInterativo
-        style={estilos.botaoAcao}
-        onPress={tocar}
-        feedbackHaptico={false}
-        accessibilityRole="button"
-        accessibilityLabel={`${acao.verbo} (toque várias vezes)`}
-      >
-        <Text style={estilos.textoBotaoAcao}>{acao.verbo.toUpperCase()}!</Text>
-      </BotaoInterativo>
-    </View>
-  );
-}
-
-function Chama() {
-  const escala = useRef(new Animated.Value(1)).current;
-
-  useEffect(() => {
-    const animacao = Animated.loop(
-      Animated.sequence([
-        Animated.timing(escala, { toValue: 1.18, duration: 380, useNativeDriver: NATIVO }),
-        Animated.timing(escala, { toValue: 0.92, duration: 380, useNativeDriver: NATIVO })
-      ])
-    );
-    animacao.start();
-    return () => animacao.stop();
-  }, [escala]);
-
-  return <Animated.Text style={[estilos.chama, { transform: [{ scale: escala }] }]}>🔥</Animated.Text>;
-}
-
-function BalaoMentor({ mentor, fala }) {
-  if (!fala) return null;
-
-  return (
-    <View style={estilos.balao}>
-      <Text style={estilos.emojiMentor}>{mentor.emoji}</Text>
-      <Text style={estilos.falaMentor}>{fala}</Text>
     </View>
   );
 }
 
 export default function MiniGame() {
-  const { mentorEscolhido, adicionarBrasas, adicionarExp } = useApp();
+  const { mentorEscolhido, adicionarBrasas, adicionarExp, dadosPerfil } = useApp();
   const mentor = MENTORES[mentorEscolhido] || MENTORES.ana;
-  const premioRegistrado = useRef(false);
-  const avancandoEtapa = useRef(false);
-  const ingredientesResolvidos = useRef(new Set());
-  const estrelasAnim = useRef([0, 1, 2].map(() => new Animated.Value(0))).current;
+  const nomeJogador = dadosPerfil?.nome ? dadosPerfil.nome.trim() : '';
 
-  const [fase, setFase] = useState('inicio');
   const [receita, setReceita] = useState(null);
+  const [fase, setFase] = useState('inicio');
   const [bancada, setBancada] = useState([]);
   const [certosEscolhidos, setCertosEscolhidos] = useState([]);
   const [errados, setErrados] = useState([]);
   const [etapaAtual, setEtapaAtual] = useState(0);
-  const [indiceDesafio, setIndiceDesafio] = useState(0);
-  const [tentativa, setTentativa] = useState(0);
-  const [etapaConcluida, setEtapaConcluida] = useState(false);
   const [precisao, setPrecisao] = useState(100);
+  const [combo, setCombo] = useState(0);
+  const [maxCombo, setMaxCombo] = useState(0);
+  const [humorMentor, setHumorMentor] = useState('padrao');
+  const [fala, setFala] = useState('');
   const [feedback, setFeedback] = useState('');
   const [feedbackErro, setFeedbackErro] = useState(false);
-  const [fala, setFala] = useState('');
   const [premioFinal, setPremioFinal] = useState({ estrelas: 1, brasas: 0, exp: 0 });
+
+  const estrelasAnim = useRef([0, 1, 2].map(() => new Animated.Value(0))).current;
+  const panelaEscala = useRef(new Animated.Value(1)).current;
 
   const etapas = useMemo(
     () => receita && typeof receita.modoPreparo === 'string' ? extrairEtapas(receita) : [],
     [receita]
   );
-  const desafios = useMemo(() => {
-    const instrucao = etapas[etapaAtual];
-    if (!instrucao) return [];
 
-    const lista = [];
-    if (exigeAquecimento(instrucao)) lista.push('ponto');
-    if (acaoManual(instrucao)) lista.push('acao');
-    if (lista.length === 0) lista.push('simples');
-    return lista;
-  }, [etapas, etapaAtual]);
+  const penalizar = useCallback(pontos => {
+    setPrecisao(atual => Math.max(0, atual - pontos));
+    setCombo(0);
+    setHumorMentor('alerta');
+  }, []);
+
+  const pontuarCombo = useCallback(() => {
+    setCombo(c => {
+      const novo = c + 1;
+      setMaxCombo(m => Math.max(m, novo));
+      if (novo >= 3) setHumorMentor('animada');
+      return novo;
+    });
+  }, []);
 
   useEffect(() => {
-    if (fase !== 'resultado') return;
-
-    estrelasAnim.forEach(estrela => estrela.setValue(0));
-    Animated.stagger(
-      220,
-      estrelasAnim.map(estrela =>
-        Animated.spring(estrela, { toValue: 1, friction: 4, useNativeDriver: NATIVO })
-      )
-    ).start();
+    if (fase === 'vitoria') {
+      estrelasAnim.forEach(e => e.setValue(0));
+      Animated.stagger(150, estrelasAnim.map(e => Animated.spring(e, { toValue: 1, friction: 4, useNativeDriver: NATIVO }))).start();
+    }
   }, [fase, estrelasAnim]);
 
-  const penalizar = valor => setPrecisao(atual => Math.max(0, atual - valor));
-
-  const escolherReceita = item => {
-    premioRegistrado.current = false;
-    avancandoEtapa.current = false;
-    ingredientesResolvidos.current.clear();
+  const escolherReceita = useCallback((item) => {
     setReceita(item);
     setBancada(criarBancada(item, RECEITAS));
     setCertosEscolhidos([]);
     setErrados([]);
     setEtapaAtual(0);
-    setIndiceDesafio(0);
-    setTentativa(0);
-    setEtapaConcluida(false);
     setPrecisao(100);
+    setCombo(0);
+    setMaxCombo(0);
+    setFase('bancada');
+    setHumorMentor('padrao');
     setFeedback('');
-    setFeedbackErro(false);
-    setFala('');
-    setFase('ingredientes');
-  };
+    setFala(sorteio(mentor.falas.inicio));
+  }, [mentor]);
 
-  const voltarParaReceitas = () => {
-    setFeedback('');
-    setFala('');
-    setFase('inicio');
-  };
-
-  const totalCertos = bancada.filter(item => item.certo).length;
+  const totalCertos = useMemo(() => bancada.filter(item => item.certo).length, [bancada]);
   const bancadaPronta = totalCertos > 0 && certosEscolhidos.length === totalCertos;
 
-  const tocarIngrediente = item => {
-    if (ingredientesResolvidos.current.has(item.id)) return;
-    ingredientesResolvidos.current.add(item.id);
+  const processarIngrediente = useCallback((item) => {
+    if (certosEscolhidos.includes(item.id) || errados.includes(item.id)) return;
 
     if (item.certo) {
       setCertosEscolhidos(lista => [...lista, item.id]);
-      setFala(sorteio(mentor.falas.certo));
-      setFeedbackErro(false);
+      pontuarCombo();
+      setHumorMentor('animada');
+      setFala(sorteio(mentor.falas.arrasteCerto));
       vibrar(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light));
-      return;
+
+      Animated.sequence([
+        Animated.timing(panelaEscala, { toValue: 1.15, duration: 90, useNativeDriver: NATIVO }),
+        Animated.spring(panelaEscala, { toValue: 1, friction: 5, useNativeDriver: NATIVO })
+      ]).start();
+    } else {
+      setErrados(lista => [...lista, item.id]);
+      penalizar(8);
+      setHumorMentor('alerta');
+      setFala(sorteio(mentor.falas.arrasteErro));
+      vibrar(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error));
     }
+  }, [certosEscolhidos, errados, mentor, penalizar, pontuarCombo, panelaEscala]);
 
-    setErrados(lista => [...lista, item.id]);
-    penalizar(8);
-    setFala(sorteio(mentor.falas.intruso));
-    setFeedbackErro(true);
-    vibrar(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error));
-  };
-
-  const irParaFogao = () => {
-    avancandoEtapa.current = false;
+  const irParaFogao = useCallback(() => {
+    setFase('preparo');
     setEtapaAtual(0);
-    setIndiceDesafio(0);
-    setTentativa(0);
-    setEtapaConcluida(false);
     setFeedback('');
-    setFala('');
-    setFase('cozinha');
-  };
+    setHumorMentor('foco');
+    setFala(`${nomeJogador ? `${nomeJogador}, ` : ''}tudo na bancada! Vamos começar o preparo no fogão.`);
+  }, [nomeJogador]);
 
-  const finalizarPrato = () => {
-    const premio = calcularRecompensaMinicozinha(precisao);
-    if (!premioRegistrado.current) {
-      premioRegistrado.current = true;
-      adicionarBrasas(premio.brasas, `Minicozinha: ${receita.nome}`);
-      adicionarExp(premio.exp);
+  const finalizarReceita = useCallback(() => {
+    const base = calcularRecompensaMinicozinha(precisao);
+    const final = {
+      estrelas: base.estrelas,
+      brasas: base.brasas + Math.floor(maxCombo * 2),
+      exp: base.exp + Math.floor(maxCombo * 4)
+    };
+
+    adicionarBrasas(final.brasas, `Minicozinha: ${receita.nome}`);
+    adicionarExp(final.exp);
+    setPremioFinal(final);
+    setFase('vitoria');
+
+    if (final.estrelas === 3) {
+      setHumorMentor('orgulhosa');
+      setFala(mentor.falas.fim3Estrelas);
+    } else if (final.estrelas === 2) {
+      setHumorMentor('animada');
+      setFala(mentor.falas.fim2Estrelas);
+    } else {
+      setHumorMentor('padrao');
+      setFala(mentor.falas.fim1Estrela);
     }
-    setPremioFinal(premio);
-    setFala(mentor.falas.fim);
     vibrar(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success));
-    setFase('resultado');
-  };
+  }, [precisao, maxCombo, receita, adicionarBrasas, adicionarExp, mentor]);
 
-  const avancar = () => {
-    if (fase !== 'cozinha' || avancandoEtapa.current) return;
-    avancandoEtapa.current = true;
-
+  const avancarEtapa = useCallback(() => {
     if (etapaAtual >= etapas.length - 1) {
-      finalizarPrato();
-      return;
+      finalizarReceita();
+    } else {
+      setEtapaAtual(i => i + 1);
+      setFeedback('');
+      setHumorMentor('foco');
     }
+  }, [etapaAtual, etapas.length, finalizarReceita]);
 
-    setEtapaAtual(indice => indice + 1);
-    setIndiceDesafio(0);
-    setTentativa(0);
-    setEtapaConcluida(false);
-    setFeedback('');
-    setFeedbackErro(false);
-  };
+  const aoAcertarCorte = useCallback((numero) => {
+    pontuarCombo();
+    if (numero % 2 === 0) {
+      setHumorMentor('animada');
+      setFala(sorteio(mentor.falas.corteCerto));
+    }
+  }, [mentor, pontuarCombo]);
 
-  useEffect(() => {
-    if (fase === 'cozinha') avancandoEtapa.current = false;
-  }, [etapaAtual, fase]);
+  const aoAcertarGiroMexer = useCallback((voltas) => {
+    pontuarCombo();
+    if (voltas % 2 === 0) {
+      setHumorMentor('animada');
+      setFala(sorteio(mentor.falas.mexerCerto));
+    }
+  }, [mentor, pontuarCombo]);
 
-  const concluirDesafio = fraseSucesso => {
-    if (indiceDesafio < desafios.length - 1) {
-      setIndiceDesafio(indice => indice + 1);
-      setTentativa(0);
-      setFeedback('Muito bem! Agora a próxima parte desta etapa.');
+  const aoPararDeMexer = useCallback(() => {
+    setHumorMentor('alerta');
+    setFala(sorteio(mentor.falas.mexerParou));
+  }, [mentor]);
+
+  const resultadoPonto = useCallback((noPonto, pontoDeOuro) => {
+    if (pontoDeOuro) {
+      pontuarCombo();
+      setHumorMentor('orgulhosa');
+      setFala(sorteio(mentor.falas.pontoOuro));
+      setFeedback('🔥 PONTO DE OURO! Temperatura perfeita!');
       setFeedbackErro(false);
-      return;
-    }
-
-    setEtapaConcluida(true);
-    setFala(fraseSucesso);
-    setFeedback('Etapa concluída!');
-    setFeedbackErro(false);
-    vibrar(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success));
-  };
-
-  const resultadoPonto = acertou => {
-    if (acertou) {
       vibrar(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success));
-      concluirDesafio(sorteio(mentor.falas.ponto));
-      return;
+    } else if (noPonto) {
+      pontuarCombo();
+      setHumorMentor('animada');
+      setFala(sorteio(mentor.falas.pontoBom));
+      setFeedback('✅ Na temperatura certa! Próxima etapa liberada.');
+      setFeedbackErro(false);
+      vibrar(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success));
+    } else {
+      penalizar(10);
+      setHumorMentor('alerta');
+      setFala(sorteio(mentor.falas.pontoErro));
+      setFeedback('⚠️ Fora do ponto! Tente parar dentro da zona verde.');
+      setFeedbackErro(true);
+      vibrar(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error));
     }
-
-    penalizar(10);
-    setTentativa(valor => valor + 1);
-    setFala(sorteio(mentor.falas.erroPonto));
-    setFeedback('Fora do ponto! A zona verde ficou um pouco maior. Tente de novo.');
-    setFeedbackErro(true);
-    vibrar(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error));
-  };
+  }, [mentor, penalizar, pontuarCombo]);
 
   if (fase === 'inicio') {
     return (
       <TelaSegura>
         <ScrollView contentContainerStyle={estilos.conteudo}>
           <Text style={estilos.emojiGrande}>🍳</Text>
-          <Text style={estilos.titulo}>Minicozinha</Text>
+          <Text style={estilos.titulo}>Minicozinha Farofa</Text>
           <View style={estilos.cartao}>
             <Text style={estilos.texto}>
-              Escolha só os ingredientes certos (cuidado com os intrusos!), acerte o ponto do
-              fogo ou do forno e faça os movimentos na hora certa.
+              Cozinhe na prática com gestos reais: arraste ingredientes para o caldeirão, fatie na tábua de corte e mexa no compasso certo da panela!
             </Text>
             <Text style={estilos.dica}>
-              Sem pressa: erros diminuem sua precisão, que define as estrelas e a recompensa.
+              Mantenha o ritmo para acumular combos e multiplicar suas Brasas e EXP!
             </Text>
           </View>
-          <Text style={estilos.subtitulo}>Escolha o prato do desafio</Text>
-          {RECEITAS.map(item => (
-            <BotaoInterativo
-              key={item.id}
-              style={estilos.cartaoReceita}
-              onPress={() => escolherReceita(item)}
-              accessibilityRole="button"
-              accessibilityLabel={`Preparar ${item.nome}, ${item.regiao}, ${item.tempo}`}
-            >
-              <Text style={estilos.nomeReceita}>{item.nome}</Text>
-              <Text style={estilos.detalheReceita}>
-                {item.regiao} · {item.tempo} · {item.dificuldade}
-              </Text>
-            </BotaoInterativo>
-          ))}
+
+          <Text style={estilos.subtitulo}>Escolha uma receita para começar</Text>
+          {RECEITAS.map(item => {
+            const rotulosDetalhe = [item.regiao, item.tempo, item.dificuldade].filter(Boolean);
+            const detalheTexto = rotulosDetalhe.join(' · ');
+            return (
+              <BotaoInterativo
+                key={item.id}
+                style={estilos.cartaoReceita}
+                onPress={() => escolherReceita(item)}
+                accessibilityRole="button"
+                accessibilityLabel={`Preparar ${item.nome}`}
+              >
+                <Text style={estilos.nomeReceita}>{item.nome}</Text>
+                {detalheTexto ? <Text style={estilos.detalheReceita}>{detalheTexto}</Text> : null}
+              </BotaoInterativo>
+            );
+          })}
         </ScrollView>
       </TelaSegura>
     );
   }
 
-  if (fase === 'ingredientes') {
+  if (fase === 'bancada') {
     return (
       <TelaSegura>
         <ScrollView contentContainerStyle={estilos.conteudo}>
-          <Text style={estilos.progresso}>{receita.regiao} · {receita.tempo}</Text>
-          <Text style={estilos.titulo}>O que vai em {receita.nome}?</Text>
-          <Text style={estilos.texto}>
-            Toque nos ingredientes da receita. Alguns não pertencem a ela, e cada erro custa precisão.
-          </Text>
-          <Text style={estilos.contador}>
-            {certosEscolhidos.length} de {totalCertos} ingredientes certos · Precisão {precisao}%
-          </Text>
-          <BotaoInterativo
-            style={estilos.botaoVoltar}
-            onPress={voltarParaReceitas}
-            accessibilityRole="button"
-          >
-            <Text style={estilos.textoBotaoVoltar}>← Escolher outra receita</Text>
-          </BotaoInterativo>
-          <BalaoMentor mentor={mentor} fala={fala} />
+          <View style={estilos.cabecalhoJogo}>
+            <Text style={estilos.progresso}>{[receita.regiao, receita.tempo].filter(Boolean).join(' · ')}</Text>
+            <BadgeCombo combo={combo} />
+          </View>
+
+          <Text style={estilos.titulo}>Bancada de {receita.nome}</Text>
+          <Text style={estilos.texto}>Arraste os ingredientes corretos até a panela. Cuidado com os intrusos!</Text>
+          <BalaoMentor mentor={mentor} humor={humorMentor} fala={fala} combo={combo} />
+
+          <View style={estilos.areaPanelaCentral}>
+            <Animated.View style={[estilos.panelaVisual, { transform: [{ scale: panelaEscala }] }]}>
+              <Text style={estilos.emojiPanelaGrande}>🥘</Text>
+              <Text style={estilos.textoPanelaCentral}>
+                {certosEscolhidos.length} de {totalCertos} ingredientes no caldeirão
+              </Text>
+              <Text style={estilos.subtextoPanelaCentral}>
+                {bancadaPronta ? 'Tudo certo! Siga para o fogão.' : 'Arraste um ingrediente até aqui ou toque nele.'}
+              </Text>
+            </Animated.View>
+          </View>
+
           <View style={estilos.grade}>
             {bancada.map(item => {
-              const estado = certosEscolhidos.includes(item.id)
-                ? 'certo'
-                : errados.includes(item.id) ? 'errado' : null;
+              const estado = certosEscolhidos.includes(item.id) ? 'certo' : errados.includes(item.id) ? 'errado' : null;
               return (
-                <CartaoIngrediente
+                <CartaoArrastavel
                   key={item.id}
                   item={item}
                   estado={estado}
-                  onPress={() => tocarIngrediente(item)}
+                  onDropNaPanela={processarIngrediente}
+                  onToque={processarIngrediente}
                 />
               );
             })}
           </View>
+
           {bancadaPronta ? (
-            <BotaoPrincipal
-              titulo="Tudo separado! Ir para o fogão"
-              onPress={irParaFogao}
-              estilo={estilos.botaoLargo}
-            />
-          ) : null}
+            <BotaoPrincipal titulo="Tudo separado! Ir para o fogão 🔥" onPress={irParaFogao} estilo={estilos.botaoLargo} />
+          ) : (
+            <BotaoInterativo style={estilos.botaoVoltar} onPress={() => setFase('inicio')}>
+              <Text style={estilos.textoBotaoVoltar}>← Escolher outra receita</Text>
+            </BotaoInterativo>
+          )}
         </ScrollView>
       </TelaSegura>
     );
   }
 
-  if (fase === 'cozinha') {
-    if (!etapas.length) {
-      return (
-        <TelaSegura>
-          <ScrollView contentContainerStyle={estilos.conteudo}>
-            <Text style={estilos.titulo}>{receita.nome}</Text>
-            <Text style={estilos.texto}>
-              Esta receita ainda não tem o modo de preparo para o jogo.
-            </Text>
-            <BotaoPrincipal
-              titulo="Escolher outra receita"
-              onPress={voltarParaReceitas}
-              estilo={estilos.botaoLargo}
-            />
-          </ScrollView>
-        </TelaSegura>
-      );
-    }
-
-    const instrucao = etapas[etapaAtual];
-    const desafio = desafios[indiceDesafio];
+  if (fase === 'preparo') {
+    const instrucao = etapas[etapaAtual] || '';
     const calor = exigeAquecimento(instrucao) ? configurarCalor(instrucao) : null;
     const acao = acaoManual(instrucao);
     const progressoReceita = `${((etapaAtual + 1) / etapas.length) * 100}%`;
-    const ehForno = calor?.equipamento === 'forno';
 
     return (
       <TelaSegura>
         <ScrollView contentContainerStyle={estilos.conteudo}>
-          <Text style={estilos.progresso}>
-            Etapa {etapaAtual + 1} de {etapas.length} · {receita.nome} · Precisão {precisao}%
-          </Text>
-          <BotaoInterativo
-            style={estilos.botaoVoltar}
-            onPress={voltarParaReceitas}
-            accessibilityRole="button"
-          >
-            <Text style={estilos.textoBotaoVoltar}>← Escolher outra receita</Text>
-          </BotaoInterativo>
-          <View
-            style={estilos.trilhoReceita}
-            accessibilityRole="progressbar"
-            accessibilityLabel="Progresso da receita"
-            accessibilityValue={{ min: 1, max: etapas.length, now: etapaAtual + 1 }}
-          >
+          <View style={estilos.cabecalhoJogo}>
+            <Text style={estilos.progresso}>Etapa {etapaAtual + 1} de {etapas.length} · Precisão {precisao}%</Text>
+            <BadgeCombo combo={combo} />
+          </View>
+
+          <View style={estilos.trilhoReceita}>
             <View style={[estilos.barraReceita, { width: progressoReceita }]} />
           </View>
-          <View style={estilos.instrucao}>
-            <Text style={estilos.instrucaoLabel}>O que fazer agora</Text>
+
+          <View style={estilos.instrucaoCard}>
+            <Text style={estilos.instrucaoLabel}>Etapa da Receita</Text>
             <Text style={estilos.textoInstrucao}>{instrucao}</Text>
           </View>
 
-          {!etapaConcluida && desafio === 'ponto' && calor ? (
-            <View style={estilos.cartao}>
+          <BalaoMentor mentor={mentor} humor={humorMentor} fala={fala} combo={combo} />
+
+          {acao && acao.verbo === 'Cortar' && (
+            <TabuaDeCorte itemNome={receita.nome} meta={4} aoAcertoCorte={aoAcertarCorte} aoCompletar={avancarEtapa} />
+          )}
+
+          {acao && acao.verbo === 'Mexer' && (
+            <PanelaDeMexer aoGirar={aoAcertarGiroMexer} aoParar={aoPararDeMexer} aoCompletar={avancarEtapa} />
+          )}
+
+          {calor && (
+            <View style={estilos.cartaoCalor}>
               <Text style={estilos.rotuloControle}>
-                {ehForno
-                  ? `Acerte a temperatura do forno: ${calor.alvo} °C`
-                  : `Acerte a chama: fogo ${calor.alvo}`}
+                {calor.equipamento === 'forno' ? `Forno a ${calor.alvo}°C` : `Fogo ${calor.alvo}`}
               </Text>
-              {ehForno ? <Text style={estilos.chama}>♨️</Text> : <Chama />}
-              <Text style={estilos.dicaTemperatura}>Pare o marcador dentro da zona verde.</Text>
-              <Medidor
-                key={`ponto-${etapaAtual}-${tentativa}`}
-                zona={zonaDoPonto(calor, tentativa * 0.04)}
-                duracao={ehForno ? 1500 : 1100}
-                aoParar={resultadoPonto}
-              />
+              <MedidorDePonto zona={zonaDoPonto(calor)} aoParar={resultadoPonto} />
             </View>
-          ) : null}
+          )}
 
-          {!etapaConcluida && desafio === 'acao' && acao ? (
+          {(!acao || (acao.verbo !== 'Cortar' && acao.verbo !== 'Mexer')) && !calor && (
             <View style={estilos.cartao}>
-              <AcaoRapida
-                key={`acao-${etapaAtual}`}
-                acao={acao}
-                aoConcluir={() => concluirDesafio(sorteio(mentor.falas.acao))}
-              />
-            </View>
-          ) : null}
-
-          {!etapaConcluida && desafio === 'simples' ? (
-            <View style={estilos.cartao}>
-              <Text style={estilos.dica}>
-                Etapa de bancada: leia com atenção e siga em frente.
-              </Text>
+              <Text style={estilos.dica}>Etapa de bancada: leia com atenção e confirme a execução.</Text>
               <BotaoPrincipal
-                titulo={etapaAtual === etapas.length - 1 ? 'Servir o prato' : 'Feito! Próxima etapa'}
-                onPress={avancar}
+                titulo={etapaAtual === etapas.length - 1 ? 'Servir o prato 🥘' : 'Feito! Próxima etapa →'}
+                onPress={avancarEtapa}
                 estilo={estilos.botaoLargo}
               />
             </View>
+          )}
+
+          {feedback ? (
+            <Text style={[estilos.feedback, feedbackErro && estilos.feedbackErro]}>{feedback}</Text>
           ) : null}
 
-          <BalaoMentor mentor={mentor} fala={fala} />
-          {feedback ? (
-            <Text style={[estilos.feedback, feedbackErro && estilos.feedbackErro]}>
-              {feedback}
-            </Text>
-          ) : null}
-          {etapaConcluida ? (
+          {calor && feedback && !feedbackErro && (
             <BotaoPrincipal
-              titulo={etapaAtual === etapas.length - 1 ? 'Servir o prato' : 'Próxima etapa'}
-              onPress={avancar}
+              titulo={etapaAtual === etapas.length - 1 ? 'Servir o prato 🥘' : 'Continuar preparo →'}
+              onPress={avancarEtapa}
               estilo={estilos.botaoLargo}
             />
-          ) : null}
+          )}
         </ScrollView>
       </TelaSegura>
     );
@@ -624,44 +797,36 @@ export default function MiniGame() {
       <ScrollView contentContainerStyle={estilos.conteudo}>
         <Text style={estilos.emojiGrande}>🥘</Text>
         <Text style={estilos.titulo}>{receita.nome} pronto!</Text>
+
         <View style={estilos.linhaEstrelas}>
           {[0, 1, 2].map(indice => (
-            <Animated.View
-              key={indice}
-              style={{ transform: [{ scale: estrelasAnim[indice] }] }}
-            >
+            <Animated.View key={indice} style={{ transform: [{ scale: estrelasAnim[indice] }] }}>
               <Ionicons
                 name={indice < premioFinal.estrelas ? 'star' : 'star-outline'}
-                size={48}
-                color={CORES.destaque}
+                size={38}
+                color={indice < premioFinal.estrelas ? CORES.destaque : CORES.textoSecundario}
                 style={estilos.estrela}
               />
             </Animated.View>
           ))}
         </View>
-        <BalaoMentor mentor={mentor} fala={fala} />
-        <View style={estilos.cartao}>
+
+        <BalaoMentor mentor={mentor} humor={humorMentor} fala={fala} combo={maxCombo} />
+
+        <View style={estilos.cartaoResultado}>
           <Text style={estilos.recompensa}>🔥 +{premioFinal.brasas} Brasas</Text>
           <Text style={estilos.recompensa}>⭐ +{premioFinal.exp} EXP</Text>
-          <Text style={estilos.precisaoFinal}>
-            Precisão no preparo: {precisao}% · {precisao >= 90
-              ? 'Muito bem!'
-              : precisao >= 70 ? 'Bom trabalho!' : 'Continue praticando!'}
-          </Text>
-          <Text style={estilos.dica}>
-            Confira o preparo completo na aba Receitas e siga as orientações de segurança alimentar.
-          </Text>
+          {maxCombo > 0 && (
+            <Text style={estilos.destaqueComboFinal}>
+              💥 Bônus de combo: +{Math.floor(maxCombo * 2)} Brasas e +{Math.floor(maxCombo * 4)} EXP (x{maxCombo})
+            </Text>
+          )}
+          <Text style={estilos.precisaoFinal}>Precisão no preparo: {precisao}%</Text>
+          <Text style={estilos.dica}>Confira a receita completa na aba Cozinha e pratique sempre com segurança!</Text>
         </View>
-        <BotaoPrincipal
-          titulo="Cozinhar de novo"
-          onPress={() => escolherReceita(receita)}
-          estilo={estilos.botaoLargo}
-        />
-        <BotaoInterativo
-          style={estilos.botaoVoltar}
-          onPress={() => setFase('inicio')}
-          accessibilityRole="button"
-        >
+
+        <BotaoPrincipal titulo="Cozinhar novamente" onPress={() => escolherReceita(receita)} estilo={estilos.botaoLargo} />
+        <BotaoInterativo style={estilos.botaoVoltar} onPress={() => setFase('inicio')}>
           <Text style={estilos.textoBotaoVoltar}>Escolher outra receita</Text>
         </BotaoInterativo>
       </ScrollView>
@@ -670,100 +835,50 @@ export default function MiniGame() {
 }
 
 const estilos = StyleSheet.create({
-  conteudo: { paddingTop: 24, paddingBottom: 36, flexGrow: 1 },
-  emojiGrande: { fontSize: 64, lineHeight: 78, textAlign: 'center', marginBottom: 8 },
-  titulo: {
-    color: CORES.destaque,
-    fontSize: 24,
-    lineHeight: 32,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 12
-  },
-  subtitulo: {
-    color: CORES.texto,
-    fontSize: 18,
-    lineHeight: 26,
-    fontWeight: 'bold',
-    marginTop: 4,
-    marginBottom: 10
-  },
-  cartaoReceita: {
-    backgroundColor: CORES.superficie,
-    borderWidth: 1,
-    borderColor: CORES.borda,
-    borderRadius: RAIO,
-    padding: 14,
-    marginBottom: 10
-  },
+  conteudo: { paddingTop: 20, paddingBottom: 40, paddingHorizontal: 16, flexGrow: 1 },
+  cabecalhoJogo: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
+  emojiGrande: { fontSize: 58, lineHeight: 70, textAlign: 'center', marginBottom: 6 },
+  titulo: { color: CORES.texto, fontSize: 22, lineHeight: 28, fontWeight: 'bold', textAlign: 'center', marginBottom: 6 },
+  subtitulo: { color: CORES.texto, fontSize: 16, lineHeight: 22, fontWeight: 'bold', marginTop: 14, marginBottom: 10 },
+  texto: { color: CORES.textoSecundario, fontSize: 14, lineHeight: 20, textAlign: 'center', marginBottom: 12 },
+  progresso: { color: CORES.destaque, fontSize: 13, lineHeight: 18, fontWeight: 'bold' },
+  dica: { color: CORES.textoSecundario, fontSize: 12, lineHeight: 18, textAlign: 'center', marginTop: 6 },
+
+  cartao: { backgroundColor: CORES.superficie, borderRadius: RAIO, borderWidth: 1, borderColor: CORES.borda, padding: 14, marginBottom: 12 },
+  cartaoReceita: { backgroundColor: CORES.superficie, borderRadius: RAIO, borderWidth: 1, borderColor: CORES.borda, padding: 14, marginBottom: 10 },
   nomeReceita: { color: CORES.texto, fontSize: 16, lineHeight: 22, fontWeight: 'bold' },
-  detalheReceita: { color: CORES.textoSecundario, fontSize: 12, lineHeight: 18, marginTop: 3 },
-  texto: {
-    color: CORES.textoSecundario,
-    fontSize: 15,
-    lineHeight: 23,
-    textAlign: 'center',
-    marginBottom: 16
-  },
-  progresso: {
-    color: CORES.textoSecundario,
-    fontSize: 13,
-    lineHeight: 20,
-    textAlign: 'center',
-    marginBottom: 10
-  },
-  contador: {
-    color: CORES.destaque,
-    fontSize: 14,
-    lineHeight: 20,
-    textAlign: 'center',
-    marginBottom: 12
-  },
-  cartao: {
-    backgroundColor: CORES.superficie,
-    borderRadius: RAIO,
-    borderWidth: 1,
-    borderColor: CORES.borda,
-    padding: 16,
-    marginBottom: 16
-  },
-  dica: {
-    color: CORES.textoSecundario,
-    fontSize: 13,
-    lineHeight: 20,
-    textAlign: 'center',
-    marginTop: 8,
-    marginBottom: 12
-  },
-  botaoLargo: { alignSelf: 'stretch' },
-  botaoVoltar: { alignSelf: 'flex-start', paddingVertical: 8, marginBottom: 8 },
-  textoBotaoVoltar: { color: CORES.destaque, fontSize: 14, lineHeight: 20, fontWeight: 'bold' },
-  balao: {
-    flexDirection: 'row',
+  detalheReceita: { color: CORES.textoSecundario, fontSize: 12, lineHeight: 18, marginTop: 4 },
+
+  balao: { flexDirection: 'row', alignItems: 'center', backgroundColor: CORES.superficie, borderRadius: RAIO, borderWidth: 1, borderColor: CORES.borda, padding: 12, marginBottom: 12 },
+  balaoCombo: { borderColor: CORES.destaque, backgroundColor: 'rgba(245, 158, 11, 0.08)' },
+  emojiMentor: { fontSize: 32, lineHeight: 40, marginRight: 10 },
+  balaoTexto: { flex: 1 },
+  nomeMentor: { color: CORES.destaque, fontSize: 12, lineHeight: 16, fontWeight: 'bold', textTransform: 'uppercase' },
+  falaMentor: { color: CORES.texto, fontSize: 13, lineHeight: 19, fontStyle: 'italic', marginTop: 2 },
+
+  badgeCombo: { backgroundColor: CORES.destaque, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12 },
+  textoBadgeCombo: { color: '#000', fontSize: 12, lineHeight: 16, fontWeight: 'bold' },
+
+  areaPanelaCentral: { alignItems: 'center', justifyContent: 'center', marginVertical: 10 },
+  panelaVisual: {
     alignItems: 'center',
-    backgroundColor: CORES.superficie,
-    borderRadius: RAIO,
-    padding: 12,
-    marginBottom: 12
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+    borderWidth: 2,
+    borderColor: CORES.destaque,
+    borderRadius: 20,
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    width: '90%'
   },
-  emojiMentor: { fontSize: 30, lineHeight: 40, marginRight: 10 },
-  falaMentor: {
-    flex: 1,
-    color: CORES.texto,
-    fontSize: 14,
-    lineHeight: 21,
-    fontStyle: 'italic'
-  },
-  grade: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    marginTop: 4,
-    marginBottom: 8
-  },
+  emojiPanelaGrande: { fontSize: 44, lineHeight: 52 },
+  textoPanelaCentral: { color: CORES.texto, fontSize: 15, lineHeight: 22, fontWeight: 'bold', marginTop: 4, textAlign: 'center', width: '100%' },
+  subtextoPanelaCentral: { color: CORES.textoSecundario, fontSize: 12, lineHeight: 18, marginTop: 4, textAlign: 'center', width: '100%' },
+
+  grade: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginTop: 6, marginBottom: 10 },
   celulaIngrediente: { width: '48%', marginBottom: 10 },
   cartaoIngrediente: {
-    minHeight: 112,
+    minHeight: 100,
     backgroundColor: CORES.superficie,
     borderWidth: 1,
     borderColor: CORES.borda,
@@ -772,152 +887,87 @@ const estilos = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  ingredienteCerto: {
-    borderColor: CORES.sucesso,
-    backgroundColor: 'rgba(16,185,129,0.15)'
-  },
-  ingredienteErrado: {
-    borderColor: CORES.erro,
-    backgroundColor: 'rgba(239,68,68,0.15)',
-    opacity: 0.7
-  },
-  emojiIngrediente: { fontSize: 28, lineHeight: 36, marginBottom: 4 },
-  nomeIngrediente: {
-    color: CORES.texto,
-    fontSize: 13,
-    lineHeight: 18,
-    fontWeight: 'bold',
-    textAlign: 'center'
-  },
-  trilhoReceita: {
-    height: 8,
-    backgroundColor: CORES.superficie,
-    borderRadius: 4,
-    overflow: 'hidden',
-    marginBottom: 16
-  },
-  barraReceita: { height: '100%', backgroundColor: CORES.destaque, borderRadius: 4 },
-  instrucao: {
-    backgroundColor: CORES.superficie,
-    borderLeftWidth: 4,
-    borderLeftColor: CORES.destaque,
-    borderRadius: RAIO,
-    padding: 14,
-    marginBottom: 14
-  },
-  instrucaoLabel: {
-    color: CORES.destaque,
-    fontSize: 12,
-    lineHeight: 18,
-    fontWeight: 'bold',
-    textTransform: 'uppercase',
-    marginBottom: 5
-  },
-  textoInstrucao: { color: CORES.texto, fontSize: 16, lineHeight: 24 },
-  rotuloControle: {
-    color: CORES.texto,
-    fontSize: 15,
-    lineHeight: 22,
-    fontWeight: 'bold',
-    textAlign: 'center'
-  },
-  chama: { fontSize: 40, lineHeight: 52, textAlign: 'center', marginVertical: 4 },
-  dicaTemperatura: {
-    color: CORES.textoSecundario,
-    fontSize: 12,
-    lineHeight: 18,
-    textAlign: 'center',
-    marginBottom: 14
-  },
-  trilhoMedidor: {
-    height: 34,
-    backgroundColor: CORES.fundo,
-    borderRadius: 17,
-    borderWidth: 1,
-    borderColor: CORES.borda,
+  ingredienteCerto: { borderColor: CORES.sucesso, backgroundColor: 'rgba(16,185,129,0.15)' },
+  ingredienteErrado: { borderColor: CORES.erro, backgroundColor: 'rgba(239,68,68,0.15)' },
+  emojiIngrediente: { fontSize: 26, lineHeight: 32, marginBottom: 2 },
+  nomeIngrediente: { color: CORES.texto, fontSize: 13, lineHeight: 19, fontWeight: 'bold', textAlign: 'center', width: '100%' },
+  dicaArraste: { color: CORES.textoSecundario, fontSize: 11, lineHeight: 16, marginTop: 4, textAlign: 'center' },
+
+  areaCorteContainer: { backgroundColor: CORES.superficie, borderRadius: RAIO, borderWidth: 1, borderColor: CORES.borda, padding: 14, marginBottom: 14, alignItems: 'center' },
+  rotuloGesto: { color: CORES.destaque, fontSize: 12, lineHeight: 16, fontWeight: 'bold', textTransform: 'uppercase', marginBottom: 4 },
+  instrucaoGesto: { color: CORES.texto, fontSize: 13, lineHeight: 18, marginBottom: 12, textAlign: 'center' },
+  tabuaMadeira: {
+    width: '100%',
+    height: 180,
+    backgroundColor: '#3b2512',
+    borderRadius: 16,
+    borderWidth: 4,
+    borderColor: '#5c3a1e',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
     overflow: 'hidden'
   },
-  zonaMedidor: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(16,185,129,0.4)',
-    borderLeftWidth: 2,
-    borderRightWidth: 2,
-    borderColor: CORES.sucesso
+  flashLamina: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(255, 255, 255, 0.45)' },
+  alimentoTabua: { alignItems: 'center' },
+  emojiAlimento: { fontSize: 50, lineHeight: 60 },
+  nomeAlimentoCorte: { color: '#fef3c7', fontSize: 14, fontWeight: 'bold', marginTop: 4 },
+  linhaGuiaCorte: { position: 'absolute', width: '80%', height: 2, borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.5)', borderStyle: 'dashed' },
+  indicadorCortes: { position: 'absolute', bottom: 8, width: '90%', alignItems: 'center' },
+  textoCortesFeitos: { color: '#fef3c7', fontSize: 12, fontWeight: 'bold', marginBottom: 4 },
+  barraProgressoCorte: { width: '100%', height: 6, backgroundColor: 'rgba(0, 0, 0, 0.4)', borderRadius: 3, overflow: 'hidden' },
+  progressoCortePreenchido: { height: '100%', backgroundColor: CORES.destaque },
+
+  areaMexerContainer: { backgroundColor: CORES.superficie, borderRadius: RAIO, borderWidth: 1, borderColor: CORES.borda, padding: 14, marginBottom: 14, alignItems: 'center' },
+  corpoPanelaCircular: {
+    width: 260,
+    height: 260,
+    borderRadius: 130,
+    backgroundColor: '#1f2937',
+    borderWidth: 8,
+    borderColor: '#4b5563',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative'
   },
-  marcadorMedidor: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    width: 8,
-    borderRadius: 4,
-    backgroundColor: CORES.destaque
-  },
-  rotulosMedidor: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 6,
-    marginBottom: 14
-  },
-  rotuloMedidor: { color: CORES.textoSecundario, fontSize: 12, lineHeight: 18 },
-  botaoParar: {
-    backgroundColor: CORES.destaque,
-    borderRadius: RAIO,
-    paddingVertical: 14,
-    alignItems: 'center'
-  },
-  textoBotaoParar: { color: '#000', fontSize: 16, lineHeight: 22, fontWeight: 'bold' },
-  areaAcao: { alignItems: 'center' },
-  emojiAcao: { fontSize: 56, lineHeight: 70 },
-  acaoTitulo: {
-    color: CORES.texto,
-    fontSize: 17,
-    lineHeight: 24,
-    fontWeight: 'bold',
-    textAlign: 'center'
-  },
-  trilhoAcao: {
-    alignSelf: 'stretch',
-    height: 16,
-    backgroundColor: CORES.fundo,
-    borderRadius: 8,
-    overflow: 'hidden',
-    marginBottom: 14
-  },
-  barraAcao: { height: '100%', backgroundColor: CORES.sucesso, borderRadius: 8 },
-  botaoAcao: {
-    alignSelf: 'stretch',
-    backgroundColor: CORES.destaque,
-    borderRadius: RAIO,
-    paddingVertical: 18,
-    alignItems: 'center'
-  },
-  textoBotaoAcao: { color: '#000', fontSize: 20, lineHeight: 28, fontWeight: 'bold' },
-  feedback: {
-    color: CORES.sucesso,
-    fontSize: 14,
-    lineHeight: 21,
-    textAlign: 'center',
-    marginBottom: 12
-  },
+  fumacaPanela: { position: 'absolute', top: 20, fontSize: 24 },
+  alimentoCozinhando: { fontSize: 56, lineHeight: 68 },
+  colherMadeira: { position: 'absolute', width: 140, height: 140, justifyContent: 'center', alignItems: 'center' },
+  emojiColher: { fontSize: 44, transform: [{ translateY: -35 }] },
+  rodapeMexer: { position: 'absolute', bottom: 14, width: '70%', alignItems: 'center' },
+  textoVoltas: { color: CORES.texto, fontSize: 12, fontWeight: 'bold', marginBottom: 4 },
+  trilhoProgressoMexer: { width: '100%', height: 6, backgroundColor: 'rgba(0,0,0,0.5)', borderRadius: 3, overflow: 'hidden' },
+  barraProgressoMexer: { height: '100%', backgroundColor: CORES.destaque },
+
+  trilhoReceita: { height: 6, backgroundColor: CORES.superficie, borderRadius: 3, overflow: 'hidden', marginBottom: 12 },
+  barraReceita: { height: '100%', backgroundColor: CORES.destaque },
+
+  instrucaoCard: { backgroundColor: CORES.superficie, borderLeftWidth: 4, borderLeftColor: CORES.destaque, borderRadius: RAIO, padding: 12, marginBottom: 12 },
+  instrucaoLabel: { color: CORES.destaque, fontSize: 11, lineHeight: 16, fontWeight: 'bold', textTransform: 'uppercase', marginBottom: 2 },
+  textoInstrucao: { color: CORES.texto, fontSize: 15, lineHeight: 22 },
+
+  cartaoCalor: { backgroundColor: CORES.superficie, borderRadius: RAIO, borderWidth: 1, borderColor: CORES.borda, padding: 14, marginBottom: 12 },
+  rotuloControle: { color: CORES.texto, fontSize: 14, lineHeight: 20, fontWeight: 'bold', textAlign: 'center', marginBottom: 10 },
+  areaMedidor: { alignItems: 'center' },
+  trilhoMedidor: { width: '100%', height: 32, backgroundColor: CORES.fundo, borderRadius: 16, borderWidth: 1, borderColor: CORES.borda, overflow: 'hidden', position: 'relative' },
+  zonaMedidor: { position: 'absolute', top: 0, bottom: 0, backgroundColor: 'rgba(16,185,129,0.35)', borderLeftWidth: 2, borderRightWidth: 2, borderColor: CORES.sucesso },
+  marcadorMedidor: { position: 'absolute', top: 3, width: 14, height: 24, borderRadius: 4, backgroundColor: CORES.destaque },
+  rotulosMedidor: { flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginTop: 6, marginBottom: 12 },
+  rotuloMedidor: { color: CORES.textoSecundario, fontSize: 12 },
+  botaoParar: { backgroundColor: CORES.destaque, borderRadius: RAIO, paddingVertical: 12, paddingHorizontal: 28, alignItems: 'center' },
+  textoBotaoParar: { color: '#000', fontSize: 15, lineHeight: 20, fontWeight: 'bold' },
+
+  botaoLargo: { alignSelf: 'stretch', marginTop: 6, marginBottom: 8 },
+  botaoVoltar: { alignSelf: 'center', paddingVertical: 8, marginTop: 4 },
+  textoBotaoVoltar: { color: CORES.destaque, fontSize: 14, lineHeight: 20, fontWeight: 'bold' },
+
+  feedback: { color: CORES.sucesso, fontSize: 14, lineHeight: 20, textAlign: 'center', marginVertical: 8, fontWeight: 'bold' },
   feedbackErro: { color: CORES.erro },
-  linhaEstrelas: { flexDirection: 'row', justifyContent: 'center', marginBottom: 12 },
+
+  linhaEstrelas: { flexDirection: 'row', justifyContent: 'center', marginVertical: 12 },
   estrela: { marginHorizontal: 4 },
-  precisaoFinal: {
-    color: CORES.texto,
-    fontSize: 15,
-    lineHeight: 22,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginTop: 10
-  },
-  recompensa: {
-    color: CORES.destaque,
-    fontSize: 20,
-    lineHeight: 30,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginVertical: 4
-  }
+  cartaoResultado: { backgroundColor: CORES.superficie, borderRadius: RAIO, borderWidth: 1, borderColor: CORES.borda, padding: 16, alignItems: 'center', marginVertical: 10 },
+  recompensa: { color: CORES.texto, fontSize: 18, lineHeight: 26, fontWeight: 'bold', marginVertical: 2 },
+  destaqueComboFinal: { color: CORES.destaque, fontSize: 14, lineHeight: 21, fontWeight: 'bold', marginTop: 6, textAlign: 'center', width: '100%' },
+  precisaoFinal: { color: CORES.destaque, fontSize: 14, lineHeight: 22, fontWeight: 'bold', marginTop: 8, textAlign: 'center', width: '100%' }
 });

@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+﻿import { StyleSheet } from 'react-native';
 import { TextoResponsivo as Text } from './TextoResponsivo';
 import BotaoInterativo from './BotaoInterativo';
 import { CORES, RAIO } from '../../uteis/constantes';

@@ -1,0 +1,41 @@
+﻿import { responderMentorOffline, obterSugestoesOffline } from './mentorIA.offline';
+
+export const SUPORTA_IA_LOCAL = true;
+export const TAMANHO_MODELO_BYTES = 0;
+
+export async function verificarModeloBaixado() {
+  return true;
+}
+
+export async function prepararMentor(onProgress = () => {}) {
+  onProgress({ etapa: 'carregamento' });
+  return true;
+}
+
+export async function cancelarDownloadMentor() {}
+
+export async function responderMentor(mentor, mensagens, onToken = () => {}) {
+  const ultimaMensagem = mensagens[mensagens.length - 1]?.content || '';
+  const resposta = await responderMentorOffline(mentor, ultimaMensagem, mensagens);
+  onToken(resposta);
+  return resposta;
+}
+
+export async function obterSugestoes(mentor, contexto = {}) {
+  return obterSugestoesOffline(mentor, contexto);
+}
+
+export async function resetarMentor() {
+  return true;
+}
+
+export default {
+  SUPORTA_IA_LOCAL,
+  TAMANHO_MODELO_BYTES,
+  verificarModeloBaixado,
+  prepararMentor,
+  cancelarDownloadMentor,
+  responderMentor,
+  obterSugestoes,
+  resetarMentor,
+};

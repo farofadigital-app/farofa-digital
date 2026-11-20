@@ -3,6 +3,7 @@ import {
   acaoManual,
   calcularRecompensaMinicozinha,
   criarBancada,
+  mesmoIngrediente,
   configurarCalor,
   criarDesafioIngredientes,
   exigeAquecimento,
@@ -98,6 +99,28 @@ describe('regras da Minicozinha', () => {
     )).toBe(true);
     expect(new Set(intrusos.map(item => item.nome.toLowerCase())).size).toBe(intrusos.length);
     expect(new Set(bancada.map(item => item.id)).size).toBe(bancada.length);
+  });
+
+  test('mesmoIngrediente reconhece o mesmo ingrediente com outra medida', () => {
+    expect(mesmoIngrediente('500 ml de leite integral', '2 xícaras de leite integral')).toBe(true);
+    expect(mesmoIngrediente('1 dente de alho (opcional)', '2 dentes de alho amassados')).toBe(true);
+    expect(mesmoIngrediente('Sal e pimenta a gosto', 'Cominho, pimenta-do-reino e sal a gosto')).toBe(true);
+    expect(mesmoIngrediente('200 ml de leite de coco', '2 xícaras de leite integral')).toBe(false);
+    expect(mesmoIngrediente('Farinha de trigo', '3 ovos')).toBe(false);
+  });
+
+  test('a bancada das receitas não traz intruso que repete um item certo', () => {
+    RECEITAS.forEach(receita => {
+      for (let tentativa = 0; tentativa < 40; tentativa++) {
+        const intrusos = criarBancada(receita, RECEITAS).filter(item => !item.certo);
+        expect(intrusos).toHaveLength(3);
+        intrusos.forEach(intruso => {
+          receita.ingredientes.forEach(certo => {
+            expect(mesmoIngrediente(intruso.nome, certo)).toBe(false);
+          });
+        });
+      }
+    });
   });
 
   test('calcula a faixa do medidor para forno e fogão', () => {

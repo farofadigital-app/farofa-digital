@@ -1,4 +1,4 @@
-export const SUPORTA_IA_LOCAL = false;
+﻿export const SUPORTA_IA_LOCAL = false;
 export const TAMANHO_MODELO_BYTES = 0;
 
 export async function verificarModeloBaixado() {

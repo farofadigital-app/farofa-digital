@@ -12,3 +12,4 @@ export const INSUMOS_REGIONAIS = [
   { id: 11, nome: 'Pinhão', regiao: 'Sul', descricao: 'Semente da araucária, consumida em pratos sulistas.' },
   { id: 12, nome: 'Mandioca', regiao: 'Várias regiões', descricao: 'Ingrediente presente em receitas de todo o Brasil.' }
 ];
+

@@ -12,27 +12,33 @@ import { INSUMOS_REGIONAIS } from '../../dados/insumos';
 import { useApp } from '../../estados/ContextoApp';
 import { CORES, RAIO } from '../../uteis/constantes';
 import { normalizarBusca } from '../../uteis/formatacao';
-import Cortes from './Cortes';
+import { obterFichaTecnica } from '../../uteis/fichaTecnica';
+import { linhaRegiaoCategoria, textoPorcoes } from '../../uteis/receitas';
 
 const ABAS = [
   { id: 'receitas', titulo: 'Receitas' },
-  { id: 'lista', titulo: 'Lista' },
-  { id: 'cortes', titulo: 'Cortes' }
+  { id: 'lista', titulo: 'Lista' }
 ];
 
-export default function Cozinha() {
+export default function Cozinha({ route }) {
+  const abaInicialParam = route?.params?.abaInicial;
   const {
     favoritos, alternarFavorito, adicionarItensCompra, itensCompra,
     adicionarItemCompra, alternarItemCompra, removerItemCompra, limparComprados
   } = useApp();
-  const [aba, setAba] = useState('receitas');
+  const [aba, setAba] = useState(
+    ABAS.some(opcao => opcao.id === abaInicialParam) ? abaInicialParam : 'receitas'
+  );
   const [busca, setBusca] = useState('');
   const [origemSelecionada, setOrigemSelecionada] = useState('Todas');
   const [receitaAberta, setReceitaAberta] = useState(null);
   const [novoItem, setNovoItem] = useState('');
+  const [modoDetalhe, setModoDetalhe] = useState('preparo');
+  const [subAbaReceita, setSubAbaReceita] = useState({});
+  const [precosSimulados, setPrecosSimulados] = useState({});
 
   const origens = useMemo(
-    () => ['Todas', ...new Set(RECEITAS.map(receita => receita.regiao))],
+    () => ['Todas', ...new Set(RECEITAS.map(receita => receita.regiao).filter(Boolean))],
     []
   );
 
@@ -75,9 +81,7 @@ export default function Cozinha() {
         ))}
       </View>
 
-      {aba === 'cortes' ? (
-        <Cortes />
-      ) : aba === 'receitas' ? (
+      {aba === 'receitas' ? (
         <ScrollView
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
@@ -136,7 +140,7 @@ export default function Cozinha() {
                 <View style={estilos.topoCartao}>
                   <View style={estilos.infoReceita}>
                     <Text style={estilos.nomeReceita}>{receita.nome}</Text>
-                    <Text style={estilos.regiao}>{receita.regiao} · {receita.categoria}</Text>
+                    <Text style={estilos.regiao}>{linhaRegiaoCategoria(receita)}</Text>
                   </View>
                   <TouchableOpacity
                     style={estilos.botaoFavorito}
@@ -153,12 +157,15 @@ export default function Cozinha() {
                 </View>
 
                 <Text style={estilos.detalhes}>
-                  {receita.tempo} · {receita.dificuldade} · {receita.porcoes} porções
+                  {receita.tempo} · {receita.dificuldade} · {textoPorcoes(receita.porcoes)}
                 </Text>
 
                 <TouchableOpacity
                   style={estilos.botaoAbrir}
-                  onPress={() => setReceitaAberta(aberta ? null : receita.id)}
+                  onPress={() => {
+                    setReceitaAberta(aberta ? null : receita.id);
+                    setModoDetalhe('preparo');
+                  }}
                   accessibilityRole="button"
                   accessibilityLabel={`${aberta ? 'Fechar' : 'Ver'} receita ${receita.nome}`}
                 >
@@ -175,8 +182,44 @@ export default function Cozinha() {
                         {'•  '}{ingrediente}
                       </Text>
                     ))}
-                    <Text style={[estilos.subtitulo, estilos.subtituloPreparo]}>Modo de preparo</Text>
-                    <Text style={estilos.preparo}>{receita.modoPreparo}</Text>
+                    <View style={estilos.seletorModoReceita}>
+                      <TouchableOpacity
+                        style={[estilos.botaoModoReceita, modoDetalhe === 'preparo' && estilos.botaoModoReceitaAtivo]}
+                        onPress={() => setModoDetalhe('preparo')}
+                        accessibilityRole="button"
+                        accessibilityState={{ selected: modoDetalhe === 'preparo' }}
+                        accessibilityLabel="Modo de Preparo"
+                      >
+                        <Text style={[estilos.textoModoReceita, modoDetalhe === 'preparo' && estilos.textoModoReceitaAtivo]}>
+                          Modo de Preparo
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={[estilos.botaoModoReceita, modoDetalhe === 'ficha' && estilos.botaoModoReceitaAtivo]}
+                        onPress={() => setModoDetalhe('ficha')}
+                        accessibilityRole="button"
+                        accessibilityState={{ selected: modoDetalhe === 'ficha' }}
+                        accessibilityLabel="Ficha de Custo & Margem"
+                      >
+                        <Text style={[estilos.textoModoReceita, modoDetalhe === 'ficha' && estilos.textoModoReceitaAtivo]}>
+                          Ficha de Custo & Margem
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                    {modoDetalhe === 'ficha' ? (
+                      <View style={estilos.blocoFicha}>
+                        {linhasDaFicha(calcularFichaDaReceita(receita)).map((linha, indiceFicha) => (
+                          <Text key={`${receita.id}-ficha-${indiceFicha}`} style={estilos.linhaFicha}>
+                            {linha}
+                          </Text>
+                        ))}
+                      </View>
+                    ) : (
+                      <View>
+                        <Text style={[estilos.subtitulo, estilos.subtituloPreparo]}>Modo de preparo</Text>
+                        <Text style={estilos.preparo}>{receita.modoPreparo}</Text>
+                      </View>
+                    )}
                     <TouchableOpacity
                       style={estilos.botaoPrincipal}
                       onPress={() => {
@@ -423,8 +466,8 @@ const estilos = StyleSheet.create({
   },
   descricaoRegional: { fontSize: 13, lineHeight: 20, color: CORES.textoSecundario, marginTop: 4 },
   cartaoRegional: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
+    alignItems: 'stretch',
     backgroundColor: CORES.superficie,
     borderWidth: 1,
     borderColor: CORES.borda,
@@ -433,12 +476,102 @@ const estilos = StyleSheet.create({
     marginTop: 10
   },
   botaoRegional: {
+    alignSelf: 'flex-start',
     backgroundColor: CORES.destaque,
     borderRadius: RAIO,
-    paddingHorizontal: 10,
-    paddingVertical: 9
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginTop: 10
   },
   botaoRegionalAdicionado: { backgroundColor: 'rgba(16,185,129,0.15)' },
   textoRegional: { color: '#000', fontSize: 12, lineHeight: 18, fontWeight: 'bold' },
-  textoRegionalAdicionado: { color: CORES.sucesso }
+  textoRegionalAdicionado: { color: CORES.sucesso },
+  seletorModoReceita: {
+    flexDirection: 'row',
+    backgroundColor: CORES.fundo,
+    borderRadius: RAIO,
+    padding: 4,
+    marginBottom: 14
+  },
+  botaoModoReceita: {
+    flex: 1,
+    paddingVertical: 8,
+    alignItems: 'center',
+    borderRadius: RAIO - 4
+  },
+  botaoModoReceitaAtivo: { backgroundColor: CORES.destaque },
+  textoModoReceita: { fontSize: 13, lineHeight: 18, color: CORES.textoSecundario, fontWeight: '600' },
+  textoModoReceitaAtivo: { color: '#000', fontWeight: 'bold' },
+  blocoFicha: { marginTop: 4, marginBottom: 8 },
+  cabecalhoFicha: { marginBottom: 10 },
+  descricaoFicha: { fontSize: 12, lineHeight: 17, color: CORES.destaque, marginTop: 2 },
+  tabelaInsumos: {
+    backgroundColor: CORES.fundo,
+    borderRadius: RAIO,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: CORES.borda,
+    marginBottom: 12
+  },
+  linhaInsumo: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 6,
+    borderBottomWidth: 1,
+    borderBottomColor: CORES.borda
+  },
+  colunaInsumoInfo: { flex: 1, marginRight: 8 },
+  nomeInsumo: { fontSize: 13, lineHeight: 18, color: CORES.texto, fontWeight: '500' },
+  qtdInsumo: { fontSize: 11, lineHeight: 15, color: CORES.textoSecundario, marginTop: 1 },
+  subtotalInsumo: { fontSize: 13, lineHeight: 18, color: CORES.destaque, fontWeight: 'bold' },
+  quadroFinanceiro: {
+    backgroundColor: CORES.fundo,
+    borderRadius: RAIO,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: CORES.borda
+  },
+  linhaQuadro: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 4
+  },
+  linhaQuadroPreco: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 6
+  },
+  colunaPrecoInfo: { flex: 1 },
+  rotuloQuadro: { fontSize: 13, lineHeight: 18, color: CORES.textoSecundario },
+  legendaPreco: { fontSize: 11, lineHeight: 15, color: CORES.textoSecundario },
+  controlesPreco: { flexDirection: 'row', alignItems: 'center' },
+  botaoAjustePreco: {
+    backgroundColor: CORES.superficie,
+    borderWidth: 1,
+    borderColor: CORES.borda,
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 4
+  },
+  textoBotaoAjuste: { color: CORES.destaque, fontSize: 12, lineHeight: 16, fontWeight: 'bold' },
+  valorQuadroVenda: { fontSize: 15, lineHeight: 20, fontWeight: 'bold', color: CORES.destaque, marginHorizontal: 8 },
+  valorQuadroCusto: { fontSize: 14, lineHeight: 19, fontWeight: 'bold', color: CORES.texto },
+  divisorFinanceiro: { height: 1, backgroundColor: CORES.borda, marginVertical: 8 },
+  valorQuadroLucro: { fontSize: 15, lineHeight: 20, fontWeight: 'bold' },
+  valorLucro: { color: CORES.sucesso },
+  valorPrejuizo: { color: CORES.erro },
+  valorQuadroMargem: { fontSize: 16, lineHeight: 22, fontWeight: 'bold' },
+  boxClassificacao: {
+    borderLeftWidth: 3,
+    paddingLeft: 10,
+    paddingVertical: 6,
+    marginTop: 10,
+    backgroundColor: 'rgba(255,255,255,0.03)',
+    borderRadius: 4
+  },
+  tituloClassificacao: { fontSize: 12, lineHeight: 16, fontWeight: 'bold' },
+  dicaClassificacao: { fontSize: 11, lineHeight: 16, color: CORES.textoSecundario, marginTop: 2 },
 });
